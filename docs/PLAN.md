@@ -6,9 +6,9 @@ Deadline: **Wed, Nov 4, 2026, 9 PM ET** (7 PM Phoenix). Late submissions are not
 
 ## The one story
 
-The prototype proves one loop end to end on a real, already-awarded contract: read the solicitation, pick the right supplier, check our numbers against the actual award, and catch a delay before it becomes a missed delivery. Anything that does not serve that loop is cut.
+KounOS does two jobs for a small government supplier: **decide which contracts are worth pursuing**, and **keep every awarded order on track** until it's delivered and paid. The prototype proves both in one loop on real, already-awarded contracts: triage a batch of notices, read the one worth pursuing, pick the right supplier, recommend a bid and check it against the actual award, then catch a delay before it becomes a missed delivery. Anything that does not serve that loop is cut.
 
-The demo in one breath: we upload a recently awarded solicitation for electrical supplies from a civilian agency. KounOS extracts line items, quantities, the delivery requirement and key clauses, each linked to the exact page and passage it came from. We drop in three supplier quotes. The cheapest misses the delivery date, the second fails a sourcing requirement, and the third meets everything at a thinner margin. The user picks it, gets a sourcing package, and KounOS's lowest safe bid appears next to the price the government actually paid.
+The demo in one breath: KounOS sorts a batch of real civilian-agency notices into pursue and pass, with a reason for each. We open the best fit, a recently awarded solicitation for electrical supplies. KounOS extracts line items, quantities, the delivery requirement and key clauses, each linked to the exact page and passage it came from. We drop in three supplier quotes. The cheapest misses the delivery date, the second fails a sourcing requirement, and the third meets everything at a thinner margin. The user picks it, gets a sourcing package, and KounOS's recommendation, "pursue at $X", appears next to the price the government actually paid.
 
 Then we replay the contract as if Koun had won, under a clearly labeled simulated award. The supplier leaves a voicemail about a 16-day slip. KounOS ties it to the customer commitment, shows the delivery will now miss by 2 days, prices each recovery option against margin and cash, and drafts a note for a human to review. KounOS never bids or sends anything; Koun's people make every external move.
 
@@ -20,12 +20,22 @@ Impact and Meta tooling carry 55% of the score, so build time goes first to visi
 
 | Criterion | Weight | What wins it for KounOS | Where judges see it |
 | --- | --- | --- | --- |
-| Impact | 30% | A real company with a real pain: a late delivery can trigger termination and a poor past-performance rating. The demo is checked against a real award. Name the problem statement it fits. | Opening 20 seconds of the video; README "Who benefits" |
-| Use of Meta AI tooling | 25% | Three Meta models doing four distinct jobs: native PDF reading with checked citations, multimodal quote intake, voicemail transcription, and a tool-calling agent for impact analysis | Each AI result is labeled with the Muse model that produced it |
+| Impact | 30% | A real company with two real pains: chasing contracts that were never a fit, and late deliveries that can trigger termination and a poor past-performance rating. The demo is checked against a real award. Koun is customer zero for a product any small supplier could use. Name the problem statement it fits. | Opening 20 seconds of the video; README "Who benefits" and "Where it's going" |
+| Use of Meta AI tooling | 25% | Three Meta models doing five distinct jobs: triage of notices, native PDF reading with checked citations, multimodal quote intake, voicemail transcription, and a tool-calling agent for impact analysis | Each AI result is labeled with the Muse model that produced it |
 | Technical depth | 20% | Models read and explain, code computes, people decide: deterministic cost, date and cash math; schema-validated outputs; citation checks; a small eval set | Verified-citation badges; README architecture and eval table |
-| Demo | 25% | One real contract with two memorable moments (the award reveal and the voicemail), seeded data, a reset button and a replay fallback | 3-minute video plus a live link |
+| Demo | 25% | One continuous story from triage to rescue, with two memorable moments (the award reveal and the voicemail), seeded data, a reset button and a replay fallback | 3-minute video plus a live link |
 
-Rough split of build time: AI pipeline 40%, the three screens 25%, demo data 15%, video and submission 20%.
+Rough split of build time: AI pipeline 40%, the four screens 25%, demo data 15%, video and submission 20%.
+
+## Product direction
+
+**Decided: KounOS is Koun's own operating software first, designed so any small government supplier could use it. Whether to sell it as a B2B product is decided later, from Koun's own results.**
+
+- **Why not commit to SaaS now:** a product for other suppliers needs accounts, logins, billing, support and strict separation of each customer's data, and those customers would be the suppliers Koun bids against, trusting KounOS with their pricing. None of that helps win this hackathon or Koun's next bid.
+- **Why keep the door open:** Impact asks whether this could become something people use. Finding contracts is a crowded market (SamSearch, HigherGov, Govly and others); keeping awarded orders on track for small resellers is less served, and that's KounOS's strongest angle.
+- **What that means for the build:** everything specific to a company (set-aside certifications, product categories, margin floor) lives in one company profile file, never in code. No multi-company accounts or logins in the prototype.
+- **For the pitch:** "Koun is customer zero."
+- **Revisit** after Koun has used KounOS on real bids and orders for a few months: is it saving real hours, and would other small suppliers pay for it? That answer also settles the license question (below).
 
 ## Rules compliance
 
@@ -33,7 +43,8 @@ Four things can disqualify the project: private code, unclear new work, missing 
 
 - A public repo whose first commit is an empty scaffold, so the history shows everything was built during the event. Commit small and often.
 - A license chosen on day one. A permissive license (MIT, Apache-2.0) lets anyone reuse the code commercially; AGPL-3.0 requires anyone who runs a modified version as a service to publish their changes.
-- This repo is a public prototype. Koun's real supplier pricing, customer names and margin rules stay out of it; production KounOS will live in a separate private repo later.
+- This repo is a public prototype. Koun's real supplier pricing, customer names and margin rules stay out of it; production KounOS will live in a separate private repo later. The demo company profile uses Koun's public eligibility facts (as registered in SAM.gov) and a demonstration margin floor, not Koun's real one.
+- The license choice depends on the product direction: if a B2B product is likely, a permissive license lets anyone host the prototype, while AGPL or keeping later work private protects it.
 - A written agreement that Koun owns code written by any teammate who isn't a Koun employee.
 - Dependency licenses checked. PyMuPDF is AGPL-licensed, so the plan uses pdfplumber (MIT) for PDF text.
 - The API key lives in `.env`, which is gitignored; `.env.example` is committed; a secret scan runs before the repo goes public.
@@ -48,14 +59,18 @@ Four things can disqualify the project: private code, unclear new work, missing 
 
 ## Scope
 
-Three screens plus an assistant panel are the whole product. Stretch work starts only after the full story runs end to end (Gate 2, Thursday night).
+Four screens plus an assistant panel are the whole product. Stretch work starts only after the core story runs end to end (Gate 2, Thursday night).
 
-**Must-have**
+**Must-have: job 1, decide what's worth pursuing**
 
-1. **Solicitation reader.** Upload a PDF and get a requirements table: line item, part number or NSN, quantity, unit, required delivery, key clauses. Every row links to its page with the passage highlighted and a "verified" or "needs review" badge. Missing or ambiguous items are flagged.
-2. **Quote comparison.** Upload three quotes in three formats. KounOS normalizes them and checks each against the requirements. A bid-price input recomputes landed cost and margin live, and KounOS computes the lowest safe bid at a target margin. The user selects a supplier, gets a one-page sourcing package, and sees KounOS's lowest safe bid next to the actual award.
-3. **Order monitor.** A clearly labeled simulated award replays the contract as if Koun had won, linking the customer commitment to the supplier PO, shipment, invoice and payment dates. A supplier update (voicemail or email) becomes an event, rules raise a flag, and Muse Wonder explains the impact, prices recovery options and drafts a note for review.
-4. **Ask KounOS.** A side panel that answers "Which orders need attention today?" across five seeded orders, with every answer linking to the records it used.
+1. **Opportunity triage.** Load a saved batch of 6 to 8 notices. For each, Muse Spark extracts the fit facts with citations: set-aside, product category, quantities, delivery window, estimated value and any competition signal. Plain code scores them against the company profile and labels each notice "pursue" or "pass", with a reason per factor. Opening a "pursue" notice goes to the solicitation reader.
+2. **Solicitation reader.** Upload a PDF and get a requirements table: line item, part number or NSN, quantity, unit, required delivery, key clauses. Every row links to its page with the passage highlighted and a "verified" or "needs review" badge. Missing or ambiguous items are flagged.
+3. **Quote comparison and bid recommendation.** Upload three quotes in three formats. KounOS normalizes them and checks each against the requirements. A bid-price input recomputes landed cost and margin live, and KounOS computes the lowest safe bid at a target margin. KounOS recommends "pursue at $X" or "pass, because...". The user selects a supplier, gets a one-page sourcing package, and sees the recommendation next to the actual award.
+
+**Must-have: job 2, keep awarded orders on track**
+
+4. **Order monitor.** A clearly labeled simulated award replays the contract as if Koun had won, linking the customer commitment to the supplier PO, shipment, invoice and payment dates. A supplier update (voicemail or email) becomes an event, rules raise a flag, and Muse Wonder explains the impact, prices recovery options and drafts a note for review.
+5. **Ask KounOS.** A side panel that answers "Which orders need attention today?" across five seeded orders, with every answer linking to the records it used.
 
 **Stretch, in priority order**
 
@@ -64,7 +79,7 @@ Three screens plus an assistant panel are the whole product. Stretch work starts
 3. An eval page showing extraction accuracy per field on the labeled solicitations.
 4. A scanned, image-only solicitation to show the reader doesn't depend on a text layer.
 
-**Out of scope** (say so in the README): live SAM.gov or DIBBS feeds, bid submission, sending any email or message, logins and multiple users, accounting integrations, and any real supplier or customer data.
+**Out of scope** (say so in the README): live SAM.gov or DIBBS feeds (triage runs on a saved batch), bid submission, sending any email or message, logins and multiple users or companies, accounting integrations, and any real supplier or customer data.
 
 ## Architecture and tech stack
 
@@ -73,6 +88,7 @@ A Next.js front end over a Python API keeps PDF handling and model calls in one 
 ```mermaid
 flowchart TB
   subgraph WEB["Next.js app (browser)"]
+    G["Triage view"]
     S["Solicitation view"]
     Q["Quote comparison"]
     O["Order monitor"]
@@ -81,6 +97,7 @@ flowchart TB
   subgraph API["FastAPI service (Python)"]
     I["PDF ingest: page text + word positions"]
     X["Extraction: schema output, citation check"]
+    F["Fit scoring: company profile rules, pursue or pass"]
     C["Cost engine: landed cost, margin, lowest safe bid, cash gap"]
     R["Risk rules: date slips, margin floor"]
     T["Agent tools: read-only, for Wonder + Ask"]
@@ -94,17 +111,18 @@ flowchart TB
   WEB <-->|"JSON + uploads"| API
   API <-->|"reads, writes"| DB
   I --> X
+  X --> F
   X --> MS
   X --> MV
   T --> MW
   T --> MS
 ```
 
-Only the extraction step and the agent tools involve a Meta model. PDF ingest, the cost engine and the risk rules are plain code with no model; every number and date comparison comes from code a judge can read.
+Only the extraction step and the agent tools involve a Meta model. PDF ingest, fit scoring, the cost engine and the risk rules are plain code with no model; every score, number and date comparison comes from code a judge can read.
 
 | Layer | Choice | Why |
 | --- | --- | --- |
-| Front end | Next.js, Tailwind, shadcn/ui | Fast to polish three screens |
+| Front end | Next.js, Tailwind, shadcn/ui | Fast to polish four screens |
 | PDF viewer | react-pdf (PDF.js) with text-layer highlights | Click a requirement, jump to its passage |
 | API | Python, FastAPI, Pydantic | Pydantic models double as the JSON schemas sent for structured output |
 | PDF text and positions | pdfplumber | Page text with word coordinates for highlights and snippet checks; MIT-licensed, unlike PyMuPDF (AGPL) |
@@ -113,7 +131,7 @@ Only the extraction step and the agent tools involve a Meta model. PDF ingest, t
 | Model client | OpenAI Python SDK, base URL `https://api.meta.ai/v1`, Responses API | One client for every Muse model |
 | Hosting | Vercel for the front end; Render, Railway or Fly.io for the API | A live link judges can open |
 
-Core records, in order: Solicitation, Award record (the actual award's total, date and offers received), Requirement (with source references), Quote, Quote line, Sourcing decision, Order, Supplier PO, Shipment, Invoice, Event, Flag. Each source reference stores the document, page, snippet, box coordinates and a verified flag.
+Core records, in order: Company profile (set-aside certifications, NAICS codes and product categories, margin floor, scoring weights), Notice, Fit assessment (per-factor score and reason, with citations), Solicitation, Award record (the actual award's total, date and offers received), Requirement (with source references), Quote, Quote line, Sourcing decision, Order, Supplier PO, Shipment, Invoice, Event, Flag. Each source reference stores the document, page, snippet, box coordinates and a verified flag.
 
 ## Where Meta AI does the work
 
@@ -121,6 +139,7 @@ Meta's developer platform is the Meta Model API and its Muse models (the separat
 
 | Step | Model and feature | Technique | Why it scores |
 | --- | --- | --- | --- |
+| Triage notices | `muse-spark-1.3`: native PDF input, structured output | Extract the fit facts from each notice in the batch, each with a page and snippet; code scores them against the company profile | Judgment that's explainable: every pursue or pass shows its reasons |
 | Read the solicitation | `muse-spark-1.3`: native PDF input, structured output | Send the PDF as-is. The JSON schema requires a page number and verbatim snippet per field; code then checks each snippet against the page text and marks it verified or needs review | Citations are checked, not trusted |
 | Flag gaps | `muse-spark-1.3`, reasoning effort `high` | A second pass asks what a contracting specialist would question (missing packaging spec, unclear unit of issue, conflicting dates) and links each flag to its clause | Judgment beyond extraction |
 | Read quotes | `muse-spark-1.3`: PDF and image input | One schema for a PDF quote, a phone photo of a printed quote, and an email screenshot | Multimodal in one pipeline |
@@ -140,6 +159,8 @@ Practical details:
 ## Demo data kit
 
 One recently awarded civilian solicitation, its public award record, and a fictional supplier world make the story believable and checkable, with no rights problems. The numbers below are illustrative; scale them to the award picked.
+
+**Triage batch and company profile.** The batch is 6 to 8 saved civilian-agency notices: the demo solicitation, the two eval solicitations, and 3 to 5 more chosen so that some pass for different reasons (a set-aside Koun doesn't hold, products Koun doesn't sell, a delivery window too short, a value too small). The company profile, `data/company_profile.json`, holds Koun's public eligibility facts (set-aside certifications and NAICS codes, as registered in SAM.gov), the product categories Koun sells, scoring weights, and a demonstration margin floor rather than Koun's real one. The demo solicitation must come out "pursue".
 
 **1. The solicitation and its award.** Start from the award side, so the answer key is guaranteed to exist. Search SAM.gov Contract Awards or USAspending.gov for VA, USDA, Interior, GSA, NIH, NOAA or NASA awards with product codes 59, 61 or 62, signed in the last six months. Take the solicitation ID from the award and pull the original notice and attachments from SAM.gov Contract Opportunities. Keep only supply-only buys with 2 to 4 line items, delivery stated in days after award, more than one offer received, and a text-based PDF under 20 pages. Record the award's total, date and number of offers. Pick two more awarded solicitations for the eval set and hand-label their expected fields as JSON.
 
@@ -172,16 +193,16 @@ The scripted comparison runs on Track B, because the story needs controlled trad
 
 ## Schedule
 
-The whole story runs end to end, rough edges and all, by Thursday night; Friday adds the smart parts, the weekend goes to stretch features and polish, Monday is the feature freeze, and Tuesday is the video. If Thursday's gate slips, Friday becomes catch-up and the stretch list is cut, not the story.
+The core story (read, compare, recommend, monitor) runs end to end, rough edges and all, by Thursday night; Friday adds triage and the smart parts, the weekend goes to deployment, stretch features and polish, Monday is the feature freeze, and Tuesday is the video. Triage reuses Tuesday's extraction pipeline, which is why it can come after Gate 2. If Thursday's gate slips, Friday becomes catch-up and the stretch list is cut, not the story.
 
 | Day | Focus | Gate |
 | --- | --- | --- |
 | Mon Oct 26 | Set up and prove the API: public repo, license, key; one PDF into Muse Spark 1.3, schema-valid JSON back | |
 | Tue Oct 27 | Read the solicitation: line items with page citations, snippet checks, PDF highlights, gap flags | Gate 1: the demo solicitation extracts with verified citations |
-| Wed Oct 28 | Compare quotes: three quote formats, requirement checks, landed cost and margin, supplier pick, award reveal | |
-| Thu Oct 29 | Monitor the order: simulated award, linked timeline, voicemail to order event, rule-based flags | **Gate 2: the whole story runs end to end, rough edges allowed** |
-| Fri Oct 30 | Explain and assist: Muse Wonder impact analysis, priced options, draft note, Ask KounOS, deploy | |
-| Sat Oct 31 | Polish and stretch: UI polish, demo reset and replay fallback, shutdown scenario if ahead | |
+| Wed Oct 28 | Compare quotes: three quote formats, requirement checks, landed cost and margin, supplier pick, bid recommendation and award reveal | |
+| Thu Oct 29 | Monitor the order: simulated award, linked timeline, voicemail to order event, rule-based flags | **Gate 2: the core story runs end to end, rough edges allowed** |
+| Fri Oct 30 | Triage and assist: fit facts and pursue-or-pass scoring, triage screen, Muse Wonder impact analysis, priced options, draft note, Ask KounOS | |
+| Sat Oct 31 | Deploy, polish and stretch: deploy, UI polish, demo reset and replay fallback, shutdown scenario if ahead | |
 | Sun Nov 1 | Harden: award backtest, fix what the judge flagged, README with architecture and evals | |
 | Mon Nov 2 | Rehearse and freeze: final eval run, two dry runs of the demo script on the live link | Gate 3: feature freeze at the end of Monday |
 | Tue Nov 3 | Record the video: record, cut to 3 minutes, add captions, final repo check | |
@@ -191,14 +212,15 @@ The day-by-day work items, with acceptance criteria, are in `TASKS.md`.
 
 ## Demo video script
 
-The video follows one real contract from solicitation to rescue in 3 minutes. The award reveal and the voicemail are the two moments judges will remember.
+The video follows the two jobs in 3 minutes: deciding what to pursue, then keeping the order on track. The award reveal and the voicemail are the two moments judges will remember.
 
 | Time | On screen | Say |
 | --- | --- | --- |
-| 0:00–0:20 | A folder of PDFs, emails and a spreadsheet, then KounOS | Koun is a small government supplier. One missed delivery can cost a contract and a past-performance rating, and today the work lives in scattered files. |
-| 0:20–0:50 | Upload the awarded solicitation; requirements fill in; click a row and the PDF jumps to the highlighted passage | This is a real [agency] contract awarded in [month]. Muse Spark reads it directly. Every field links to its source, and our code verifies each quote before it's trusted. One gap is flagged for review. |
-| 0:50–1:25 | Drop in a PDF, a photo and an email screenshot; the comparison fills; drag the bid price; select Brightline | Three formats, one comparison. The cheapest misses the date; the next fails a sourcing rule. Margins recompute in code as the bid changes. |
-| 1:25–1:40 | The reveal: KounOS's lowest safe bid next to the actual award's total, date and offers, with caveats | At a 10% margin, KounOS says we could have bid $X. The government paid $Y. [We'd have been competitive / KounOS would have told us to skip this one.] |
+| 0:00–0:15 | A folder of PDFs, emails and a spreadsheet, then KounOS | Koun is a small government supplier. We have to pick the right contracts and then deliver every one on time, and today the work lives in scattered files. |
+| 0:15–0:30 | Triage: the batch of notices sorts into pursue and pass; hover a pass to see its reasons | KounOS reads every notice and checks it against our profile. Wrong set-aside, pass. Products we don't sell, pass. This one fits. |
+| 0:30–0:55 | Open the pursue notice; requirements fill in; click a row and the PDF jumps to the highlighted passage | This is a real [agency] contract awarded in [month]. Muse Spark reads it directly. Every field links to its source, and our code verifies each quote before it's trusted. One gap is flagged for review. |
+| 0:55–1:25 | Drop in a PDF, a photo and an email screenshot; the comparison fills; drag the bid price; select Brightline | Three formats, one comparison. The cheapest misses the date; the next fails a sourcing rule. Margins recompute in code as the bid changes. |
+| 1:25–1:40 | The recommendation, "pursue at $X", next to the actual award's total, date and offers, with caveats | At a 10% margin, KounOS says pursue at $X. The government paid $Y. [We'd have been competitive / KounOS would have told us to skip this one.] |
 | 1:40–1:50 | "Simulated award" banner; order timeline with linked records | Now we replay the contract as if Koun had won, to show what happens after the award. |
 | 1:50–2:25 | Play the voicemail; transcript appears; the flag fires; Wonder's analysis with priced options; draft note | Muse Voice Transcribe turns the call into an event. Muse Wonder traces it to the customer date, prices each fix and drafts a note. A person decides; nothing is sent. |
 | 2:25–2:45 | Ask KounOS: "Which orders need attention today?" | Answers come from tool calls over our records, with a link to each one. |
@@ -214,6 +236,7 @@ The biggest risk is a slow or wrong model response in front of judges, so every 
 | --- | --- | --- |
 | Extraction errors on the real solicitation | Choose the document early; check every snippet; run the eval on three labeled solicitations | "Needs review" badges show errors instead of hiding them |
 | Real supplier quotes don't arrive or can't be shown | Send requests Tuesday morning; follow up by phone; ask for written permission up front | Fictional quotes carry the scripted story; cut-off Wednesday 5 pm |
+| Triage scores look arbitrary | Plain rules with weights in the company profile; every factor shows its reason and citation | Show the facts without a score and let the user decide |
 | The award comparison is read as an accuracy score | Pick an award under six months old with more than one offer; show the caveats on screen | Frame it as "would we have been competitive," never as a score |
 | The contract reads as political or military | Civilian agencies only; skip DoD, the Department of War, DHS, the Bureau of Prisons and weapons labs | Swap in an eval solicitation from a neutral agency |
 | Slow responses during live judging | Low or medium reasoning effort for extraction; stream progress; cache the solicitation prompt | Demo mode replays stored responses for the scripted path |
@@ -229,7 +252,7 @@ The biggest risk is a slow or wrong model response in front of judges, so every 
 Submit by 2 PM Phoenix time (5 PM ET) on Wednesday, Nov 4, four hours before the 9 PM ET deadline. Nothing below should be done for the first time on submission day.
 
 - Repo is public, licensed, and passes a secret scan
-- README covers the problem and who it's for, video and live links, setup, architecture, which Meta model does what, the award comparison and its caveats, "Built during the hackathon," out of scope, eval results, and data provenance (solicitation and award links; which supplier data is fictional)
+- README covers the problem and who it's for, where the product is going, video and live links, setup, architecture, which Meta model does what, the award comparison and its caveats, "Built during the hackathon," out of scope, eval results, and data provenance (solicitation and award links; which supplier data is fictional)
 - Written permission on file for any real supplier quote shown; teammate IP agreement signed
 - Demo video is within the length limit and captioned
 - Live link works from a fresh browser, and "Reset demo" restores the seeded state
@@ -240,6 +263,7 @@ Submit by 2 PM Phoenix time (5 PM ET) on Wednesday, Nov 4, four hours before the
 ## Open questions (humans resolve these)
 
 - Which listed problem statement does KounOS fit?
+- Company profile: which set-aside certifications does Koun hold, which NAICS codes and product categories does it sell, and what demonstration margin floor should the demo use?
 - Is there a video length limit?
 - How many people are on the team, and who owns the AI pipeline, the UI, and the demo?
 - Does the hackathon provide Meta Model API credits or require specific Meta models?

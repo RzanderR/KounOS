@@ -15,10 +15,10 @@ Use this file to review any change, branch or the whole project. Score from evid
 
 | Criterion | Strong evidence |
 | --- | --- |
-| Impact | The problem is concrete: a late delivery can cost a contract and a past-performance rating. The demo runs on a real, civilian-agency solicitation and checks the bid against the real award. The README names who benefits and the problem statement. |
-| Use of Meta AI tooling | Three Meta models doing distinct jobs: native PDF reading with citations that code verifies; one schema reading PDF, photo and screenshot quotes; voicemail transcription into a structured event; a Muse Wonder tool-calling agent whose numbers all come from tools. Each AI result in the UI is labeled with its model. |
-| Technical depth and execution | Deterministic, unit-tested math for costs, margins, lowest safe bid, dates and cash. Schema-validated model output. Citation checks. Number grounding for explanations. Untrusted documents treated as data. Model IDs in config with a fallback. An eval with real numbers in the README. |
-| Demo | One continuous story: read, compare, price, reveal against the award, simulated award, voicemail delay, priced recovery options, Ask KounOS. Seeded data, a reset button, a replay mode that says when it's on, and an end-to-end test that passes on the live link. |
+| Impact | Both jobs are concrete: chasing contracts that were never a fit wastes a small team's time, and a late delivery can cost a contract and a past-performance rating. The demo runs on real, civilian-agency solicitations and checks the bid against the real award. The README names who benefits, where the product is going (Koun as customer zero) and the problem statement. |
+| Use of Meta AI tooling | Three Meta models doing distinct jobs: triage of a batch of notices, with cited fit facts; native PDF reading with citations that code verifies; one schema reading PDF, photo and screenshot quotes; voicemail transcription into a structured event; a Muse Wonder tool-calling agent whose numbers all come from tools. Each AI result in the UI is labeled with its model. |
+| Technical depth and execution | Deterministic, unit-tested math for costs, margins, lowest safe bid, dates and cash, and rule-based pursue-or-pass scoring driven by the company profile. Schema-validated model output. Citation checks. Number grounding for explanations. Untrusted documents treated as data. Model IDs in config with a fallback. An eval with real numbers in the README. |
+| Demo | One continuous story: triage, read, compare, recommend a bid, reveal against the award, simulated award, voicemail delay, priced recovery options, Ask KounOS. Seeded data, a reset button, a replay mode that says when it's on, and an end-to-end test that passes on the live link. |
 
 ## Rules that disqualify a project
 

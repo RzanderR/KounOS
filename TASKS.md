@@ -16,11 +16,12 @@ Deadline: **Wed, Nov 4, 2026, 9 PM ET.** Submit by 2 PM Phoenix time (5 PM ET).
 - [ ] **H02** Get a Meta Model API key and put it in `.env` as `MODEL_API_KEY`.
 - [ ] **H03** Find the demo solicitation award-first (civilian agency, supply-only, 2 to 4 line items, more than one offer, text-based PDF under 20 pages) plus two more for the eval. Put the PDFs in `data/solicitations/` and each award's total, date, offers received and source link in `data/awards/<solicitation-id>.json`.
 - [ ] **H04** List 6 to 8 suppliers for budgetary quote requests.
+- [ ] **H15** Company profile for `data/company_profile.json`: Koun's set-aside certifications and NAICS codes (as registered in SAM.gov), the product categories Koun sells, and a demonstration margin floor (not Koun's real one).
 - [ ] **A01** Scaffold the repo: `api/` (FastAPI with a health route and pytest), `web/` (Next.js with Tailwind and shadcn/ui), `.env.example`, `.gitignore`, and scripts for test, lint, typecheck and build. Fill in the commands section of `AGENTS.md`.
   - Done when: API tests pass, the web app builds, both start locally, and `AGENTS.md` lists the real commands.
 - [ ] **A02** Meta API smoke test: `api/scripts/smoke_meta.py` sends one PDF from `data/solicitations/` to `MODEL_READ` with a small JSON schema and prints the parsed result and token usage.
   - Done when: it runs against the real API, the output validates against a Pydantic model, and token usage is printed.
-- [ ] **A03** Contract first: Pydantic schemas for `SourceRef`, `Requirement`, `Solicitation`, `AwardRecord`, `Quote`, `QuoteLine`, `SourcingDecision`, `Order`, `SupplierPO`, `Shipment`, `Invoice`, `Event`, `Flag`; API route stubs; TypeScript types generated for `web/`.
+- [ ] **A03** Contract first: Pydantic schemas for `CompanyProfile`, `Notice`, `FitAssessment`, `SourceRef`, `Requirement`, `Solicitation`, `AwardRecord`, `Quote`, `QuoteLine`, `SourcingDecision`, `Order`, `SupplierPO`, `Shipment`, `Invoice`, `Event`, `Flag`; API route stubs; TypeScript types generated for `web/`.
   - Done when: schemas and stubs are committed, OpenAPI docs load, and the web app imports the generated types.
 
 ## Tue Oct 27: read the solicitation
@@ -52,9 +53,10 @@ Deadline: **Wed, Nov 4, 2026, 9 PM ET.** Submit by 2 PM Phoenix time (5 PM ET).
   - Done when: tests reproduce the plan's numbers: landed costs $42,100 / $44,150 / $46,900; margins 22.0% / 18.2% / 13.1% at a $54,000 bid; lowest safe bid $52,111 for $46,900 at 10%.
 - [ ] **A13** Quote comparison screen: side-by-side quotes with pass or fail checks; a bid-price input that recomputes margins live; supplier selection; a one-page printable sourcing package.
   - Done when: changing the bid updates every margin without a model call.
-- [ ] **A14** Award reveal view: KounOS's lowest safe bid next to the actual award's total, date and offers received, with three caveats on screen (only totals are public; today's quotes reflect today's prices; one award is one data point).
-  - Done when: it reads `data/awards/` and shows all three caveats.
+- [ ] **A14** Bid recommendation and award reveal: KounOS recommends "pursue at $X" (the lowest safe bid with the chosen supplier) or "pass, because..." (no compliant quote, or the margin floor can't be met), computed in code. It appears next to the actual award's total, date and offers received, with three caveats on screen (only totals are public; today's quotes reflect today's prices; one award is one data point).
+  - Done when: it reads `data/awards/`, shows the recommendation and all three caveats, and a test shows "pass" when no quote is compliant.
 - [ ] **H08** 5 pm quote cut-off. Add any real quotes that arrived with written permission, labeled real.
+- [ ] **H16** Save the triage batch: 3 to 5 more civilian-agency notices in `data/notices/`, chosen so some fail for different reasons (a set-aside Koun doesn't hold, products Koun doesn't sell, too short a delivery window, too small a value). With the demo and eval solicitations, the batch is 6 to 8 notices.
 - [ ] **A15** Eval script `python -m eval.run`: per-field accuracy and citation-verified rate for each labeled solicitation, printed as a Markdown table.
   - Done when: it runs on all three solicitations.
 
@@ -70,9 +72,16 @@ Deadline: **Wed, Nov 4, 2026, 9 PM ET.** Submit by 2 PM Phoenix time (5 PM ET).
   - Done when: a test shows the delay event yields arrival Dec 19, two days late, and raises a flag.
 - [ ] **A20** End-to-end demo-path test (browser automation) from upload to the delay flag.
   - Done when: it passes locally from a reset.
-- [ ] **Gate 2 (human):** the whole story runs end to end, rough edges allowed. Stretch work starts only after this.
+- [ ] **Gate 2 (human):** the core story (read, compare, recommend, monitor) runs end to end, rough edges allowed. Stretch work starts only after this.
 
-## Fri Oct 30: explain and assist
+## Fri Oct 30: triage and assist
+
+- [ ] **A34** Fit facts: for each notice in the triage batch, `MODEL_READ` extracts set-aside, product category, quantities, delivery window, estimated value and any competition signal, each with a page and snippet checked by the A06 citation check.
+  - Done when: every notice in the batch produces a validated record, with fields not found marked "not stated" rather than guessed.
+- [ ] **A35** Fit scoring in code against `data/company_profile.json`: set-aside eligibility, product category match, delivery feasibility, value band and competition, weighted by the profile, giving "pursue" or "pass" with a reason per factor.
+  - Done when: tests cover a pass for each reason, and the demo solicitation scores "pursue".
+- [ ] **A36** Triage screen: the batch ranked by fit, pursue or pass with per-factor reasons and citations, the model label on extracted facts; opening a notice goes to the solicitation screen.
+  - Done when: a screenshot shows the ranked batch and one notice's reasons.
 
 - [ ] **A21** Read-only agent tools (order, commitments, alternate quotes, margin, cash gap) and the impact analysis on `MODEL_IMPACT` with priced options: expedite (about $1,100 overnight, on time, margin 13.1% to 11.1%), request a two-day extension, partial shipment if allowed, and why switching suppliers fails. Falls back to `MODEL_READ` if `MODEL_IMPACT` is unavailable.
   - Done when: the analysis names all four options with numbers that match the cost engine.
@@ -81,18 +90,18 @@ Deadline: **Wed, Nov 4, 2026, 9 PM ET.** Submit by 2 PM Phoenix time (5 PM ET).
 - [ ] **A23** Draft note to the contracting officer or supplier for a person to edit. No send capability anywhere.
 - [ ] **A24** Ask KounOS panel: answers "Which orders need attention today?" from read-only tools across the five seeded orders, linking every record used.
 - [ ] **H10** Create hosting accounts and secrets for the front end and API.
+
+## Sat Oct 31: deploy, polish and stretch
+
 - [ ] **A25** Deploy the front end and API; run the end-to-end test against the live link.
-
-## Sat Oct 31: polish and stretch
-
-- [ ] **A26** Polish the three screens, including loading and error states; run `/taste` on each.
+- [ ] **A26** Polish the four screens, including loading and error states; run `/taste` on each.
 - [ ] **A27** Replay mode (`DEMO_MODE=replay`) serving stored responses for the scripted path, with a visible indicator in the UI.
 - [ ] **A28** Stretch, only after Gate 2: shutdown scenario toggle that pushes government payment dates out and shows cash exposure per order.
 
 ## Sun Nov 1: harden
 
 - [ ] **A29** Stretch: award backtest on 5 to 10 more past awards using public list prices; chart lowest safe bid against each actual award for the README.
-- [ ] **A30** Fix every blocking issue from reviews; the end-to-end test passes on the live link from a fresh browser.
+- [ ] **A30** Fix every blocking issue from reviews; extend the end-to-end test to start at triage; it passes on the live link from a fresh browser.
 - [ ] **A31** README sync: architecture, model map, "Built during the hackathon" list, third-party table, eval table.
 
 ## Mon Nov 2: rehearse and freeze
