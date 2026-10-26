@@ -282,6 +282,8 @@ eval/    Hand-labeled expected fields and the eval script
 
 All code in this repository was written between **October 26 and November 4, 2026**. No pre-existing Koun code was used. The first commit is an empty scaffold: [FIRST COMMIT LINK].
 
+The prototype was built with the help of AI coding agents: Muse Code (Meta) for implementation and Claude Code (Anthropic) for planning and review.
+
 <!-- TODO: keep this list matched to what actually shipped. -->
 
 - Opportunity triage: pursue-or-pass on a batch of notices, scored against the company profile with a reason per factor
