@@ -314,6 +314,7 @@ The prototype was built with the help of AI coding agents: Muse Code (Meta) for 
 | Next.js, React | MIT | Web app |
 | Tailwind CSS | MIT | Styling |
 | shadcn/ui | MIT | UI components |
+| shadcn runtime (@base-ui/react, cn, tw-animate-css, class-variance-authority) | MIT (class-variance-authority: Apache-2.0) | shadcn/ui primitives and utils |
 | react-pdf (PDF.js) | MIT (PDF.js: Apache-2.0) | PDF viewer |
 | FastAPI | MIT | API |
 | Pydantic, SQLModel | MIT | Schemas and database |
