@@ -21,6 +21,10 @@ node_modules/
 out/
 dist/
 
+# Sandbox npm redirects (session-local cache/config)
+.npm-cache/
+.npmrc-local
+
 # Local data
 *.db
 *.sqlite

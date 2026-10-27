@@ -253,7 +253,7 @@ uvicorn app.main:app --reload --port 8000
 
 # Web app (new terminal, from the repo root)
 cd web
-npm install
+npm ci
 npm run dev                   # http://localhost:3000
 ```
 
@@ -266,6 +266,8 @@ npm run dev                   # http://localhost:3000
 | `MODEL_TRANSCRIBE` | Voicemail transcription | `muse-voice-transcribe-1.0` |
 | `DEMO_MODE` | `live` calls the models; `replay` serves stored responses for the scripted path | `live` |
 | `NEXT_PUBLIC_API_URL` | Where the web app finds the API | `http://localhost:8000` |
+
+On Windows, activate the API venv with `.venv\Scripts\activate` (from `api/`) instead of `source .venv/bin/activate`.
 
 ### Repository layout
 
@@ -285,6 +287,8 @@ All code in this repository was written between **October 26 and November 4, 202
 The prototype was built with the help of AI coding agents: Muse Code (Meta) for implementation and Claude Code (Anthropic) for planning and review.
 
 <!-- TODO: keep this list matched to what actually shipped. -->
+
+- Running scaffold: API health route and a placeholder web shell with live API status
 
 - Opportunity triage: pursue-or-pass on a batch of notices, scored against the company profile with a reason per factor
 - Solicitation reader with page-linked, verified citations and gap flags
@@ -310,6 +314,7 @@ The prototype was built with the help of AI coding agents: Muse Code (Meta) for 
 | Next.js, React | MIT | Web app |
 | Tailwind CSS | MIT | Styling |
 | shadcn/ui | MIT | UI components |
+| shadcn runtime (shadcn, @base-ui/react, cn, tw-animate-css, class-variance-authority) | MIT (class-variance-authority: Apache-2.0) | shadcn/ui primitives and utils |
 | react-pdf (PDF.js) | MIT (PDF.js: Apache-2.0) | PDF viewer |
 | FastAPI | MIT | API |
 | Pydantic, SQLModel | MIT | Schemas and database |
@@ -317,8 +322,12 @@ The prototype was built with the help of AI coding agents: Muse Code (Meta) for 
 | pdfplumber | MIT | PDF text and word positions |
 | RapidFuzz | MIT | Snippet matching |
 | OpenAI Python SDK | Apache-2.0 | Client for the Meta Model API |
-| Inter font | SIL Open Font License 1.1 | Typeface |
+| Geist font | SIL Open Font License 1.1 | Typeface |
 | Lucide icons | ISC | Icons |
+| Pydantic Settings | MIT | Env-based API settings |
+| pytest, httpx | MIT (httpx: BSD-3-Clause) | API tests |
+| ruff, mypy | MIT | API lint and typecheck |
+| ESLint, TypeScript | MIT (TypeScript: Apache-2.0) | Web lint and types |
 
 Meta's models are called as hosted services and are not bundled in this repository.
 
