@@ -253,7 +253,7 @@ uvicorn app.main:app --reload --port 8000
 
 # Web app (new terminal, from the repo root)
 cd web
-npm install
+npm ci
 npm run dev                   # http://localhost:3000
 ```
 
@@ -314,7 +314,7 @@ The prototype was built with the help of AI coding agents: Muse Code (Meta) for 
 | Next.js, React | MIT | Web app |
 | Tailwind CSS | MIT | Styling |
 | shadcn/ui | MIT | UI components |
-| shadcn runtime (@base-ui/react, cn, tw-animate-css, class-variance-authority) | MIT (class-variance-authority: Apache-2.0) | shadcn/ui primitives and utils |
+| shadcn runtime (shadcn, @base-ui/react, cn, tw-animate-css, class-variance-authority) | MIT (class-variance-authority: Apache-2.0) | shadcn/ui primitives and utils |
 | react-pdf (PDF.js) | MIT (PDF.js: Apache-2.0) | PDF viewer |
 | FastAPI | MIT | API |
 | Pydantic, SQLModel | MIT | Schemas and database |
@@ -322,7 +322,7 @@ The prototype was built with the help of AI coding agents: Muse Code (Meta) for 
 | pdfplumber | MIT | PDF text and word positions |
 | RapidFuzz | MIT | Snippet matching |
 | OpenAI Python SDK | Apache-2.0 | Client for the Meta Model API |
-| Inter font | SIL Open Font License 1.1 | Typeface |
+| Geist font | SIL Open Font License 1.1 | Typeface |
 | Lucide icons | ISC | Icons |
 | Pydantic Settings | MIT | Env-based API settings |
 | pytest, httpx | MIT (httpx: BSD-3-Clause) | API tests |
