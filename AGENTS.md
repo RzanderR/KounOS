@@ -4,7 +4,7 @@ Instructions for coding agents working in this repository. Read this file first,
 
 ## What this is
 
-KounOS is a hackathon prototype for Koun Logistics LLC: an AI procurement workspace that reads a federal solicitation, compares supplier quotes, prices a safe bid, checks it against the real award, and monitors a simulated order so a supplier delay is caught before it becomes a missed delivery.
+KounOS is a hackathon prototype for Koun Logistics LLC that does two jobs for a small government supplier: decide which contracts are worth pursuing, and keep every awarded order on track. It triages a batch of notices into pursue or pass, reads the solicitation worth pursuing, compares supplier quotes, recommends a bid and checks it against the real award, then monitors a simulated order so a supplier delay is caught before it becomes a missed delivery. Koun is customer zero; everything company-specific lives in `data/company_profile.json`, never in code.
 
 **Deadline: Wednesday, Nov 4, 2026 at 9 PM ET. Late submissions are not considered.** We submit by 2 PM Phoenix time (5 PM ET) that day.
 
@@ -59,7 +59,9 @@ README.md         public README for judges (keep it accurate)
 TASKS.md          backlog with acceptance criteria
 docs/PLAN.md      the baseline plan
 docs/RUBRIC.md    judging criteria and review scorecard
-docs/DECISIONS.md settled design decisions (create it when the first one is made)
+docs/DECISIONS.md settled design decisions (the orchestrator records them)
+docs/WORKFLOW.md  how Claude Code (design, review) and Muse Code (build) hand work off
+docs/briefs/      one implementation brief per task, written by the orchestrator
 api/              FastAPI service: ingest, extraction, cost engine, rules, agent tools
 web/              Next.js app: solicitation, quotes, order monitor, Ask KounOS
 data/             demo scenario: public solicitation, award record, fictional quotes, voicemail
@@ -77,17 +79,18 @@ Fill in the exact commands below once task A01 creates them, and keep them curre
 
 ## How to work a task
 
-1. Read the task in `TASKS.md`, its "Done when" line, and the relevant section of `docs/PLAN.md`.
-2. Plan first (use `/plan`). For risky designs (citation checking, cost engine, order data model, impact agent), stress-test the plan with `/grilling` before writing code.
-3. Work on a branch named `task/<ID>-<short-name>`. Never commit to `main` directly and never force-push.
-4. Write tests with the code. Money and date logic needs unit tests using the example numbers in `docs/PLAN.md`.
-5. Run every check: tests, lint, typecheck, build, and the eval or end-to-end test when the task touches them.
-6. Review in a **separate session** with the rubric (`docs/RUBRIC.md`, scorecard format). Fix every blocking issue.
-7. Open a pull request whose description lists the task ID, what changed, check results and the scorecard. Tick the task in `TASKS.md` in the same PR.
-8. Record any design decision that future tasks depend on in `docs/DECISIONS.md` (use `/grill-with-docs`).
-9. If the work adds a user-visible feature, add it to the README's "Built during the hackathon" list.
+Claude Code designs and reviews; Muse Code builds. The full handoff protocol is in `docs/WORKFLOW.md`, and it wins over anything below. For builders:
 
-Stop and ask a human instead of guessing when: a task is marked **human**, acceptance criteria are unclear, a change would alter scope or the demo story, a rule above might be broken, or the same task fails review three times.
+1. Build only from a brief: `docs/briefs/<ID>.md` with `Status: ready`. No brief, no build.
+2. Run `/next-task` to pick up and build the next ready task, and `/fix-review <PR number>` to address a failed review.
+3. Plan first with `/plan`, inside the brief's scope. Stress-test risky designs (citation checking, cost engine, order data model, impact agent) with `/grilling`.
+4. Work on a branch named `task/<ID>-<short-name>`. Never commit to `main`, never force-push, never merge.
+5. Write tests with the code. Money, date and extraction logic uses the brief's test vectors.
+6. Run every check the brief lists, plus the commands above.
+7. Open a pull request using `.github/pull_request_template.md`. Tick the task in `TASKS.md` in the same pull request, and add user-visible features to the README's "Built during the hackathon" list.
+8. Don't edit `docs/PLAN.md`, `docs/RUBRIC.md`, `docs/DECISIONS.md` or briefs. Propose decisions in the pull request's "Questions" section; the orchestrator records them.
+
+Stop and ask a human instead of guessing when: a task is marked **human**, no ready brief exists, the brief is unclear or conflicts with the plan, a change would alter scope or the demo story, a rule above might be broken, or the same task fails review three times.
 
 ## Running subagents in parallel
 
