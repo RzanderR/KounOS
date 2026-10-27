@@ -17,7 +17,7 @@ Deadline: **Wed, Nov 4, 2026, 9 PM ET.** Submit by 2 PM Phoenix time (5 PM ET).
 - [ ] **H03** Find the demo solicitation award-first (civilian agency, supply-only, 2 to 4 line items, more than one offer, text-based PDF under 20 pages) plus two more for the eval. Put the PDFs in `data/solicitations/` and each award's total, date, offers received and source link in `data/awards/<solicitation-id>.json`.
 - [ ] **H04** List 6 to 8 suppliers for budgetary quote requests.
 - [ ] **H15** Company profile for `data/company_profile.json`: Koun's set-aside certifications and NAICS codes (as registered in SAM.gov), the product categories Koun sells, and a demonstration margin floor (not Koun's real one).
-- [ ] **A01** Scaffold the repo: `api/` (FastAPI with a health route and pytest), `web/` (Next.js with Tailwind and shadcn/ui), `.env.example`, `.gitignore`, and scripts for test, lint, typecheck and build. Fill in the commands section of `AGENTS.md`.
+- [x] **A01** Scaffold the repo: `api/` (FastAPI with a health route and pytest), `web/` (Next.js with Tailwind and shadcn/ui), `.env.example`, `.gitignore`, and scripts for test, lint, typecheck and build. Fill in the commands section of `AGENTS.md`.
   - Done when: API tests pass, the web app builds, both start locally, and `AGENTS.md` lists the real commands.
 - [ ] **A02** Meta API smoke test: `api/scripts/smoke_meta.py` sends one PDF from `data/solicitations/` to `MODEL_READ` with a small JSON schema and prints the parsed result and token usage.
   - Done when: it runs against the real API, the output validates against a Pydantic model, and token usage is printed.

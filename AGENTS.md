@@ -71,10 +71,19 @@ eval/             hand-labeled expected fields and the eval script
 Fill in the exact commands below once task A01 creates them, and keep them current:
 
 ```
-# api:  test, lint, typecheck, run
-# web:  test, lint, typecheck, build, run
-# eval: python -m eval.run
-# e2e:  demo-path browser test
+# api (from api/, venv active; create it with: python -m venv .venv)
+pytest                                    # test
+ruff check                                # lint
+mypy app                                  # typecheck
+python -m app.seed                        # seed (stub)
+uvicorn app.main:app --reload --port 8000 # run -> http://localhost:8000
+# web (from web/; no test runner yet in A01)
+npm run lint                              # lint
+npm run typecheck                         # typecheck
+npm run build                             # build
+npm run dev                               # run -> http://localhost:3000
+# eval: python -m eval.run (from A15)
+# e2e: demo-path browser test (from A20)
 ```
 
 ## How to work a task
