@@ -78,6 +78,7 @@ mypy app                                  # typecheck
 python -m app.seed                        # seed (stub)
 uvicorn app.main:app --reload --port 8000 # run -> http://localhost:8000
 # web (from web/; no test runner yet in A01)
+npm ci                                    # clean install
 npm run lint                              # lint
 npm run typecheck                         # typecheck
 npm run build                             # build
@@ -88,18 +89,18 @@ npm run dev                               # run -> http://localhost:3000
 
 ## How to work a task
 
-Claude Code designs and reviews; Muse Code builds. The full handoff protocol is in `docs/WORKFLOW.md`, and it wins over anything below. For builders:
+You build directly with the human: no briefs required, no review rounds. The loop is in `docs/WORKFLOW.md`, and it wins over anything below.
 
-1. Build only from a brief: `docs/briefs/<ID>.md` with `Status: ready`. No brief, no build.
-2. Run `/next-task` to pick up and build the next ready task, and `/fix-review <PR number>` to address a failed review.
-3. Plan first with `/plan`, inside the brief's scope. Stress-test risky designs (citation checking, cost engine, order data model, impact agent) with `/grilling`.
+1. Take the task from `TASKS.md` or the human's words; human words win. If a ready brief exists in `docs/briefs/`, use it, otherwise spec inline in the pull request.
+2. Run `/next-task` to pick up and build the next task, and `/fix-review <PR number>` to address review findings.
+3. For anything bigger than a small change, write the spec inline first (files, checks, acceptance). Stress-test risky designs (citation checking, cost engine, order data model, impact agent) with the grilling skills.
 4. Work on a branch named `task/<ID>-<short-name>`. Never commit to `main`, never force-push, never merge.
-5. Write tests with the code. Money, date and extraction logic uses the brief's test vectors.
-6. Run every check the brief lists, plus the commands above.
+5. Write tests with the code. Money, date and extraction logic uses the plan's test vectors (`docs/PLAN.md`) and `docs/DECISIONS.md`.
+6. Run every check the task needs, plus the commands above.
 7. Open a pull request using `.github/pull_request_template.md`. Tick the task in `TASKS.md` in the same pull request, and add user-visible features to the README's "Built during the hackathon" list.
-8. Don't edit `docs/PLAN.md`, `docs/RUBRIC.md`, `docs/DECISIONS.md` or briefs. Propose decisions in the pull request's "Questions" section; the orchestrator records them.
+8. Don't edit `docs/PLAN.md`, `docs/RUBRIC.md` or `docs/DECISIONS.md` without asking. Propose decisions in the pull request's "Questions" section; the human records them.
 
-Stop and ask a human instead of guessing when: a task is marked **human**, no ready brief exists, the brief is unclear or conflicts with the plan, a change would alter scope or the demo story, a rule above might be broken, or the same task fails review three times.
+Stop and ask a human instead of guessing when: a task is marked **human**, the request is unclear or conflicts with the plan, a change would alter scope or the demo story, a rule above might be broken, or the same check fails three times.
 
 ## Running subagents in parallel
 

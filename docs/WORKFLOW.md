@@ -1,73 +1,55 @@
-# Build workflow: Claude Code designs, Muse Code builds
+# Build workflow: human and Muse Code, direct
 
-How the two agents and the human hand work to each other. `AGENTS.md` points here; when the two disagree, this file wins for anything about the handoff.
+One builder, no handoffs. The human decides and supplies; Muse Code designs (inline), builds, checks, and opens pull requests. No briefs required, no review rounds.
 
 ## Roles
 
 | Who | Does | Does not |
 | --- | --- | --- |
-| **Human** | Makes decisions, does the H tasks, ticks gates, merges pull requests | Get surprised: every agent stop lands in chat or on a pull request |
-| **Claude Code** (orchestrator) | Writes a brief for each task, reviews every pull request against its brief and `docs/RUBRIC.md`, keeps `docs/PLAN.md`, `TASKS.md` and `docs/DECISIONS.md` current | Write product code (it may fix docs and config) |
-| **Muse Code** (builder) | Builds one brief at a time on a task branch, opens a pull request, fixes review findings | Change scope, the plan, the rubric, the briefs or the decisions log; merge |
+| **Human** | Decides scope, does the H tasks, supplies contracts/quotes/keys, ticks gates, merges pull requests | Get surprised: every stop lands in chat or on a pull request |
+| **Muse Code** (builder) | Builds one task per run on a task branch, runs the checks, opens a pull request | Merge, push to `main`, force-push, or commit secrets/real business data |
 
 ## The cycle
 
 ```
-Brief (Claude) -> Build (Muse) -> Review (Claude) -> Fix (Muse) -> Merge (human)
-                                      ^                 |
-                                      +-----------------+   at most 3 rounds
+Ask (human) -> Build (Muse) -> Check (Muse) -> Pull request (Muse) -> Merge (human)
 ```
 
-1. **Brief.** Claude Code runs `/brief`. It writes `docs/briefs/<ID>.md` from `docs/briefs/TEMPLATE.md` and commits briefs straight to `main` (they are docs only).
-2. **Build.** Muse Code runs `/next-task`. It picks the next ready brief, builds it on `task/<ID>-<short-name>`, runs the checks and opens a pull request using `.github/pull_request_template.md`.
-3. **Review.** Claude Code runs `/review <PR number>`. It posts one comment starting `KounOS review: pass` or `KounOS review: fail`, followed by the scorecard from `docs/RUBRIC.md`.
-4. **Fix.** On a fail, Muse Code runs `/fix-review <PR number>` and pushes fixes to the same branch. Then back to review.
-5. **Merge.** On a pass, the human merges. The task's tick in `TASKS.md` lands with it.
+1. **Ask.** The human picks the next `TASKS.md` item or describes the work directly. Human words win over backlog order.
+2. **Build.** Muse works on `task/<ID>-<short-name>` from `origin/main`. For anything bigger than a small change, it writes the spec inline (files, checks, acceptance) in the pull request description — no separate brief required. Existing `docs/briefs/` are history and optional reference.
+3. **Check.** Muse runs every relevant check (the commands section of `AGENTS.md`, plus task-specific tests) and reports the evidence. A check that cannot run in the sandbox is reported, not worked around.
+4. **Pull request.** One task per PR, using `.github/pull_request_template.md`, with evidence for each acceptance criterion. Muse self-checks the hard rules in `AGENTS.md` before opening.
+5. **Merge.** The human merges. The task's tick in `TASKS.md` lands with it.
 
-After three failed review rounds on one task, both agents stop and the human decides: re-brief, split the task, or accept it as is.
+## Quality without the queue
+
+- Spot skills, on demand: `/to-spec` (spec a big task), `/implement`, `/code-review` (two-axis self-check of a diff), `surgical-patch`, `verify-and-stop`, `/retro` (close the loop after a build). `ask-matt` routes to the right flow.
+- Style modes: `/caveman` and `ponytail` change how Muse writes and replies; they do not change what gets built.
+- `fix-review` answers any `KounOS review:` comment on an open pull request, whoever posted it.
+
+## Gates and data rules (still human)
+
+- Gate 1/2/3 in `TASKS.md` are human confirmations. No work starts past a gate until the human ticks it.
+- Real supplier quotes and real business data enter the repo only with the human's explicit say-so, labeled per the `AGENTS.md` hard rules (written permission on file, labeled real). Fictional data stays labeled fictional.
 
 ## State lives in the repo
 
 | You see | It means |
 | --- | --- |
-| `docs/briefs/<ID>.md` with `Status: ready`, task unchecked in `TASKS.md` | Ready to build |
-| `docs/briefs/<ID>.md` with `Status: blocked` | Waiting on a human task, a gate or a decision; the reason is in the brief |
-| An open pull request from `task/<ID>-*` | Built, waiting for review or fixes |
-| Latest review comment says `KounOS review: pass` | Ready for the human to merge |
+| Task unchecked in `TASKS.md`, no open PR from `task/<ID>-*` | Ready to build |
+| An open pull request from `task/<ID>-*` | Built, waiting for merge or fixes |
 | Task ticked in `TASKS.md` on `main` | Done |
 
-## Where each agent works
+## Where the work happens
 
-The agents must not switch branches under each other, so each gets its own folder:
-
-- **Claude Code** works in `KounOS/` on `main`, writing briefs and reviewing. To run a pull request's checks it uses a temporary worktree, never a checkout of the main folder.
-- **Muse Code** works in a second clone, for example `KounOS-build/` next to `KounOS/`:
-
-  ```
-  git clone https://github.com/RzanderR/KounOS ../KounOS-build
-  ```
-
-  Muse creates its own worktrees for subagents inside that clone.
-
-Push everything on `main` before Muse starts, so its clone has the latest briefs.
+Muse Code works in `KounOS-muse/` (a worktree of this repo) and never switches branches in the main checkout. One task branch at a time.
 
 ## Muse stops and reports, instead of guessing, when
 
-- The next task is a human (H) task or sits behind a gate that isn't ticked
-- No brief exists, or the brief says `Status: blocked`
-- The brief conflicts with `docs/PLAN.md`, `docs/RUBRIC.md` or `AGENTS.md`, or is ambiguous
-- The work needs a dependency, file or change the brief doesn't cover
+- The task is a human (H) task or sits behind a gate that isn't ticked
+- The request is ambiguous, or conflicts with `docs/PLAN.md`, `docs/RUBRIC.md` or `AGENTS.md`
+- The work needs a dependency, file or change the request doesn't cover
 - A check still fails after three fix attempts
-- A task has failed review three times
+- A secret or real business data would have to be committed to proceed
 
 When it stops, it says which rule it hit and what it needs, in the pull request if one exists, otherwise in chat.
-
-## Unattended runs
-
-Muse can run one cycle at a time without a person watching:
-
-```
-muse exec --json "/next-task"
-```
-
-One task per run. It never merges, never pushes to `main`, and keeps approval prompts on (never `--yolo` on a personal machine). Review the pull requests when you're back.
