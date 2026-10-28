@@ -115,4 +115,4 @@ Stop and ask a human instead of guessing when: a task is marked **human**, the r
 - All checks pass.
 - No secrets, no real business data, no new non-permissive dependency.
 - AI results in the UI are labeled with the model that produced it.
-- README and `docs/DECISIONS.md` are updated where relevant.
+- README and `docs/DECISIONS.md` are updated where relevant; `docs/STATUS.md` is updated (Done / In progress / Blocked / Decisions / Next).

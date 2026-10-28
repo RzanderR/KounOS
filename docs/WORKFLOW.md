@@ -16,7 +16,7 @@ Ask (human) -> Build (Muse) -> Check (Muse) -> Pull request (Muse) -> Merge (hum
 ```
 
 1. **Ask.** The human picks the next `TASKS.md` item or describes the work directly. Human words win over backlog order.
-2. **Build.** Muse works on `task/<ID>-<short-name>` from `origin/main`. For anything bigger than a small change, it writes the spec inline (files, checks, acceptance) in the pull request description — no separate brief required. Existing `docs/briefs/` are history and optional reference.
+2. **Build.** Muse works on `task/<ID>-<short-name>` from `origin/main`. Push the branch early and often, even half done; the branch is the backup. For anything bigger than a small change, it writes the spec inline (files, checks, acceptance) in the pull request description — no separate brief required. Existing `docs/briefs/` are history and optional reference.
 3. **Check.** Muse runs every relevant check (the commands section of `AGENTS.md`, plus task-specific tests) and reports the evidence. A check that cannot run in the sandbox is reported, not worked around.
 4. **Pull request.** One task per PR, using `.github/pull_request_template.md`, with evidence for each acceptance criterion. Muse self-checks the hard rules in `AGENTS.md` before opening.
 5. **Merge.** The human merges. The task's tick in `TASKS.md` lands with it.
