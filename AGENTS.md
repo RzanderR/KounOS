@@ -13,6 +13,7 @@ KounOS is a hackathon prototype for Koun Logistics LLC that does two jobs for a 
 1. `docs/PLAN.md`: the baseline. What we build, why, the demo story, scope, architecture, data kit and schedule. If a request conflicts with the plan, stop and ask.
 2. `docs/RUBRIC.md`: how the hackathon judges us, the rules that disqualify a project, and the scorecard format for reviews.
 3. `TASKS.md`: the task backlog with acceptance criteria. Work the next unchecked **agent** task in order unless told otherwise.
+4. `docs/STATUS.md`: where the project stands. Read it first, update it last (Done / In progress / Blocked / Decisions / Next).
 
 ## The core principle
 
