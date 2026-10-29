@@ -9,7 +9,6 @@ client = TestClient(app)
 
 GET_STUBS = [
     "/solicitations",
-    "/sourcing-decisions",
     "/orders",
     "/orders/one",
     "/notices",
@@ -23,7 +22,6 @@ POST_STUBS = [
     "/solicitations/1232SA26Q0557/extract",
     "/solicitations/1232SA26Q0557/gap-pass",
     "/quotes/extract",
-    "/sourcing-decisions",
     "/demo/reset",
     "/events",
 ]

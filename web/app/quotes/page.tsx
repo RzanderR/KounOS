@@ -2,8 +2,12 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-import { fetchComparison } from "@/lib/api";
-import type { QuoteComparison } from "@/lib/kounos-types";
+import { fetchAward, fetchComparison, fetchDecision } from "@/lib/api";
+import type {
+  AwardRecord,
+  QuoteComparison,
+  SourcingDecision,
+} from "@/lib/kounos-types";
 
 function VerdictBadge({ verdict }: { verdict: "pass" | "fail" | "needs_confirmation" }) {
   const label =
@@ -39,15 +43,23 @@ export default function QuotesPage() {
   const [failed, setFailed] = useState(false);
   const [bidInput, setBidInput] = useState("91880.12");
   const [selected, setSelected] = useState<string | null>(null);
+  const [decision, setDecision] = useState<SourcingDecision | null>(null);
+  const [awardRecord, setAwardRecord] = useState<AwardRecord | null>(null);
 
   useEffect(() => {
     let cancelled = false;
     async function load() {
-      const data = await fetchComparison();
+      const [data, decisions, awardData] = await Promise.all([
+        fetchComparison(),
+        fetchDecision(),
+        fetchAward(),
+      ]);
       if (!cancelled) {
-        if (data === null) setFailed(true);
+        if (data === null || decisions === null || awardData === null) setFailed(true);
         else {
           setRows(data);
+          setDecision(decisions[0] ?? null);
+          setAwardRecord(awardData);
           const firstPassing = data.find((row) => row.verdict.overall !== "fail");
           const firstId: unknown =
             firstPassing?.quote.quote_id ?? data[0]?.quote.quote_id;
@@ -158,6 +170,41 @@ export default function QuotesPage() {
           </tbody>
         </table>
       </section>
+
+      {decision === null || awardRecord === null ? null : (
+        <section aria-label="Recommendation" className="mt-10">
+          <h2 className="text-lg font-medium">Recommendation</h2>
+          <div className="mt-2 rounded border p-4 text-sm">
+            {decision.decision === "pursue" ? (
+              <p>
+                <strong>
+                  Pursue at {decision.bid_price === null || decision.bid_price === undefined ? "—" : money(decision.bid_price)}
+                </strong>{" "}
+                with {decision.supplier ?? "the selected supplier"}.
+              </p>
+            ) : (
+              <p>
+                <strong>Pass</strong>, because no quote is compliant.
+              </p>
+            )}
+            <ul className="mt-2 list-disc pl-5">
+              {(decision.reasons ?? []).map((reason) => (
+                <li key={reason}>{reason}</li>
+              ))}
+            </ul>
+            <p className="mt-3">
+              Actual award {awardRecord.award_id}: {money(awardRecord.total)} · signed{" "}
+              {awardRecord.date_signed} · {awardRecord.number_of_offers} offers received ·{" "}
+              {awardRecord.awardee}.
+            </p>
+            <ul className="mt-2 list-disc pl-5 text-muted-foreground">
+              <li>Only award totals are public.</li>
+              <li>Today&apos;s quotes reflect today&apos;s prices.</li>
+              <li>One award is one data point.</li>
+            </ul>
+          </div>
+        </section>
+      )}
 
       {chosen === null ? null : (
         <section aria-label="Sourcing package" className="mt-10">
