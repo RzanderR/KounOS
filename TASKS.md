@@ -21,7 +21,7 @@ Deadline: **Wed, Nov 4, 2026, 9 PM ET.** Submit by 2 PM Phoenix time (5 PM ET).
   - Done when: API tests pass, the web app builds, both start locally, and `AGENTS.md` lists the real commands.
 - [x] **A02** Meta API smoke test: `api/scripts/smoke_meta.py` sends one PDF from `data/solicitations/` to `MODEL_READ` with a small JSON schema and prints the parsed result and token usage.
   - Done when: it runs against the real API, the output validates against a Pydantic model, and token usage is printed.
-- [ ] **A03** Contract first: Pydantic schemas for `CompanyProfile`, `Notice`, `FitAssessment`, `SourceRef`, `Requirement`, `Solicitation`, `AwardRecord`, `Quote`, `QuoteLine`, `SourcingDecision`, `Order`, `SupplierPO`, `Shipment`, `Invoice`, `Event`, `Flag`; API route stubs; TypeScript types generated for `web/`.
+- [x] **A03** Contract first: Pydantic schemas for `CompanyProfile`, `Notice`, `FitAssessment`, `SourceRef`, `Requirement`, `Solicitation`, `AwardRecord`, `Quote`, `QuoteLine`, `SourcingDecision`, `Order`, `SupplierPO`, `Shipment`, `Invoice`, `Event`, `Flag`; API route stubs; TypeScript types generated for `web/`.
   - Done when: schemas and stubs are committed, OpenAPI docs load, and the web app imports the generated types.
 
 ## Tue Oct 27: read the solicitation

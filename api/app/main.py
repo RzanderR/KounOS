@@ -4,8 +4,10 @@ from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import Settings, get_settings
+from app.routers import api_router
 
 app = FastAPI(title="KounOS API")
+app.include_router(api_router)
 
 app.add_middleware(
     CORSMiddleware,

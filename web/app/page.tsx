@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+import { fetchHealth } from "@/lib/api";
 
 type ApiStatus = "checking" | "ok" | "unreachable";
 
@@ -19,18 +19,8 @@ export default function Home() {
   useEffect(() => {
     let cancelled = false;
     async function checkApi() {
-      try {
-        const res = await fetch(`${API_URL}/health`);
-        const data: unknown = await res.json();
-        const ok =
-          res.ok &&
-          typeof data === "object" &&
-          data !== null &&
-          (data as { status?: unknown }).status === "ok";
-        if (!cancelled) setStatus(ok ? "ok" : "unreachable");
-      } catch {
-        if (!cancelled) setStatus("unreachable");
-      }
+      const health = await fetchHealth();
+      if (!cancelled) setStatus(health === null ? "unreachable" : "ok");
     }
     void checkApi();
     return () => {

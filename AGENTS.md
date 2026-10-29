@@ -76,6 +76,7 @@ Fill in the exact commands below once task A01 creates them, and keep them curre
 pytest                                    # test
 ruff check                                # lint
 mypy app                                  # typecheck
+python scripts/generate_types.py          # regenerate web/lib/kounos-types.ts
 python -m app.seed                        # seed (stub)
 uvicorn app.main:app --reload --port 8000 # run -> http://localhost:8000
 # web (from web/; no test runner yet in A01)
