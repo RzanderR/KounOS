@@ -19,7 +19,7 @@ Deadline: **Wed, Nov 4, 2026, 9 PM ET.** Submit by 2 PM Phoenix time (5 PM ET).
 - [ ] **H15** Company profile for `data/company_profile.json`: Koun's set-aside certifications and NAICS codes (as registered in SAM.gov), the product categories Koun sells, and a demonstration margin floor (not Koun's real one).
 - [x] **A01** Scaffold the repo: `api/` (FastAPI with a health route and pytest), `web/` (Next.js with Tailwind and shadcn/ui), `.env.example`, `.gitignore`, and scripts for test, lint, typecheck and build. Fill in the commands section of `AGENTS.md`.
   - Done when: API tests pass, the web app builds, both start locally, and `AGENTS.md` lists the real commands.
-- [ ] **A02** Meta API smoke test: `api/scripts/smoke_meta.py` sends one PDF from `data/solicitations/` to `MODEL_READ` with a small JSON schema and prints the parsed result and token usage.
+- [x] **A02** Meta API smoke test: `api/scripts/smoke_meta.py` sends one PDF from `data/solicitations/` to `MODEL_READ` with a small JSON schema and prints the parsed result and token usage.
   - Done when: it runs against the real API, the output validates against a Pydantic model, and token usage is printed.
 - [ ] **A03** Contract first: Pydantic schemas for `CompanyProfile`, `Notice`, `FitAssessment`, `SourceRef`, `Requirement`, `Solicitation`, `AwardRecord`, `Quote`, `QuoteLine`, `SourcingDecision`, `Order`, `SupplierPO`, `Shipment`, `Invoice`, `Event`, `Flag`; API route stubs; TypeScript types generated for `web/`.
   - Done when: schemas and stubs are committed, OpenAPI docs load, and the web app imports the generated types.
