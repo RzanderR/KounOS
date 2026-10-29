@@ -7,6 +7,7 @@ Updated at the end of every task or work session, committed with that work.
 - **A01** scaffold (`api/` FastAPI + health route, `web/` Next.js placeholder shell, CI, docs) — [PR #2](https://github.com/RzanderR/KounOS/pull/2), merged as `25d99a4`. Reviewed by Muse Code (pass, in chat 2026-10-27); CI green ([run 40583572645](https://github.com/RzanderR/KounOS/actions/runs/40583572645)).
 - Workflow simplification (direct human-Muse loop, briefs optional, spot-skill quality loop) — [PR #3](https://github.com/RzanderR/KounOS/pull/3), merged as `22533b8`.
 - **A03** contract (`task/A03-contract`, PR to open): `api/app/schemas.py` (16 models + `KeyClause`), stub routers returning 501 with owning task, `api/scripts/generate_types.py` → `web/lib/kounos-types.ts`, typed `web/lib/api.ts` used by the home page. Socket-free tests pass (ruff, mypy, 8 pytest); TestClient and node gates need CI or a dev machine (sandbox blocks sockets and node).
+- **A04** ingest (`task/A04-ingest`, PR to open): `api/app/ingest.py` returns per-page text plus word boxes; `tests/test_ingest.py` pins the demo PDFs (specs 2 pages, terms 16). 10 pytest pass with ruff and mypy clean.
 
 ## In progress
 

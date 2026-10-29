@@ -27,7 +27,7 @@ Deadline: **Wed, Nov 4, 2026, 9 PM ET.** Submit by 2 PM Phoenix time (5 PM ET).
 ## Tue Oct 27: read the solicitation
 
 - [ ] **H05** Morning: send budgetary quote requests (no live order; ask for written permission to show quotes publicly). Afternoon: follow up by phone.
-- [ ] **A04** PDF ingest with pdfplumber: store each page's text and word bounding boxes.
+- [x] **A04** PDF ingest with pdfplumber: store each page's text and word bounding boxes.
   - Done when: a unit test on a sample PDF returns page count, page text and word coordinates.
 - [ ] **A05** Extraction: send the solicitation PDF to `MODEL_READ` with a schema that requires, per field, a page number and a verbatim snippet. Fields: line items, part number or NSN, quantity, unit, required delivery, key clauses.
   - Done when: the demo solicitation returns every line item, and output that fails validation is rejected, not stored.
