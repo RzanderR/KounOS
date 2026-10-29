@@ -1,0 +1,21 @@
+{
+  "quote_id": "larkspur",
+  "supplier": "Larkspur Grow Systems",
+  "solicitation_id": "1232SA26Q0557",
+  "lines": [
+    {
+      "line": "1",
+      "description": "PHOTOBIO CX 2125 LED, 850W, 100-277V, S4 spectrum, 10' 208-240V cord",
+      "quantity": 116,
+      "unit": "Each",
+      "unit_price": "679.00",
+      "extended": "78764.00",
+      "part": "PTB8850LS42"
+    }
+  ],
+  "freight": "0",
+  "total": "78764.00",
+  "lead_time_days_max": 21,
+  "country_of_origin": "not stated",
+  "status": "needs_review"
+}
