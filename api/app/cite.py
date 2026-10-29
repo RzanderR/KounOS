@@ -19,6 +19,10 @@ from app.schemas import WordBox
 # Below this partial-ratio a snippet is not the passage it claims to be.
 MATCH_THRESHOLD = 90.0
 
+# A snippet shorter than this proves nothing: "58" or "EA" matches too many
+# passages to locate the claim, so it always needs review.
+MIN_SNIPPET_WORDS = 4
+
 
 def normalize(text: str) -> str:
     """Lowercase and collapse all whitespace to single spaces."""
@@ -92,9 +96,12 @@ def check_citation(
 
     A match on the claimed page verifies. A match elsewhere marks
     ``needs_review`` and records where it was actually found. No match
-    anywhere marks ``needs_review`` with no boxes.
+    anywhere marks ``needs_review`` with no boxes. A snippet under
+    ``MIN_SNIPPET_WORDS`` words always needs review: it cannot locate a claim.
     """
     if not snippet or not snippet.strip():
+        return CitationResult(status="needs_review", page=page, snippet=snippet)
+    if len(snippet.split()) < MIN_SNIPPET_WORDS:
         return CitationResult(status="needs_review", page=page, snippet=snippet)
     by_number = {number: content for number, content in ((p.page_number, p) for p in pages)}
     claimed = by_number.get(page)

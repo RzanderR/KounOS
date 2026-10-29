@@ -53,6 +53,11 @@ EXTRACTION_SCHEMA: dict[str, object] = {
             },
         },
         "required_delivery": cited_field("When and where delivery is due."),
+        "sourcing_clause": cited_field(
+            "The domestic-sourcing / Buy American / Trade Agreements clause: "
+            "its FAR number (e.g. FAR 52.225-3), what it requires, and whether "
+            "a certificate (e.g. 52.225-4) applies."
+        ),
         "key_clauses": {
             "type": "array",
             "items": {
@@ -72,6 +77,7 @@ EXTRACTION_SCHEMA: dict[str, object] = {
         "agency",
         "line_items",
         "required_delivery",
+        "sourcing_clause",
         "key_clauses",
     ],
     "additionalProperties": False,
@@ -80,10 +86,15 @@ EXTRACTION_SCHEMA: dict[str, object] = {
 PROMPT = (
     "Extract the facts of this federal solicitation. Every field needs its value, "
     "the 1-based page number it appears on, and the exact verbatim snippet you read it from. "
+    "Each snippet must be the surrounding line or phrase, at least about five words long: "
+    "a bare number, unit or part code alone proves nothing, so always include its context. "
     "Line items: every CLIN with line number, description, part number or NSN "
     "(write 'not stated' when none is given), quantity and unit. "
     "Also extract the required delivery term and the key clauses "
     "(delivery, FOB, brand-name requirement, sourcing clause, evaluation basis). "
+    "Clause lists use checkboxes: report only checked clauses, never unchecked ones. "
+    "The sourcing clause is required: give its FAR number (e.g. FAR 52.225-3) and "
+    "whether a certificate (e.g. 52.225-4) applies. "
     "Return only JSON matching the schema."
 )
 
@@ -121,6 +132,7 @@ class SolicitationExtraction(BaseModel):
     agency: CitedField
     line_items: list[ExtractedLineItem] = Field(default_factory=list)
     required_delivery: CitedField
+    sourcing_clause: CitedField
     key_clauses: list[ExtractedClause] = Field(default_factory=list)
 
 

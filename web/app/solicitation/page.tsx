@@ -1,9 +1,7 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
-import { Document, Page, pdfjs } from "react-pdf";
-import "react-pdf/dist/Page/AnnotationLayer.css";
-import "react-pdf/dist/Page/TextLayer.css";
 
 import { attachmentUrl, fetchSolicitation } from "@/lib/api";
 import type {
@@ -12,28 +10,16 @@ import type {
   Solicitation,
   WordBox,
 } from "@/lib/kounos-types";
+import type { Selection } from "./passage-viewer";
 
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  "pdfjs-dist/build/pdf.worker.min.mjs",
-  import.meta.url,
-).toString();
+// Client-only: react-pdf's pdf.js entry needs Promise.withResolvers (absent
+// on Node 20), so the viewer never renders during prerender.
+const PassageViewer = dynamic(() => import("./passage-viewer"), {
+  ssr: false,
+  loading: () => <p className="mt-2 text-sm text-muted-foreground">Loading viewer…</p>,
+});
 
 const DEMO_ID = "1232SA26Q0557";
-const PAGE_WIDTH = 640;
-
-type PdfPage = {
-  getViewport: (options: { scale: number }) => { width: number; height: number };
-};
-type PdfDoc = { getPage: (pageNumber: number) => Promise<PdfPage> };
-
-type Selection = {
-  kind: string;
-  label: string;
-  file: string;
-  page: number;
-  snippet: string;
-  boxes: WordBox[];
-};
 
 function toSelection(
   kind: string,
@@ -64,9 +50,6 @@ export default function SolicitationPage() {
   const [solicitation, setSolicitation] = useState<Solicitation | null>(null);
   const [failed, setFailed] = useState(false);
   const [selection, setSelection] = useState<Selection | null>(null);
-  const [pdf, setPdf] = useState<PdfDoc | null>(null);
-  const [dims, setDims] = useState<{ w: number; h: number } | null>(null);
-  const [viewerError, setViewerError] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -82,31 +65,6 @@ export default function SolicitationPage() {
       cancelled = true;
     };
   }, []);
-
-  function select(next: Selection | null) {
-    setSelection(next);
-    setPdf(null);
-    setDims(null);
-    setViewerError(false);
-  }
-
-  useEffect(() => {
-    let cancelled = false;
-    async function measure() {
-      if (pdf === null || selection === null) return;
-      try {
-        const page = await pdf.getPage(selection.page);
-        const viewport = page.getViewport({ scale: 1 });
-        if (!cancelled) setDims({ w: viewport.width, h: viewport.height });
-      } catch {
-        if (!cancelled) setViewerError(true);
-      }
-    }
-    void measure();
-    return () => {
-      cancelled = true;
-    };
-  }, [pdf, selection]);
 
   if (failed) {
     return (
@@ -171,7 +129,7 @@ export default function SolicitationPage() {
                     onClick={() =>
                       req.source === null || req.source === undefined
                         ? undefined
-                        : select(toSelection("requirement", req.line, req, req.source, req.boxes ?? []))
+                        : setSelection(toSelection("requirement", req.line, req, req.source, req.boxes ?? []))
                     }
                     aria-label={`Show citation for line ${req.line}`}
                   >
@@ -203,7 +161,7 @@ export default function SolicitationPage() {
                   <button
                     type="button"
                     className="cursor-pointer"
-                    onClick={() => select(toSelection("clause", clause.name, clause, clause.source, clause.boxes ?? []))}
+                    onClick={() => setSelection(toSelection("clause", clause.name, clause, clause.source, clause.boxes ?? []))}
                     aria-label={`Show citation for clause ${clause.name}`}
                   >
                     <Badge status={clause.citation_status} />
@@ -222,44 +180,11 @@ export default function SolicitationPage() {
             Select a citation badge to jump to the passage in the PDF.
           </p>
         ) : (
-          <div className="mt-2">
-            <p className="text-sm">
-              {selection.kind} <strong>{selection.label}</strong> · {selection.file}, page{" "}
-              {selection.page} · citations checked in code
-            </p>
-            <blockquote className="mt-2 rounded border p-3 text-sm">“{selection.snippet}”</blockquote>
-            {viewerError ? (
-              <p role="alert" className="mt-2 text-sm">
-                The PDF failed to render. The API serves it at {viewerUrl}.
-              </p>
-            ) : (
-              <div className="relative mt-2 max-w-full overflow-auto border" style={{ maxWidth: PAGE_WIDTH + 2 }}>
-                <Document
-                  file={viewerUrl}
-                  onLoadSuccess={setPdf}
-                  onLoadError={() => setViewerError(true)}
-                  loading={<p className="p-4 text-sm text-muted-foreground">Loading PDF…</p>}
-                >
-                  <Page pageNumber={selection.page} width={PAGE_WIDTH} />
-                </Document>
-                {dims === null
-                  ? null
-                  : selection.boxes.map((box, index) => (
-                      <div
-                        key={index}
-                        aria-hidden="true"
-                        className="pointer-events-none absolute border-2 border-yellow-500 bg-yellow-300/30"
-                        style={{
-                          left: `${(box.x0 / dims.w) * 100}%`,
-                          top: `${(box.top / dims.h) * 100}%`,
-                          width: `${((box.x1 - box.x0) / dims.w) * 100}%`,
-                          height: `${((box.bottom - box.top) / dims.h) * 100}%`,
-                        }}
-                      />
-                    ))}
-              </div>
-            )}
-          </div>
+          <PassageViewer
+            key={`${selection.file}:${selection.page}`}
+            fileUrl={viewerUrl}
+            selection={selection}
+          />
         )}
       </section>
     </main>

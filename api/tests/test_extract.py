@@ -45,6 +45,11 @@ def valid_payload() -> dict[str, object]:
             "page": 12,
             "snippet": "delivery of all items within 60 days after award",
         },
+        "sourcing_clause": {
+            "value": "FAR 52.225-3 Buy American applies, with the 52.225-4 certificate",
+            "page": 4,
+            "snippet": "FAR 52.225-3 Buy American-Free Trade Agreements-Israeli Trade Act",
+        },
         "key_clauses": [],
     }
 
@@ -86,6 +91,15 @@ def test_demo_line_items_validate() -> None:
     extraction = SolicitationExtraction.model_validate(valid_payload())
     assert [item.line.value for item in extraction.line_items] == ["0001", "1001"]
     assert extraction.required_delivery.page == 12
+
+
+def test_missing_sourcing_clause_is_rejected() -> None:
+    """Output without the required sourcing clause is rejected, not stored."""
+    payload = valid_payload()
+    assert isinstance(payload, dict)
+    del payload["sourcing_clause"]
+    with pytest.raises(ValidationError):
+        SolicitationExtraction.model_validate(payload)
 
 
 def test_missing_snippet_is_rejected() -> None:

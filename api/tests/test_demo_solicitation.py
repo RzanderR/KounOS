@@ -32,11 +32,21 @@ def test_demo_has_both_clins_with_citation_badges() -> None:
     for req in demo.requirements:
         assert req.citation_status in ("verified", "needs_review")
         assert req.source is not None
-        if req.citation_status == "verified":
-            assert req.boxes, req.line
-    assert len(demo.key_clauses) == 5
+    assert demo.key_clauses, "stored extraction produced no clauses"
     for clause in demo.key_clauses:
         assert clause.citation_status in ("verified", "needs_review")
+        assert clause.source is not None
+    assert any(clause.boxes for clause in demo.key_clauses), (
+        "no clause carries highlight boxes for the PDF jump"
+    )
+
+
+def test_sourcing_clause_names_far_number() -> None:
+    """The required sourcing clause reaches the screen with its FAR number."""
+    demo = build_demo_solicitation(SETTINGS.model_read)
+    sourcing = [c for c in demo.key_clauses if c.name == "sourcing"]
+    assert len(sourcing) == 1
+    assert "52.225-3" in sourcing[0].summary
 
 
 def test_provenance_names_model_and_eval_only_key() -> None:

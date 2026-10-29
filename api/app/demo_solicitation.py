@@ -132,6 +132,17 @@ def build_demo_solicitation(model_read: str) -> Solicitation:
                 boxes=boxes,
             )
         )
+    sourcing = extraction.sourcing_clause
+    status, file, page, boxes = _cite(sourcing.page, sourcing.snippet)
+    clauses.append(
+        KeyClause(
+            name="sourcing",
+            summary=sourcing.value,
+            source=SourceRef(file=file, page=page, snippet=sourcing.snippet),
+            citation_status=status,
+            boxes=boxes,
+        )
+    )
     return Solicitation(
         solicitation_id=extraction.solicitation_id.value,
         title=extraction.title.value,
