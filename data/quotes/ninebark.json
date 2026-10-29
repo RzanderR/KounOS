@@ -39,6 +39,7 @@
   "lead_time": "12-14 weeks ARO (manufacturer backorder on this cord variant)",
   "lead_time_days_max": 98,
   "payment_terms": "Net 30",
+  "deposit_fraction": "0",
   "country_of_origin": "Not stated on quote",
   "notes": [
     "Pricing firm for 30 days.",

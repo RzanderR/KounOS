@@ -1,4 +1,10 @@
-import type { HealthStatus, Order, Quote, Solicitation } from "./kounos-types";
+import type {
+  HealthStatus,
+  Order,
+  Quote,
+  QuoteComparison,
+  Solicitation,
+} from "./kounos-types";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
@@ -39,6 +45,13 @@ export function attachmentUrl(solicitationId: string, filename: string): string 
 /** Typed GET /quotes. Empty until intake lands (A10). */
 export function fetchQuotes(): Promise<Quote[] | null> {
   return getJson<Quote[]>("/quotes");
+}
+
+export type { QuoteComparison };
+
+/** Typed GET /quotes/comparison. Null when unreachable. */
+export function fetchComparison(): Promise<QuoteComparison[] | null> {
+  return getJson<QuoteComparison[]>("/quotes/comparison");
 }
 
 /** Typed GET /orders. Empty until seeding lands (A16). */

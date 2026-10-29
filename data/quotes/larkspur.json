@@ -39,6 +39,7 @@
   "lead_time": "2-3 weeks ARO, in stock at our Denver warehouse",
   "lead_time_days_max": 21,
   "payment_terms": "Net 30",
+  "deposit_fraction": "0",
   "country_of_origin": "Not stated",
   "notes": [
     "Quoted the 208-240V cord because the 120V cord version is backordered."
