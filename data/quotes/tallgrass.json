@@ -1,0 +1,57 @@
+{
+  "fictional": true,
+  "fictional_note": "FICTIONAL - created for the KounOS hackathon demo. Not a real company or a real quote.",
+  "supplier": "Tallgrass Horticultural Supply",
+  "supplier_city": "Lincoln, NE",
+  "contact": "Renee Halvorsen, Government Sales",
+  "email": "orders@tallgrass-hort.example",
+  "phone": "(402) 555-0119",
+  "quote_number": "THS-2026-1487",
+  "quote_date": "2026-06-04",
+  "valid_until": "2026-07-04",
+  "document_format": "printed quote, photographed with a phone",
+  "solicitation_id": "1232SA26Q0557",
+  "lines": [
+    {
+      "line": "1",
+      "maps_to": "0001 (base)",
+      "part": "PTB8850LS41",
+      "description": "PHOTOBIO CX 2125 LED, 850W, 100-277V, S4 spectrum, 10' cord with NEMA 5-15P plug",
+      "quantity": 58,
+      "unit": "EA",
+      "unit_price": "695.00",
+      "extended": "40310.00"
+    },
+    {
+      "line": "2",
+      "maps_to": "1001 (option)",
+      "part": "PTB8850LS41",
+      "description": "PHOTOBIO CX 2125 LED, 850W, 100-277V, S4 spectrum, 10' cord with NEMA 5-15P plug",
+      "quantity": 58,
+      "unit": "EA",
+      "unit_price": "695.00",
+      "extended": "40310.00"
+    }
+  ],
+  "freight": "1450.00",
+  "freight_terms": "FOB destination, Fargo ND; liftgate and inside delivery to dock",
+  "quote_total": "82070.00",
+  "lead_time": "3-4 weeks ARO",
+  "lead_time_days_max": 28,
+  "payment_terms": "50% deposit with PO, balance net 30 after delivery",
+  "country_of_origin": "Not stated on quote",
+  "notes": [
+    "Pricing firm for 30 days.",
+    "Will split base and option lines into two shipments on request."
+  ],
+  "demo_role": "meets every requirement at a thinner margin",
+  "demo_catch": "None on requirements; 50% deposit ties up cash, and margin is the thinnest of the three.",
+  "expected_kounos_results": {
+    "landed_cost": "82070.00",
+    "landed_cost_per_unit": "707.50",
+    "lowest_safe_bid_per_unit_at_10pct": "786.12",
+    "lowest_safe_bid_total_at_10pct": "91189.92",
+    "margin_at_actual_award_price": "10.68%",
+    "deposit_due_with_po": "41035.00"
+  }
+}

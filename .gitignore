@@ -28,6 +28,9 @@ dist/
 # Session logs (never commit)
 trajectory-*.json
 
+# Local agent skills (project tools, not part of the product)
+.agents/skills/
+
 # Local data
 *.db
 *.sqlite

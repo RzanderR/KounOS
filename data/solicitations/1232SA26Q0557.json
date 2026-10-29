@@ -1,0 +1,126 @@
+{
+  "solicitation_id": "1232SA26Q0557",
+  "title": "Greenhouse light fixtures, brand name for the USDA, ARS, ETSARC in Fargo, ND",
+  "agency": "U.S. Department of Agriculture",
+  "sub_agency": "Agricultural Research Service",
+  "office": "USDA ARS AFM APD",
+  "notice_type": "Combined Synopsis/Solicitation (RFQ)",
+  "posted": "2026-06-01",
+  "response_deadline": "2026-06-10T15:00:00-04:00",
+  "set_aside": "Total Small Business Set-Aside (FAR 19.5)",
+  "naics": "335132",
+  "psc": "6210",
+  "place_of_performance": "Fargo, ND 58102",
+  "line_items": [
+    {
+      "line": "0001",
+      "type": "base",
+      "quantity": 58,
+      "unit": "EA",
+      "description": "LED greenhouse light fixtures, 100-277V with a 10-foot cord and a 5-15P plug"
+    },
+    {
+      "line": "1001",
+      "type": "option",
+      "quantity": 58,
+      "unit": "EA",
+      "description": "LED greenhouse light fixtures, 100-277V with a 10-foot cord and a 5-15P plug (option, up to 58)"
+    }
+  ],
+  "brand_and_part_awarded": "PHOTOBIO CX 2125 850W (100-277V) with 10' cord w/ 5-15P plug, part PTB8850LS41",
+  "sam_notice_id": "8e79b518fb1046398b4c90429d18deea",
+  "sam_url": "https://sam.gov/opp/8e79b518fb1046398b4c90429d18deea/view",
+  "attachments": [
+    {
+      "file": "1232SA26Q0557_specifications.pdf",
+      "sam_name": "C04-a_Issued Solicitation Document-Statement of Requirements - Specifications.pdf",
+      "pages": 2
+    },
+    {
+      "file": "1232SA26Q0557_terms_and_clauses.pdf",
+      "sam_name": "C04_CSS_Commerical Products and Services Terms Conditions Provisions Clauses.pdf",
+      "pages": 16
+    }
+  ],
+  "confirmed_from_attachments": {
+    "checked": "2026-10-28, by hand from the PDFs (answer key for the extraction eval, not model output)",
+    "delivery": {
+      "value": "All items within 60 days after award; early deliveries accepted",
+      "file": "1232SA26Q0557_terms_and_clauses.pdf",
+      "page": 12,
+      "snippet": "The USDA requires delivery of all items within 60 days after award."
+    },
+    "fob": {
+      "value": "FOB destination",
+      "file": "1232SA26Q0557_terms_and_clauses.pdf",
+      "page": 12,
+      "snippet": "F.o.b. destination, is requested as the F.O.B. point for all deliverables."
+    },
+    "delivery_address": {
+      "value": "USDA-ARS ETSARC BRL, 1616 Albrecht Blvd N, Fargo ND 58102",
+      "file": "1232SA26Q0557_specifications.pdf",
+      "page": 1
+    },
+    "brand_name": {
+      "value": "Brand name only: exact make and model; 'equal' products are technically unacceptable",
+      "file": "1232SA26Q0557_terms_and_clauses.pdf",
+      "page": 12,
+      "snippet": "Quotations offering alternate, substitute, or “equal” products will not be considered"
+    },
+    "evaluation": {
+      "value": "Lowest-priced technically acceptable with acceptable or neutral past performance; price evaluated on base plus option",
+      "file": "1232SA26Q0557_terms_and_clauses.pdf",
+      "page": 12,
+      "snippet": "Only the lowest priced offer will be evaluated for Technical Capability."
+    },
+    "sourcing_clause": {
+      "value": "FAR 52.225-3 Buy American--Free Trade Agreements--Israeli Trade Act applies, with the 52.225-4 certificate",
+      "file": "1232SA26Q0557_terms_and_clauses.pdf",
+      "pages": [
+        4,
+        14
+      ]
+    }
+  },
+  "known_ambiguities": [
+    {
+      "issue": "Cord length conflict: specifications say a 10-foot cord; the technical acceptability table says '1- foot cord'",
+      "refs": [
+        {
+          "file": "1232SA26Q0557_specifications.pdf",
+          "page": 1
+        },
+        {
+          "file": "1232SA26Q0557_terms_and_clauses.pdf",
+          "page": 11
+        }
+      ]
+    },
+    {
+      "issue": "Quantity split conflict: schedule says 58 base + 58 option; technical table lists 96 and 20 (same 116 total)",
+      "refs": [
+        {
+          "file": "1232SA26Q0557_terms_and_clauses.pdf",
+          "page": 1
+        },
+        {
+          "file": "1232SA26Q0557_terms_and_clauses.pdf",
+          "page": 11
+        }
+      ]
+    },
+    {
+      "issue": "Delivery conflict: specifications say base 2 months after award and option within 180 days; terms say all items within 60 days",
+      "refs": [
+        {
+          "file": "1232SA26Q0557_specifications.pdf",
+          "page": 2
+        },
+        {
+          "file": "1232SA26Q0557_terms_and_clauses.pdf",
+          "page": 12
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "solicitation_id": "1232SA26Q0557",
+  "award_id": "1232SA26P0357",
+  "awardee": "MORGAN INGLAND LLC",
+  "awardee_location": "Morgan Hill, CA",
+  "date_signed": "2026-09-30",
+  "period_of_performance": {
+    "start": "2026-09-28",
+    "end": "2027-03-31"
+  },
+  "number_of_offers_received": 26,
+  "extent_competed": "Competed under simplified acquisition procedures",
+  "set_aside": "Small business set-aside, total",
+  "transactions": [
+    {
+      "date": "2026-09-30",
+      "modification": "0",
+      "obligation": "45940.06",
+      "note": "base line, 58 fixtures"
+    },
+    {
+      "date": "2026-09-30",
+      "modification": "P00001",
+      "obligation": "45940.06",
+      "note": "option line exercised, 58 fixtures"
+    }
+  ],
+  "total_obligated": "91880.12",
+  "quantity": 116,
+  "unit_price_implied": "792.07",
+  "usaspending_url": "https://www.usaspending.gov/award/CONT_AWD_1232SA26P0357_12K3_-NONE-_-NONE-",
+  "source": "USAspending.gov award data (FPDS), retrieved 2026-10-27"
+}

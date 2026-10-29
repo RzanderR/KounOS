@@ -1,0 +1,57 @@
+{
+  "fictional": true,
+  "fictional_note": "FICTIONAL - created for the KounOS hackathon demo. Not a real company or a real quote.",
+  "supplier": "Ninebark Lighting Supply",
+  "supplier_city": "Sioux Falls, SD",
+  "contact": "Dana Ostrowski, Inside Sales",
+  "email": "quotes@ninebark-lighting.example",
+  "phone": "(605) 555-0142",
+  "quote_number": "NLS-Q-26-0611",
+  "quote_date": "2026-06-04",
+  "valid_until": "2026-07-04",
+  "document_format": "PDF quote",
+  "solicitation_id": "1232SA26Q0557",
+  "lines": [
+    {
+      "line": "1",
+      "maps_to": "0001 (base)",
+      "part": "PTB8850LS41",
+      "description": "PHOTOBIO CX 2125 LED, 850W, 100-277V, S4 spectrum, 10' cord with NEMA 5-15P plug",
+      "quantity": 58,
+      "unit": "EA",
+      "unit_price": "668.00",
+      "extended": "38744.00"
+    },
+    {
+      "line": "2",
+      "maps_to": "1001 (option)",
+      "part": "PTB8850LS41",
+      "description": "PHOTOBIO CX 2125 LED, 850W, 100-277V, S4 spectrum, 10' cord with NEMA 5-15P plug",
+      "quantity": 58,
+      "unit": "EA",
+      "unit_price": "668.00",
+      "extended": "38744.00"
+    }
+  ],
+  "freight": "1860.00",
+  "freight_terms": "FOB destination, Fargo ND; freight shown as a separate line",
+  "quote_total": "79348.00",
+  "lead_time": "12-14 weeks ARO (manufacturer backorder on this cord variant)",
+  "lead_time_days_max": 98,
+  "payment_terms": "Net 30",
+  "country_of_origin": "Not stated on quote",
+  "notes": [
+    "Pricing firm for 30 days.",
+    "Partial shipments not available; ships complete."
+  ],
+  "demo_role": "cheapest, but misses the delivery requirement",
+  "demo_catch": "Lead time of up to 98 days after order; confirm against the solicitation's delivery requirement.",
+  "expected_kounos_results": {
+    "landed_cost": "79348.00",
+    "landed_cost_per_unit": "684.03",
+    "lowest_safe_bid_per_unit_at_10pct": "760.04",
+    "lowest_safe_bid_total_at_10pct": "88164.64",
+    "margin_at_actual_award_price": "13.64%",
+    "deposit_due_with_po": "0.00"
+  }
+}
