@@ -51,6 +51,7 @@ MODELS: list[type[BaseModel]] = [
     schemas.Shipment,
     schemas.Invoice,
     schemas.Event,
+    schemas.OrderDetail,
     schemas.Flag,
     schemas.HealthStatus,
 ]
