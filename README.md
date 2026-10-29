@@ -284,7 +284,7 @@ eval/    Hand-labeled expected fields and the eval script
 
 All code in this repository was written between **October 26 and November 4, 2026**. No pre-existing Koun code was used. The first commit is an empty scaffold: [FIRST COMMIT LINK].
 
-The prototype was built with the help of AI coding agents: Muse Code (Meta) for implementation and Claude Code (Anthropic) for planning and review.
+Built by Koun Logistics LLC with Muse Code (Meta) for implementation, planning and review; early planning briefs by Claude Code (Anthropic).
 
 <!-- TODO: keep this list matched to what actually shipped. -->
 

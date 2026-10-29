@@ -25,6 +25,9 @@ dist/
 .npm-cache/
 .npmrc-local
 
+# Session logs (never commit)
+trajectory-*.json
+
 # Local data
 *.db
 *.sqlite
