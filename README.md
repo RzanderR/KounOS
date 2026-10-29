@@ -326,6 +326,7 @@ Built by Koun Logistics LLC with Muse Code (Meta) for implementation, planning a
 | Lucide icons | ISC | Icons |
 | Pydantic Settings | MIT | Env-based API settings |
 | pytest, httpx | MIT (httpx: BSD-3-Clause) | API tests |
+| Playwright | Apache-2.0 | Browser end-to-end test (drives system Chrome) |
 | ruff, mypy | MIT | API lint and typecheck |
 | ESLint, TypeScript | MIT (TypeScript: Apache-2.0) | Web lint and types |
 
