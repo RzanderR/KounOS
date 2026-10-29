@@ -199,6 +199,8 @@ class Order(BaseModel):
     status: str
     customer_due_date: date | None = None
     supplier_ship_date: date | None = None
+    bid_price: Decimal | None = None
+    landed_cost: Decimal | None = None
     notes: list[str] = Field(default_factory=list)
 
 
@@ -244,6 +246,16 @@ class Event(BaseModel):
     new_ship_date: date | None = None
     confidence: float | None = Field(default=None, ge=0.0, le=1.0)
     received_at: datetime | None = None
+
+
+class OrderDetail(BaseModel):
+    """One order with its linked records for the timeline screen."""
+
+    order: Order
+    po: SupplierPO | None = None
+    shipments: list[Shipment] = Field(default_factory=list)
+    invoices: list[Invoice] = Field(default_factory=list)
+    events: list[Event] = Field(default_factory=list)
 
 
 class Flag(BaseModel):
