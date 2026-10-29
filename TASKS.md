@@ -41,7 +41,7 @@ Deadline: **Wed, Nov 4, 2026, 9 PM ET.** Submit by 2 PM Phoenix time (5 PM ET).
   - Done when: both files exist and every number matches `docs/PLAN.md`.
 - [ ] **H06** Print the third fictional quote (Brightline) and photograph it with a phone into `data/quotes/`.
 - [ ] **H07** Hand-label expected fields for the three solicitations in `eval/expected/<solicitation-id>.json`. An agent may draft these; a human must check every value.
-- [ ] **Gate 1 (human):** the demo solicitation extracts with verified citations.
+- [x] **Gate 1 (human):** the demo solicitation extracts with verified citations.
 
 ## Wed Oct 28: compare quotes
 

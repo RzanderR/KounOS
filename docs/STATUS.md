@@ -24,12 +24,13 @@ Updated at the end of every task or work session, committed with that work.
 ## In progress
 
 - **A02** smoke test (`task/A02-smoke-test`, covered by PR #5): code done and run live; merges with the single PR.
-- **A08** screenshot (human): open http://localhost:3000/solicitation, click the "verified" badge on line 0001 (or any key-clause badge) and screenshot the highlighted passage in the PDF viewer. Then tick A08 in `TASKS.md`.
+- **Fuzzy-boxes fix** (`task/A08-fuzzy-boxes`, small PR to open): when the exact word-run fails but the fuzzy match passes, `partial_ratio_alignment` gives the char span, mapped back to word boxes; when the span misses snippet words (table row interleaved with columns), the densest query-word window wins. Clicking line 0001 now highlights the 0001 schedule row (18 boxes); all 8 served rows carry boxes. API gates green (ruff, mypy, 58 pytest).
+- **A08** screenshot (human): no file found in `docs/screenshots/` yet — please save it there (open http://localhost:3000/solicitation, click the line-0001 badge for the row highlight). Then agent ticks A08 + A09. Note: [PR #5](https://github.com/RzanderR/KounOS/pull/5) is still OPEN, not merged — it needs a human merge click.
 - Project-local skills installed (untracked, not for commit): caveman, ponytail, rtk, mattpocock set — 73 skills under `.agents/skills/` plus `skills-lock.json`.
 
 ## Blocked (on what or whom)
 
-- Gate 1 confirmation tick (human). Evidence for it: live extraction with 6/7 rows `verified` (1001 description `needs_review`); gap pass reproduces all three known ambiguities.
+- Gate 1 ticked 2026-10-29 on human order (evidence: live extraction re-run, 8/8 rows `verified`; gap pass reproduces all three known ambiguities). A08/A09 ticks wait for the screenshot file.
 - H03 remainder: two eval solicitations; H06: Tallgrass print-and-photograph; A01 screenshots need a dev machine with a browser.
 - A01 home-page screenshots (API ok / unreachable) — needs a dev machine with a browser; neither sandbox nor CI can bind ports or run one.
 
