@@ -66,7 +66,14 @@ EXTRACTION_SCHEMA: dict[str, object] = {
             },
         },
     },
-    "required": ["solicitation_id", "title", "agency", "line_items", "required_delivery"],
+    "required": [
+        "solicitation_id",
+        "title",
+        "agency",
+        "line_items",
+        "required_delivery",
+        "key_clauses",
+    ],
     "additionalProperties": False,
 }
 

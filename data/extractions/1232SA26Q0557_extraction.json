@@ -1,0 +1,120 @@
+{
+  "solicitation_id": {
+    "value": "1232SA26Q0557",
+    "page": 1,
+    "snippet": "Solicitation 1232SA26Q0557"
+  },
+  "title": {
+    "value": "Greenhouse light fixtures, LED for the USDA, ARS, ETSARC-BRL in Fargo, ND",
+    "page": 1,
+    "snippet": "Greenhouse light fixtures, LED for the USDA, ARS, ETSARC-BRL in Fargo, ND"
+  },
+  "agency": {
+    "value": "USDA, ARS, ETSARC-BRL",
+    "page": 1,
+    "snippet": "USDA, ARS, ETSARC-BRL"
+  },
+  "line_items": [
+    {
+      "line": {
+        "value": "0001",
+        "page": 1,
+        "snippet": "0001"
+      },
+      "description": {
+        "value": "LED greenhouse light fixtures, brand name to PhotoBio CX 2125, 850W, 100-277 V",
+        "page": 1,
+        "snippet": "LED greenhouse light fixtures, brand name to PhotoBio CX 2125, 850W, 100-277 V"
+      },
+      "part_or_nsn": {
+        "value": "PTB8850LS41",
+        "page": 11,
+        "snippet": "PTB8850LS41"
+      },
+      "quantity": {
+        "value": "58",
+        "page": 1,
+        "snippet": "58"
+      },
+      "unit": {
+        "value": "EA",
+        "page": 1,
+        "snippet": "EA"
+      }
+    },
+    {
+      "line": {
+        "value": "1001",
+        "page": 1,
+        "snippet": "1001"
+      },
+      "description": {
+        "value": "Optional quantity - LED greenhouse light fixtures, brand name to PhotoBio CX 2125, 850W, 100-277 V",
+        "page": 1,
+        "snippet": "Optional quantity - LED greenhouse light fixtures, brand name to PhotoBio CX 2125, 850W, 100-277 V"
+      },
+      "part_or_nsn": {
+        "value": "PTB8850LS41",
+        "page": 11,
+        "snippet": "PTB8850LS41"
+      },
+      "quantity": {
+        "value": "58",
+        "page": 1,
+        "snippet": "58"
+      },
+      "unit": {
+        "value": "EA",
+        "page": 1,
+        "snippet": "EA"
+      }
+    }
+  ],
+  "required_delivery": {
+    "value": "The USDA requires delivery of all items within 60 days after award.",
+    "page": 12,
+    "snippet": "The USDA requires delivery of all items within 60 days after award."
+  },
+  "key_clauses": [
+    {
+      "name": "delivery",
+      "detail": {
+        "value": "The USDA requires delivery of all items within 60 days after award.",
+        "page": 12,
+        "snippet": "The USDA requires delivery of all items within 60 days after award."
+      }
+    },
+    {
+      "name": "FOB",
+      "detail": {
+        "value": "All offers will be considered F.O.B. Destination unless F.O.B. origin is specified AND estimated shipping costs are included.",
+        "page": 12,
+        "snippet": "All offers will be considered F.O.B. Destination unless F.O.B. origin is specified AND estimated shipping costs are included."
+      }
+    },
+    {
+      "name": "brand-name requirement",
+      "detail": {
+        "value": "The United States Department of Agriculture (USDA) requires the following items on a brand name basis.",
+        "page": 11,
+        "snippet": "The United States Department of Agriculture (USDA) requires the following items on a brand name basis."
+      }
+    },
+    {
+      "name": "sourcing clause",
+      "detail": {
+        "value": "All items must have clear traceability to the Original Equipment Manufacturer (OEM).",
+        "page": 1,
+        "snippet": "All items must have clear traceability to the Original Equipment Manufacturer (OEM)."
+      }
+    },
+    {
+      "name": "evaluation basis",
+      "detail": {
+        "value": "Award will be made to the offeror representing the best value to the Government.",
+        "page": 11,
+        "snippet": "Award will be made to the offeror representing the best value to the Government."
+      }
+    }
+  ]
+}

@@ -83,11 +83,12 @@ export default function SolicitationPage() {
     };
   }, []);
 
-  useEffect(() => {
+  function select(next: Selection | null) {
+    setSelection(next);
     setPdf(null);
     setDims(null);
     setViewerError(false);
-  }, [selection?.file]);
+  }
 
   useEffect(() => {
     let cancelled = false;
@@ -170,7 +171,7 @@ export default function SolicitationPage() {
                     onClick={() =>
                       req.source === null || req.source === undefined
                         ? undefined
-                        : setSelection(toSelection("requirement", req.line, req, req.source, req.boxes ?? []))
+                        : select(toSelection("requirement", req.line, req, req.source, req.boxes ?? []))
                     }
                     aria-label={`Show citation for line ${req.line}`}
                   >
@@ -202,7 +203,7 @@ export default function SolicitationPage() {
                   <button
                     type="button"
                     className="cursor-pointer"
-                    onClick={() => setSelection(toSelection("clause", clause.name, clause, clause.source, clause.boxes ?? []))}
+                    onClick={() => select(toSelection("clause", clause.name, clause, clause.source, clause.boxes ?? []))}
                     aria-label={`Show citation for clause ${clause.name}`}
                   >
                     <Badge status={clause.citation_status} />

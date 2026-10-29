@@ -18,8 +18,8 @@ client = TestClient(app)
 SETTINGS = Settings()
 
 
-def test_demo_id_matches_answer_key() -> None:
-    """The served id is the hand-checked demo solicitation."""
+def test_demo_id_matches_stored_extraction() -> None:
+    """The served id comes from the stored model extraction."""
     assert demo_id() == "1232SA26Q0557"
 
 
@@ -34,18 +34,26 @@ def test_demo_has_both_clins_with_citation_badges() -> None:
         assert req.source is not None
         if req.citation_status == "verified":
             assert req.boxes, req.line
-    assert len(demo.key_clauses) == 4
+    assert len(demo.key_clauses) == 5
     for clause in demo.key_clauses:
         assert clause.citation_status in ("verified", "needs_review")
 
 
-def test_provenance_names_pending_live_extraction() -> None:
-    """The note is honest: answer key plus code checks, live run pending."""
+def test_provenance_names_model_and_eval_only_key() -> None:
+    """The note is honest: stored model extraction, key is eval-only."""
     demo = build_demo_solicitation(SETTINGS.model_read)
     assert demo.provenance_note is not None
-    assert "answer key" in demo.provenance_note
-    assert "pending" in demo.provenance_note
     assert SETTINGS.model_read in demo.provenance_note
+    assert "data/extractions/1232SA26Q0557_extraction.json" in demo.provenance_note
+    assert "eval" in demo.provenance_note
+
+
+def test_answer_key_fields_are_not_displayed() -> None:
+    """Set-aside/NAICS come only from the answer key, so the screen omits them."""
+    demo = build_demo_solicitation(SETTINGS.model_read)
+    assert demo.sub_agency is None
+    assert demo.set_aside is None
+    assert demo.naics is None
 
 
 def test_handler_returns_demo_for_known_id() -> None:

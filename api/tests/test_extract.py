@@ -72,6 +72,15 @@ def test_schema_requires_page_and_snippet_per_field() -> None:
         assert field_schema["required"] == ["value", "page", "snippet"]
 
 
+def test_top_level_required_covers_every_property() -> None:
+    """Strict-mode APIs reject the schema unless required lists every property."""
+    props = EXTRACTION_SCHEMA["properties"]
+    assert isinstance(props, dict)
+    required = EXTRACTION_SCHEMA["required"]
+    assert isinstance(required, list)
+    assert set(required) == set(props)
+
+
 def test_demo_line_items_validate() -> None:
     """Both demo CLINs (0001 base, 1001 option) validate."""
     extraction = SolicitationExtraction.model_validate(valid_payload())
