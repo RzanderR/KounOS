@@ -13,12 +13,24 @@ export interface SourceRef {
   snippet: string;
 }
 /**
+ * One word and where it sits on its page (PDF points).
+ */
+export interface WordBox {
+  text: string;
+  x0: number;
+  top: number;
+  x1: number;
+  bottom: number;
+}
+/**
  * A named clause or term with its cited passage.
  */
 export interface KeyClause {
   name: string;
   summary: string;
   source: SourceRef;
+  citation_status?: "verified" | "needs_review" | null;
+  boxes?: WordBox[];
 }
 /**
  * One line item or delivery term the solicitation asks for.
@@ -31,6 +43,8 @@ export interface Requirement {
   part_or_nsn?: string | null;
   required_delivery?: string | null;
   source?: SourceRef | null;
+  citation_status?: "verified" | "needs_review" | null;
+  boxes?: WordBox[];
 }
 /**
  * A solicitation worth pursuing, with cited requirements and clauses.
@@ -45,6 +59,7 @@ export interface Solicitation {
   response_deadline?: string | null;
   requirements?: Requirement[];
   key_clauses?: KeyClause[];
+  provenance_note?: string | null;
 }
 /**
  * Everything company-specific. Code never hardcodes these values.

@@ -9,7 +9,6 @@ client = TestClient(app)
 
 GET_STUBS = [
     "/solicitations",
-    "/solicitations/1232SA26Q0557",
     "/quotes",
     "/quotes/three",
     "/sourcing-decisions",

@@ -24,12 +24,24 @@ class SourceRef(BaseModel):
     snippet: str
 
 
+class WordBox(BaseModel):
+    """One word and where it sits on its page (PDF points)."""
+
+    text: str
+    x0: float
+    top: float
+    x1: float
+    bottom: float
+
+
 class KeyClause(BaseModel):
     """A named clause or term with its cited passage."""
 
     name: str
     summary: str
     source: SourceRef
+    citation_status: Literal["verified", "needs_review"] | None = None
+    boxes: list[WordBox] = Field(default_factory=list)
 
 
 class Requirement(BaseModel):
@@ -42,6 +54,8 @@ class Requirement(BaseModel):
     part_or_nsn: str | None = None
     required_delivery: str | None = None
     source: SourceRef | None = None
+    citation_status: Literal["verified", "needs_review"] | None = None
+    boxes: list[WordBox] = Field(default_factory=list)
 
 
 class Solicitation(BaseModel):
@@ -56,6 +70,7 @@ class Solicitation(BaseModel):
     response_deadline: datetime | None = None
     requirements: list[Requirement] = Field(default_factory=list)
     key_clauses: list[KeyClause] = Field(default_factory=list)
+    provenance_note: str | None = None
 
 
 class CompanyProfile(BaseModel):

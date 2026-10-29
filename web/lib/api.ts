@@ -24,6 +24,18 @@ export function fetchSolicitations(): Promise<Solicitation[] | null> {
   return getJson<Solicitation[]>("/solicitations");
 }
 
+/** Typed GET /solicitations/{id}. Null when unreachable or unknown. */
+export function fetchSolicitation(solicitationId: string): Promise<Solicitation | null> {
+  return getJson<Solicitation>(`/solicitations/${encodeURIComponent(solicitationId)}`);
+}
+
+/** URL of a solicitation PDF served by the API for the viewer. */
+export function attachmentUrl(solicitationId: string, filename: string): string {
+  const id = encodeURIComponent(solicitationId);
+  const file = encodeURIComponent(filename);
+  return `${API_URL}/solicitations/${id}/attachments/${file}`;
+}
+
 /** Typed GET /quotes. Empty until intake lands (A10). */
 export function fetchQuotes(): Promise<Quote[] | null> {
   return getJson<Quote[]>("/quotes");

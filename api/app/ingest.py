@@ -10,15 +10,7 @@ from pathlib import Path
 import pdfplumber
 from pydantic import BaseModel, Field
 
-
-class WordBox(BaseModel):
-    """One word and where it sits on its page (PDF points)."""
-
-    text: str
-    x0: float
-    top: float
-    x1: float
-    bottom: float
+from app.schemas import WordBox
 
 
 class PageContent(BaseModel):

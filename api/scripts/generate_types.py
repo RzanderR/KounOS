@@ -32,6 +32,7 @@ HEADER = """/**
 # Models in dependency order so every referenced interface is declared first.
 MODELS: list[type[BaseModel]] = [
     schemas.SourceRef,
+    schemas.WordBox,
     schemas.KeyClause,
     schemas.Requirement,
     schemas.Solicitation,

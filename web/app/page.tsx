@@ -8,7 +8,7 @@ type ApiStatus = "checking" | "ok" | "unreachable";
 
 const NAV_LINKS = [
   { label: "Triage", href: "#" },
-  { label: "Solicitation", href: "#" },
+  { label: "Solicitation", href: "/solicitation" },
   { label: "Quotes", href: "#" },
   { label: "Orders", href: "#" },
 ];

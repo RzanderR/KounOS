@@ -13,7 +13,8 @@ from typing import Literal
 from pydantic import BaseModel, Field
 from rapidfuzz import fuzz
 
-from app.ingest import PageContent, WordBox
+from app.ingest import PageContent
+from app.schemas import WordBox
 
 # Below this partial-ratio a snippet is not the passage it claims to be.
 MATCH_THRESHOLD = 90.0

@@ -11,6 +11,7 @@ Updated at the end of every task or work session, committed with that work.
 - **A05** extraction (`task/A05-extract`, PR to open): `api/app/extract.py` sends both PDFs to `MODEL_READ` with a strict page-plus-snippet schema; invalid output is rejected, never stored. Rejection tests green (15 pytest with A06/A07 suites, ruff + mypy clean). Live run needs dev-machine confirmation (sandbox call in flight, no result yet).
 - **A06** citations (`task/A06-citations`, PR to open): `api/app/cite.py` checks snippets with word-run matching plus a RapidFuzz fallback; verdicts are `verified`/`needs_review` with the real page and word boxes. Tests cover exact, hyphenated/line-broken, wrong-page and absent snippets.
 - **A07** gaps (`task/A07-gaps`, PR to open): `api/app/gaps.py` runs the high-effort gap pass; flags link issue to clause with page and snippet. Tests pin the schema and the three hand-checked `known_ambiguities`. Live run needs dev-machine confirmation.
+- **A08** screen (`task/A08-screen`, PR to open, task unticked): `GET /solicitations/1232SA26Q0557` serves the answer-key solicitation with code-checked badges and word boxes; `.../attachments/{file}` serves the PDFs; `web/app/solicitation/page.tsx` shows the requirements/clause tables with badges and a PDF viewer that jumps to the passage with box highlights. API side verified (7 socket-free tests, ruff, mypy). Web side (tsc, lint, build, screenshot) and live extraction need a dev machine: sandbox runs no node and the live A05/A07 calls never returned.
 
 ## In progress
 
