@@ -192,6 +192,8 @@ export interface Order {
   status: string;
   customer_due_date?: string | null;
   supplier_ship_date?: string | null;
+  bid_price?: string | null;
+  landed_cost?: string | null;
   notes?: string[];
 }
 /**

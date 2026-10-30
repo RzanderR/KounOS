@@ -1,7 +1,9 @@
-"""Event and flag route stubs (A03). Handlers land in A18/A19."""
+"""Event and flag routes (A18/A19)."""
 
 from fastapi import APIRouter, HTTPException
 
+from app import order_store
+from app.rules import evaluate_all
 from app.schemas import Event, Flag
 
 router = APIRouter(prefix="/events", tags=["events"])
@@ -9,8 +11,13 @@ router = APIRouter(prefix="/events", tags=["events"])
 
 @router.get("", response_model=list[Event])
 def list_events() -> list[Event]:
-    """List order events (stub until A18)."""
-    raise HTTPException(status_code=501, detail="Not implemented until A18.")
+    """Events across every tracked order (none seeded; A18 records them)."""
+    events: list[Event] = []
+    for order in order_store.list_orders():
+        detail = order_store.get_detail(order.order_id)
+        if detail is not None:
+            events.extend(detail.events)
+    return events
 
 
 @router.post("", response_model=Event)
@@ -21,5 +28,5 @@ def record_event() -> Event:
 
 @router.get("/flags", response_model=list[Flag])
 def list_flags() -> list[Flag]:
-    """List rule-engine flags (stub until A19)."""
-    raise HTTPException(status_code=501, detail="Not implemented until A19.")
+    """Rule-engine flags across every tracked order (A19)."""
+    return evaluate_all()
