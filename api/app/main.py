@@ -9,11 +9,16 @@ from app.routers import api_router
 app = FastAPI(title="KounOS API")
 app.include_router(api_router)
 
+# Allowed origins come from CORS_ORIGINS (comma-separated) so the hosted
+# web URL can be added later. Exposed PDF headers let hosted, cross-origin
+# viewers use range requests.
+_cors = get_settings()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=[origin.strip() for origin in _cors.cors_origins.split(",") if origin.strip()],
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["Content-Length", "Content-Range", "Accept-Ranges"],
 )
 
 

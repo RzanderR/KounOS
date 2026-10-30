@@ -1,10 +1,15 @@
+
 import type {
   HealthStatus,
   Order,
+  PassageBytes,
   Quote,
   QuoteComparison,
   Solicitation,
 } from "./kounos-types";
+
+
+
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
@@ -35,11 +40,25 @@ export function fetchSolicitation(solicitationId: string): Promise<Solicitation 
   return getJson<Solicitation>(`/solicitations/${encodeURIComponent(solicitationId)}`);
 }
 
-/** URL of a solicitation PDF served by the API for the viewer. */
-export function attachmentUrl(solicitationId: string, filename: string): string {
+/** Viewer bytes endpoint: same PDF wrapped in JSON, no .pdf path. */
+export function passageBytesUrl(solicitationId: string, filename: string): string {
   const id = encodeURIComponent(solicitationId);
   const file = encodeURIComponent(filename);
-  return `${API_URL}/solicitations/${id}/attachments/${file}`;
+  return `${API_URL}/solicitations/${id}/passage-bytes?file=${file}`;
+}
+
+export type { PassageBytes };
+
+/** Fetch viewer bytes and decode the base64 payload. */
+export async function fetchPassageBytes(url: string): Promise<Uint8Array> {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`Passage bytes fetch failed: ${res.status}`);
+  const body = (await res.json()) as { data?: unknown };
+  if (typeof body.data !== "string") throw new Error("Passage bytes missing data");
+  const binary = atob(body.data);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  return bytes;
 }
 
 /** Typed GET /quotes. Empty until intake lands (A10). */

@@ -19,6 +19,7 @@ class Settings(BaseSettings):
 
     model_api_key: str | None = None
     meta_base_url: str = "https://api.meta.ai/v1"
+    cors_origins: str = "http://localhost:3000"
     model_read: str = "muse-spark-1.3"
     model_impact: str = "muse-wonder-1.0"
     model_transcribe: str = "muse-voice-transcribe-1.0"

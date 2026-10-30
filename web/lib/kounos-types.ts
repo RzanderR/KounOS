@@ -47,6 +47,13 @@ export interface Requirement {
   boxes?: WordBox[];
 }
 /**
+ * Attachment bytes for the viewer, base64 inside JSON.
+ */
+export interface PassageBytes {
+  file: string;
+  data: string;
+}
+/**
  * A solicitation worth pursuing, with cited requirements and clauses.
  */
 export interface Solicitation {
