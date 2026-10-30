@@ -18,7 +18,6 @@ POST_STUBS = [
     "/solicitations/1232SA26Q0557/extract",
     "/solicitations/1232SA26Q0557/gap-pass",
     "/quotes/extract",
-    "/events",
 ]
 
 
