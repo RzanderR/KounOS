@@ -35,6 +35,7 @@ MODELS: list[type[BaseModel]] = [
     schemas.WordBox,
     schemas.KeyClause,
     schemas.Requirement,
+    schemas.PassageBytes,
     schemas.Solicitation,
     schemas.CompanyProfile,
     schemas.Notice,

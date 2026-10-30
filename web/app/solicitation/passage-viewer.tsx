@@ -5,6 +5,7 @@ import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 
+import { fetchPassageBytes } from "@/lib/api";
 import type { WordBox } from "@/lib/kounos-types";
 
 // Client-only: this module is loaded with next/dynamic { ssr: false }, so
@@ -24,10 +25,11 @@ const pdfCache = new Map<string, Promise<Uint8Array>>();
 function fetchPdfBytes(fileUrl: string): Promise<Uint8Array> {
   let cached = pdfCache.get(fileUrl);
   if (cached === undefined) {
-    cached = fetch(fileUrl).then(async (response) => {
-      if (!response.ok) throw new Error(`PDF fetch failed: ${response.status}`);
-      return new Uint8Array(await response.arrayBuffer());
-    });
+    cached = fetchPassageBytes(fileUrl);
+
+
+      
+
     pdfCache.set(fileUrl, cached);
   }
   return cached;
