@@ -241,6 +241,16 @@ export interface Event {
   received_at?: string | null;
 }
 /**
+ * One order with its linked records for the timeline screen.
+ */
+export interface OrderDetail {
+  order: Order;
+  po?: SupplierPO | null;
+  shipments?: Shipment[];
+  invoices?: Invoice[];
+  events?: Event[];
+}
+/**
  * A rule-engine finding a person must look at.
  */
 export interface Flag {

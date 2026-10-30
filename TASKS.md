@@ -64,7 +64,7 @@ Deadline: **Wed, Nov 4, 2026, 9 PM ET.** Submit by 2 PM Phoenix time (5 PM ET).
 
 - [x] **A16** Seed data: the simulated award (award Nov 2, 2026; delivery due Dec 17; Brightline ships Nov 30, arrives Dec 3) plus four background orders in healthy or minor-issue states. `POST /demo/reset` restores it.
   - Done when: reset restores the exact seeded state, and every order screen shows the "Simulated award" banner.
-- [ ] **A17** Order timeline screen linking customer commitment, supplier PO, shipment, invoice and payment.
+- [x] **A17** Order timeline screen linking customer commitment, supplier PO, shipment, invoice and payment.
 - [ ] **H09** Record the 20-second Brightline voicemail (backorder; shipping moves 16 days to Dec 16) into `data/voicemail/`, plus the same message as an email for backup.
 - [ ] **A18** Voicemail to event: `MODEL_TRANSCRIBE` transcribes the audio, then `MODEL_READ` extracts supplier, PO, affected items, new ship date and confidence into an `Event`. The email backup goes through the same extraction.
   - Done when: the recorded voicemail produces an event with ship date Dec 16.

@@ -1,9 +1,12 @@
-
 import type {
   AwardRecord,
+  Flag,
   HealthStatus,
   Order,
+
+  OrderDetail,
   PassageBytes,
+
   Quote,
   QuoteComparison,
   Solicitation,
@@ -88,4 +91,16 @@ export function fetchAward(): Promise<AwardRecord | null> {
 /** Typed GET /orders. Empty until seeding lands (A16). */
 export function fetchOrders(): Promise<Order[] | null> {
   return getJson<Order[]>("/orders");
+}
+
+export type { Flag, OrderDetail };
+
+/** Typed GET /orders/{id}. Null when unreachable or unknown. */
+export function fetchOrderDetail(orderId: string): Promise<OrderDetail | null> {
+  return getJson<OrderDetail>(`/orders/${encodeURIComponent(orderId)}`);
+}
+
+/** Typed GET /events/flags. Null when unreachable. */
+export function fetchFlags(): Promise<Flag[] | null> {
+  return getJson<Flag[]>("/events/flags");
 }
