@@ -1,9 +1,10 @@
 """Order and demo-reset routes (A16/A17)."""
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 
-from app import order_store
-from app.schemas import Order, OrderDetail
+from app import lineage, order_store
+from app.config import Settings, get_settings
+from app.schemas import ContractFile, Order, OrderDetail
 
 router = APIRouter(prefix="/orders", tags=["orders"])
 demo_router = APIRouter(prefix="/demo", tags=["demo"])
@@ -22,6 +23,17 @@ def get_order(order_id: str) -> OrderDetail:
     if detail is None:
         raise HTTPException(status_code=404, detail=f"Unknown order: {order_id}.")
     return detail
+
+
+@router.get("/{order_id}/contract-file", response_model=ContractFile)
+def get_contract_file(
+    order_id: str, settings: Settings = Depends(get_settings)
+) -> ContractFile:
+    """The whole linked picture for one order with per-figure lineage (A37)."""
+    try:
+        return lineage.build_contract_file(order_id, settings)
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
 
 
 @demo_router.post("/reset")
