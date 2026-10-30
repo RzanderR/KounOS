@@ -17,6 +17,22 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 
 const PAGE_WIDTH = 640;
 
+// One fetch per PDF per page load: the viewer remounts on every badge
+// click, and this cache keeps that from refetching the same file.
+const pdfCache = new Map<string, Promise<Uint8Array>>();
+
+function fetchPdfBytes(fileUrl: string): Promise<Uint8Array> {
+  let cached = pdfCache.get(fileUrl);
+  if (cached === undefined) {
+    cached = fetch(fileUrl).then(async (response) => {
+      if (!response.ok) throw new Error(`PDF fetch failed: ${response.status}`);
+      return new Uint8Array(await response.arrayBuffer());
+    });
+    pdfCache.set(fileUrl, cached);
+  }
+  return cached;
+}
+
 type PdfPage = {
   getViewport: (options: { scale: number }) => { width: number; height: number };
 };
@@ -41,6 +57,26 @@ export default function PassageViewer({
   const [pdf, setPdf] = useState<PdfDoc | null>(null);
   const [dims, setDims] = useState<{ w: number; h: number } | null>(null);
   const [viewerError, setViewerError] = useState(false);
+  const [pdfBytes, setPdfBytes] = useState<Uint8Array | null>(null);
+
+  // The PDF comes through the app's own fetch as bytes, so pdf.js never
+  // makes its own cross-origin request (its range/stream loader fails
+  // across origins, e.g. web :3000 to API :8000, and on hosted demos).
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      try {
+        const bytes = await fetchPdfBytes(fileUrl);
+        if (!cancelled) setPdfBytes(bytes);
+      } catch {
+        if (!cancelled) setViewerError(true);
+      }
+    }
+    void load();
+    return () => {
+      cancelled = true;
+    };
+  }, [fileUrl]);
 
   useEffect(() => {
     let cancelled = false;
@@ -71,10 +107,12 @@ export default function PassageViewer({
         <p role="alert" className="mt-2 text-sm">
           The PDF failed to render. The API serves it at {fileUrl}.
         </p>
+      ) : pdfBytes === null ? (
+        <p className="p-4 text-sm text-muted-foreground">Loading PDF…</p>
       ) : (
         <div className="relative mt-2 max-w-full overflow-auto border" style={{ maxWidth: PAGE_WIDTH + 2 }}>
           <Document
-            file={fileUrl}
+            file={{ data: pdfBytes }}
             onLoadSuccess={setPdf}
             onLoadError={() => setViewerError(true)}
             loading={<p className="p-4 text-sm text-muted-foreground">Loading PDF…</p>}
