@@ -47,7 +47,7 @@ Deadline: **Wed, Nov 4, 2026, 9 PM ET.** Submit by 2 PM Phoenix time (5 PM ET).
 
 - [x] **A10** Quote extraction: one schema reads the PDF, the phone photo and the email screenshot.
   - Done when: all three quotes produce matching structured records.
-- [ ] **A11** Requirement checks in code: delivery date against the requirement, and the sourcing clause (for example country of origin) against each quote.
+- [x] **A11** Requirement checks in code: delivery date against the requirement, and the sourcing clause (for example country of origin) against each quote.
   - Done when: Alder fails on delivery, Cobalt fails on sourcing, Brightline passes.
 - [ ] **A12** Cost engine as pure, tested functions: landed cost, margin, lowest safe bid = landed cost ÷ (1 − target margin), cash exposure. Use `Decimal` for money.
   - Done when: tests reproduce the demo numbers: landed costs $79,348 / $78,764 / $82,070; margins 13.6% / 14.3% / 10.7% at the $91,880.12 award; lowest safe bid $91,189.92 for $82,070 at 10%.
