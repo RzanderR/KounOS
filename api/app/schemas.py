@@ -58,6 +58,13 @@ class Requirement(BaseModel):
     boxes: list[WordBox] = Field(default_factory=list)
 
 
+class PassageBytes(BaseModel):
+    """Attachment bytes for the viewer, base64 inside JSON."""
+
+    file: str
+    data: str
+
+
 class Solicitation(BaseModel):
     """A solicitation worth pursuing, with cited requirements and clauses."""
 

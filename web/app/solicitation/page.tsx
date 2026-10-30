@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 
-import { attachmentUrl, fetchSolicitation } from "@/lib/api";
+import { fetchSolicitation, passageBytesUrl } from "@/lib/api";
 import type {
   KeyClause,
   Requirement,
@@ -86,7 +86,7 @@ export default function SolicitationPage() {
     );
   }
 
-  const viewerUrl = selection === null ? "" : attachmentUrl(DEMO_ID, selection.file);
+  const viewerUrl = selection === null ? "" : passageBytesUrl(DEMO_ID, selection.file);
 
   return (
     <main className="mx-auto w-full max-w-5xl px-6 py-10">
