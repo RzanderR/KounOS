@@ -21,6 +21,9 @@ Updated at the end of every task or work session, committed with that work.
 - Working agreement (human, 2026-10-29): from now on "verified" means the same commands CI runs passed (`npm ci`, `npm run lint`, `npm run typecheck`, `npm run build`; API: `ruff check`, `mypy app`, `pytest`).
 - Note: the dev web server had to be stopped for `npm ci` (Windows file locks) and was restarted after; a stale `.next` cache caused one dev-only 500, cleared by deleting `web/.next`.
 
+- **Badge PDF fix (2026-10-30, `task/A08-pdf-bytes`):** badge clicks failed with pdf.js `NetworkError` / CORS errors because download managers (IDM duplicated/intercepted the direct `.pdf` response) and pdf.js's own range loader break cross-origin. The viewer now fetches `GET /solicitations/{id}/passage-bytes?file=…` (same guarded file as base64 inside `application/json`, no `.pdf` path; pinned by `test_passage_bytes.py`) via the app fetch, decodes to bytes, and passes a memoized `{ data }` object to `<Document>` (fresh literal per render re-transferred the buffer → `DataCloneError`). CORS allowed origins come from config with `Content-Length/Content-Range/Accept-Ranges` exposed. Verified live from fresh profiles: system Chrome AND Firefox — badge click renders the canvas with 18 highlight overlays, `passage-bytes` 200, zero console errors. API gates green (ruff, mypy, 62 pytest); web `lint` + `typecheck` + `build` green.
+- Screenshot retry: the badge viewer works again — please re-capture `docs/screenshots/` (open http://localhost:3000/solicitation from a hard refresh, click the line-0001 badge for the row highlight).
+
 ## In progress
 
 - **A02** smoke test (`task/A02-smoke-test`, covered by PR #5): code done and run live; merges with the single PR.
@@ -48,4 +51,4 @@ Updated at the end of every task or work session, committed with that work.
 2. After CI is green and the human merges: A10–A14, then A16–A20 for Gate 2. Hold triage (A34–A36) until Gate 2 is ticked.
 3. Capture A01 screenshots on a dev machine.
 
-Branches pushed: `task/A01-scaffold` (merged), `task/workflow-direct` (merged), `task/A02-smoke-test`, `task/A03-contract`, `task/A04-ingest`, `task/A05-extract`, `task/A06-citations`, `task/A07-gaps`, `task/A08-screen` (PR #5).
+Branches pushed: `task/A01-scaffold` (merged), `task/workflow-direct` (merged), `task/A02-smoke-test`, `task/A03-contract`, `task/A04-ingest`, `task/A05-extract`, `task/A06-citations`, `task/A07-gaps`, `task/A08-screen` (PR #5), `task/A08-pdf-bytes` (PR #14, badge PDF fix, CI pending).

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
@@ -60,6 +60,10 @@ export default function PassageViewer({
   const [dims, setDims] = useState<{ w: number; h: number } | null>(null);
   const [viewerError, setViewerError] = useState(false);
   const [pdfBytes, setPdfBytes] = useState<Uint8Array | null>(null);
+  // One stable object per fetch: a fresh { data } literal each render
+  // makes react-pdf reload and re-transfer the same buffer, which
+  // detaches its ArrayBuffer (DataCloneError on the second load).
+  const docOptions = useMemo(() => ({ data: pdfBytes ?? new Uint8Array() }), [pdfBytes]);
 
   // The PDF comes through the app's own fetch as bytes, so pdf.js never
   // makes its own cross-origin request (its range/stream loader fails
@@ -114,7 +118,7 @@ export default function PassageViewer({
       ) : (
         <div className="relative mt-2 max-w-full overflow-auto border" style={{ maxWidth: PAGE_WIDTH + 2 }}>
           <Document
-            file={{ data: pdfBytes }}
+            file={docOptions}
             onLoadSuccess={setPdf}
             onLoadError={() => setViewerError(true)}
             loading={<p className="p-4 text-sm text-muted-foreground">Loading PDF…</p>}
