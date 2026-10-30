@@ -53,6 +53,11 @@ Updated at the end of every task or work session, committed with that work.
 2. Gate 2 (human, due Friday): core story read → compare → recommend → monitor runs end to end. Triage (A34–A36) held until Gate 2 is ticked.
 3. Capture A01 screenshots on a dev machine.
 
+## Findings needing human action (2026-10-30)
+
+- **IDM intercepts browser PDF downloads (root cause of the badge bug).** Chromium netlog proves the PDF fetch gets `HTTP/1.0 204 Intercepted by the IDM Advanced Integration` instead of the API's 200: same-origin and JSON pass, both browsers fail identically, curl/python succeed. Our bytes-fetch + CORS work (PR #14) is still the right hardening, but on this machine IDM eats the fetch first. Fix: quit IDM (IDMan.exe is running) or exclude localhost in IDM Options, then agent re-verifies both browsers and the human retries the screenshot.
+- **`.env` names a `-contributor` model.** `MODEL_READ=muse-spark-1.3-contributor` was already in the repo-root `.env` (agent never edits `.env`). Every live run so far (smoke, A05, A07, A10, gap/event re-runs) called that model, breaching the standard-modes-only rule. Fix: human sets `MODEL_READ=muse-spark-1.3` in `.env`; agent then re-runs all live extractions and refreshes `data/extractions/` + provenance notes.
+
 ## Human file specs (H06/H09)
 
 - **H06** (already present?): `data/quotes/docs/tallgrass_quote_PRINT_AND_PHOTOGRAPH.pdf` — if that is the phone photo of the printed Tallgrass quote, nothing to do (will tick H06); otherwise replace that exact path with the photo (PDF or JPG).

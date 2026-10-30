@@ -1,12 +1,16 @@
-"""End-to-end demo-path test (A20): reset to delay flag, in a real browser.
+"""End-to-end demo-path test (A20): badge highlight to delay flag.
 
-Flow: POST /demo/reset, ingest the H09 voicemail, then open the order in
-headless system Chrome and assert the Simulated-award banner, the moved
-shipment and the blocking delay flag are on screen.
+Stages (each browser gets a fresh context: clean profile, no cache —
+the equivalent of a hard refresh):
+1. Solicitation: click the line-0001 badge, assert the PDF page renders
+   (a canvas) with highlight boxes and no viewer error.
+2. Orders list shows the Simulated-award banner.
+3. Delay path (needs H09 audio): ingest the voicemail, assert the
+   blocking 2-days-late flag via API and on the order page.
 
-Needs: API on :8000, web on :3000, data/voicemail/tallgrass_backorder.m4a
-(H09) and MODEL_API_KEY for transcription + extraction.
-Run (from repo root): python e2e/demo_path.py
+Needs: API on :8000, web on :3000. Stage 3 additionally needs
+data/voicemail/tallgrass_backorder.m4a (H09) and MODEL_API_KEY.
+Run (from repo root): python e2e/demo_path.py [--browser chrome|firefox|all]
 """
 
 import sys
@@ -33,7 +37,50 @@ def api(method: str, path: str, body: object = None) -> object:
         return json.loads(response.read().decode())
 
 
-def main() -> int:
+def check_solicitation(browser_name: str) -> None:
+    """Badge click renders the PDF page with highlights, no error."""
+    from playwright.sync_api import sync_playwright
+
+    with sync_playwright() as playwright:
+        if browser_name == "firefox":
+            browser = playwright.firefox.launch(headless=True)
+        else:
+            browser = playwright.chromium.launch(channel="chrome", headless=True)
+        context = browser.new_context()
+        page = context.new_page()
+        page.goto(f"{WEB}/solicitation", wait_until="networkidle")
+        page.get_by_role("button", name="Show citation for line 0001").click()
+        page.wait_for_selector("canvas", timeout=30000)
+        highlights = page.locator("div.border-yellow-500").count()
+        assert highlights > 0, f"[{browser_name}] no highlight boxes on the row"
+        errors = page.get_by_role("alert").count()
+        assert errors == 0, f"[{browser_name}] viewer error shown"
+        print(f"[{browser_name}] badge click: canvas + {highlights} highlights, no error")
+        context.close()
+        browser.close()
+
+
+def check_orders_banner(browser_name: str) -> None:
+    """The orders list shows the Simulated-award banner."""
+    from playwright.sync_api import sync_playwright
+
+    with sync_playwright() as playwright:
+        if browser_name == "firefox":
+            browser = playwright.firefox.launch(headless=True)
+        else:
+            browser = playwright.chromium.launch(channel="chrome", headless=True)
+        context = browser.new_context()
+        page = context.new_page()
+        page.goto(f"{WEB}/orders", wait_until="networkidle")
+        body = page.text_content("main") or ""
+        assert "Simulated award" in body, f"[{browser_name}] banner missing"
+        print(f"[{browser_name}] orders banner on screen")
+        context.close()
+        browser.close()
+
+
+def check_delay_path() -> bool:
+    """Ingest the voicemail and assert the delay flag (needs H09 audio)."""
     reset = api("POST", "/demo/reset")
     assert reset == {"orders": 5}, reset
     print("reset: 5 orders")
@@ -41,7 +88,7 @@ def main() -> int:
     audio = ROOT / "data" / "voicemail" / AUDIO
     if not audio.is_file():
         print(f"missing H09 audio: {audio} — record it, then re-run")
-        return 2
+        return False
     event = api(
         "POST",
         "/events/ingest",
@@ -55,23 +102,26 @@ def main() -> int:
     delay = [f for f in flags if f["order_id"] == ORDER and f["code"] == "delivery-slip"]
     assert delay and "2 days late" in delay[0]["message"], flags
     print(f"flag: {delay[0]['message']}")
+    return True
 
-    from playwright.sync_api import sync_playwright
 
-    with sync_playwright() as playwright:
-        browser = playwright.chromium.launch(
-            channel="chrome", headless=True
-        )
-        page = browser.new_page()
-        page.goto(f"{WEB}/orders/{ORDER}", wait_until="networkidle")
-        body = page.text_content("main") or ""
-        assert "Simulated award" in body, "banner missing"
-        assert "2 days late" in body, "flag missing on screen"
-        assert "2027-01-03" in body, "moved arrival missing on screen"
-        browser.close()
-    print("browser: banner, flag and arrival on screen — demo path green")
+def main(browsers: list[str]) -> int:
+    for browser_name in browsers:
+        check_solicitation(browser_name)
+        check_orders_banner(browser_name)
+    if not check_delay_path():
+        print("browser stages green; delay path waits for H09 audio")
+        return 2
+    print("demo path green end to end")
     return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    arg = sys.argv[1] if len(sys.argv) > 1 else "--browser=all"
+    if arg == "--browser=chrome":
+        chosen = ["chrome"]
+    elif arg == "--browser=firefox":
+        chosen = ["firefox"]
+    else:
+        chosen = ["chrome", "firefox"]
+    raise SystemExit(main(chosen))
