@@ -19,6 +19,9 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 const PAGE_WIDTH = 640;
 
 // One fetch per PDF per page load: the viewer remounts on every badge
+// click, but each caller gets its own copy of the bytes — react-pdf
+// detaches (neuters) the buffer it is given when it transfers it to its
+// worker, so reusing the cached object breaks the second render.
 // click, and this cache keeps that from refetching the same file.
 const pdfCache = new Map<string, Promise<Uint8Array>>();
 
@@ -32,7 +35,7 @@ function fetchPdfBytes(fileUrl: string): Promise<Uint8Array> {
 
     pdfCache.set(fileUrl, cached);
   }
-  return cached;
+  return cached.then((bytes) => bytes.slice());
 }
 
 type PdfPage = {
