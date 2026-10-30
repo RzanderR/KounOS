@@ -52,3 +52,15 @@ Updated at the end of every task or work session, committed with that work.
 3. Capture A01 screenshots on a dev machine.
 
 Branches pushed: `task/A01-scaffold` (merged), `task/workflow-direct` (merged), `task/A02-smoke-test`, `task/A03-contract`, `task/A04-ingest`, `task/A05-extract`, `task/A06-citations`, `task/A07-gaps`, `task/A08-screen` (PR #5), `task/A08-pdf-bytes` (PR #14, badge PDF fix, CI pending).
+
+## Handoff 2026-10-30 evening (laptop → home desktop)
+
+Merged into main: #1–#3, #4 closed, #5→#13 (A02–A08 screen, fuzzy boxes, pdf-bytes fix, A10–A14, A16+A19, A17). Gate 2 ticked by owner; e2e green on the merged-result tree in Chrome + Firefox from a reset.
+
+Open PRs, merge in numeric order, all CI green except #25 (running): #15 D04 contributor-tier note; #16 A18 email-ingest endpoint + backup email + live event; #17 A20 e2e (badge x2, banner, reset→email→flag); #18 D05 + PLAN/TASKS (contract-file direction, A28/A29 dropped, A37–A40 added); #19 A21 impact tools + live Muse Wonder run; #20 A37 lineage endpoint; #21 A38 contract-file screen + screenshot; #22 A39 ripple + options + screenshot; #23 A34–A36 triage code (live runs need H15 profile + H16 batch); #24 A40 e2e extension (base: #17 branch; needs #16–#22 first); #25 DRAFT render.yaml (merge only after Saturday deploy + live-link e2e).
+
+Local branches: everything pushed — only `task/A17-timeline` differs locally (one extra main-merge commit from a `git pull`; remote tip already merged via #13, nothing to push). Old superseded branches with no PRs, correctly: `task/A18-voicemail`, `task/A20-e2e`. Do not use the `main` checkout at `C:/Users/zande/Documents/Projects/KounOS` (a linked worktree of this repo) from two machines at once.
+
+Next: merge #15→#24; Saturday A25 deploy (Render blueprint PR #25 + Vercel `web/`, secrets per 2026-10-30 chat), re-ingest the email after deploy (free-tier sleep resets state to seed), run A40 e2e on the live link; then H15 `data/company_profile.json` + H16 3-notice `data/notices/` batch for triage live runs; tick A18/A20/A37–A40 in TASKS as their PRs land.
+
+Laptop-only (recreate on desktop, never commit): repo-root `.env` (`MODEL_API_KEY`, `MODEL_READ=muse-spark-1.3-contributor`) — secret; `api/.venv` (Python 3.11.5, `pip install -r requirements.txt`); `web/node_modules` (`npm ci`); `.agents/skills/` (73 third-party dirs — reinstall from the now-committed `skills-lock.json`); Playwright browsers (`playwright install`); `C:\Users\zande\Documents\Projects\tmp_*.py` scratch probes (disposable); running :8000/:3000 dev servers (die with the laptop).
