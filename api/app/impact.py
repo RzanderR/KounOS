@@ -50,7 +50,10 @@ ANALYSIS_PROMPT = (
     "supplier. Using ONLY the figures in the tool output below, write one "
     "plain sentence per recovery option (expedite_overnight, "
     "request_extension, partial_shipment, switch_supplier) and a one-line "
-    "overall note. Never invent a number: repeat the figures exactly. "
+    "overall note. Never invent a number: repeat the figures exactly; "
+    "never invent ids, lots, units or parties — the note must only react "
+    "to the options above, and the switch_supplier sentence must name the "
+    "failing suppliers from its context line. "
     "Return only JSON matching the schema."
 )
 
@@ -187,6 +190,7 @@ def analyze(order_id: str, settings: Settings) -> ImpactAnalysis:
             f"new_margin_pct {opt.new_margin_pct}, "
             f"new_arrival_date {opt.new_arrival_date}, "
             f"on_time {opt.on_time}"
+            + (f". Context: {opt.summary}" if opt.summary else "")
             for opt in options
         )
     )
