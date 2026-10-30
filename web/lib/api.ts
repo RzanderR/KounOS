@@ -1,7 +1,9 @@
 import type {
   AwardRecord,
+  FitAssessment,
   Flag,
   HealthStatus,
+  Notice,
   Order,
 
   OrderDetail,
@@ -98,6 +100,16 @@ export type { Flag, OrderDetail };
 /** Typed GET /orders/{id}. Null when unreachable or unknown. */
 export function fetchOrderDetail(orderId: string): Promise<OrderDetail | null> {
   return getJson<OrderDetail>(`/orders/${encodeURIComponent(orderId)}`);
+}
+
+/** Typed GET /notices. Empty until the H16 batch lands. */
+export function fetchNotices(): Promise<Notice[] | null> {
+  return getJson<Notice[]>("/notices");
+}
+
+/** Typed GET /notices/{id}/fit. Null when unscorable (H15 profile pending). */
+export function fetchFit(noticeId: string): Promise<FitAssessment | null> {
+  return getJson<FitAssessment>(`/notices/${encodeURIComponent(noticeId)}/fit`);
 }
 
 /** Typed GET /events/flags. Null when unreachable. */
