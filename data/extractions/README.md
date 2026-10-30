@@ -22,3 +22,10 @@ and is never displayed on screen).
   (Pydantic-validated, token usage printed). Command:
   `python scripts/smoke_meta.py` with `PYTHONPATH=.`. Caveat: the smoke
   schema sees only the specs PDF, so `solicitation_id` comes back empty.
+- `quotes_ninebark.json`, `quotes_larkspur.json`, `quotes_tallgrass.json` —
+  A10 quote records, run live 2026-10-29
+  (`python scripts/extract_quotes.py`). One schema reads the Ninebark PDF,
+  the Larkspur email PNG and the Tallgrass photographed PDF; all three
+  match their `data/quotes/*.json` fixtures on supplier, total and lead
+  time. Caveat: the email shows one combined line (qty 116), so the live
+  Larkspur record has one line where the fixture splits base + option.

@@ -1,0 +1,30 @@
+{
+  "quote_id": "ninebark",
+  "supplier": "Ninebark Lighting Supply",
+  "solicitation_id": "1232SA26Q0557",
+  "lines": [
+    {
+      "line": "1",
+      "description": "PHOTOBIO CX 2125 LED, 850W, 100-277V, S4 spectrum, 10' cord with NEMA 5-15P plug Base (CLIN 0001)",
+      "quantity": 58,
+      "unit": "EA",
+      "unit_price": "668.00",
+      "extended": "38744.00",
+      "part": "PTB8850LS41"
+    },
+    {
+      "line": "2",
+      "description": "PHOTOBIO CX 2125 LED, 850W, 100-277V, S4 spectrum, 10' cord with NEMA 5-15P plug Option (CLIN 0002)",
+      "quantity": 58,
+      "unit": "EA",
+      "unit_price": "668.00",
+      "extended": "38744.00",
+      "part": "PTB8850LS41"
+    }
+  ],
+  "freight": "1860.00",
+  "total": "79348.00",
+  "lead_time_days_max": 98,
+  "country_of_origin": "not stated",
+  "status": "needs_review"
+}
