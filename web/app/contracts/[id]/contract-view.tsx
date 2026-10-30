@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 
-import { fetchContractFile } from "@/lib/api";
-import type { ContractFile, LinkedFigure } from "@/lib/kounos-types";
+import { fetchContractFile, fetchImpactAnalysis, fetchRipple } from "@/lib/api";
+import type { ImpactAnalysisShim } from "@/lib/api";
+import type { ContractFile, LinkedFigure, Ripple } from "@/lib/kounos-types";
 import { SimulatedAwardBanner } from "../../orders/banner";
 
 const SECTION_TITLES: Record<string, string> = {
@@ -71,14 +72,22 @@ export default function ContractView({ orderId }: { orderId: string }) {
   const [file, setFile] = useState<ContractFile | null>(null);
   const [failed, setFailed] = useState(false);
   const [selection, setSelection] = useState<LinkedFigure | null>(null);
+  const [ripple, setRipple] = useState<Ripple | null>(null);
+  const [impact, setImpact] = useState<ImpactAnalysisShim | null>(null);
 
   useEffect(() => {
     let cancelled = false;
     async function load() {
-      const data = await fetchContractFile(orderId);
+      const [data, rippleData, impactData] = await Promise.all([
+        fetchContractFile(orderId),
+        fetchRipple(orderId),
+        fetchImpactAnalysis(orderId),
+      ]);
       if (!cancelled) {
         if (data === null) setFailed(true);
         else setFile(data);
+        setRipple(rippleData);
+        setImpact(impactData);
       }
     }
     void load();
@@ -141,6 +150,63 @@ export default function ContractView({ orderId }: { orderId: string }) {
           </ul>
         </section>
       ))}
+
+      {ripple === null ? null : (
+        <section aria-label="Delay ripple" className="mt-8">
+          <h2 className="text-lg font-medium">Delay ripple</h2>
+          <p className="mt-2 text-sm">
+            Arrival {ripple.arrival_date ?? "unknown"} is {ripple.days_late}{" "}
+            {ripple.days_late === 1 ? "day" : "days"} late (due{" "}
+            {ripple.customer_due_date ?? "unknown"}).
+          </p>
+          <table className="mt-2 w-full border-collapse text-sm">
+            <tbody>
+              <tr className="border-b align-top">
+                <td className="py-2 pr-4 font-medium">Margin now</td>
+                <td className="py-2">{ripple.margin_now}%</td>
+              </tr>
+              <tr className="border-b align-top">
+                <td className="py-2 pr-4 font-medium">Margin if expedited</td>
+                <td className="py-2">
+                  {ripple.margin_expedited}% (overnight {ripple.expedite_cost})
+                </td>
+              </tr>
+              <tr className="border-b align-top">
+                <td className="py-2 pr-4 font-medium">Deposit due</td>
+                <td className="py-2">{ripple.deposit_due}</td>
+              </tr>
+              <tr className="border-b align-top">
+                <td className="py-2 pr-4 font-medium">Invoice balance</td>
+                <td className="py-2">{ripple.invoice_balance}</td>
+              </tr>
+              {(ripple.risks ?? []).map((risk) => (
+                <tr key={risk} className="border-b align-top">
+                  <td className="py-2 pr-4 font-medium">Risk</td>
+                  <td className="py-2">{risk}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+      )}
+
+      {impact === null ? null : (
+        <section aria-label="Recovery options" className="mt-8">
+          <h2 className="text-lg font-medium">Recovery options</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Analysis by {impact.generated_by}
+          </p>
+          <ul className="mt-2">
+            {(impact.options ?? []).map((option) => (
+              <li key={option.name} className="border-b py-2 text-sm">
+                <p className="font-medium">{option.name}</p>
+                <p className="mt-1">{option.summary}</p>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-2 text-sm">{impact.note}</p>
+        </section>
+      )}
 
       <section aria-label="Lineage" className="mt-8">
         <h2 className="text-lg font-medium">Lineage</h2>

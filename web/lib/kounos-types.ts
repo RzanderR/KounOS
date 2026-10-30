@@ -302,3 +302,19 @@ export interface ContractFile {
   solicitation_id: string;
   sections: ContractSection[];
 }
+/**
+ * What the latest delay event changes: date, margin, cash, risk (A39).
+ */
+export interface Ripple {
+  order_id: string;
+  event_id: string;
+  arrival_date?: string | null;
+  customer_due_date?: string | null;
+  days_late: number;
+  margin_now: string;
+  margin_expedited: string;
+  expedite_cost: string;
+  deposit_due: string;
+  invoice_balance: string;
+  risks?: string[];
+}

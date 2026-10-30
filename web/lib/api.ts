@@ -1,6 +1,7 @@
 import type {
   AwardRecord,
   ContractFile,
+  Ripple,
   Flag,
   HealthStatus,
   Order,
@@ -104,6 +105,47 @@ export function fetchOrderDetail(orderId: string): Promise<OrderDetail | null> {
 /** Typed GET /orders/{id}/contract-file. Null when unreachable or unknown. */
 export function fetchContractFile(orderId: string): Promise<ContractFile | null> {
   return getJson<ContractFile>(`/orders/${encodeURIComponent(orderId)}/contract-file`);
+}
+
+/** Typed GET /orders/{id}/ripple. Null when unreachable, unknown, or on track. */
+export function fetchRipple(orderId: string): Promise<Ripple | null> {
+  return getJson<Ripple>(`/orders/${encodeURIComponent(orderId)}/ripple`);
+}
+
+/** Typed POST /impact/analyze. Null when unreachable or not yet served. */
+export function fetchImpactAnalysis(orderId: string): Promise<ImpactAnalysisShim | null> {
+  return postJson<ImpactAnalysisShim>("/impact/analyze", { order_id: orderId });
+}
+
+/** Local copy of the A21 analysis shape; the generated type lands with #19. */
+export interface ImpactAnalysisShim {
+  order_id: string;
+  event_id: string | null;
+  generated_by: string;
+  options: {
+    name: string;
+    summary: string;
+    cost_delta: string;
+    new_margin_pct: string | null;
+    new_arrival_date: string | null;
+    on_time: boolean;
+    needs_confirmation: boolean;
+  }[];
+  note: string;
+}
+
+async function postJson<T>(path: string, body: unknown): Promise<T | null> {
+  try {
+    const res = await fetch(`${API_URL}${path}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    if (!res.ok) return null;
+    return (await res.json()) as T;
+  } catch {
+    return null;
+  }
 }
 
 /** Typed GET /events/flags. Null when unreachable. */

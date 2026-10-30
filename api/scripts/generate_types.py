@@ -59,6 +59,7 @@ MODELS: list[type[BaseModel]] = [
     schemas.LinkedFigure,
     schemas.ContractSection,
     schemas.ContractFile,
+    schemas.Ripple,
 ]
 
 
