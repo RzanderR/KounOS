@@ -1,0 +1,29 @@
+# Render blueprint for the KounOS demo API (A25).
+#
+# Saturday flow: Render dashboard -> New -> Blueprint -> pick the repo.
+# Render prompts for every `sync: false` variable on first apply.
+# Python version and build/start come from the api/ rootDir; no runtime
+# key needed (Render detects requirements.txt).
+# After the API is live, deploy the web/ app on Vercel with
+# NEXT_PUBLIC_API_URL pointing at the URL below.
+
+services:
+  - type: web
+    name: kounos-api
+    rootDir: api
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: MODEL_API_KEY
+        sync: false
+      - key: MODEL_READ
+        value: muse-spark-1.3-contributor
+      - key: MODEL_IMPACT
+        value: muse-wonder-1.0
+      - key: MODEL_TRANSCRIBE
+        value: muse-voice-transcribe-1.0
+      - key: DEMO_MODE
+        value: live
+      - key: CORS_ORIGINS
+        value: https://kounos-web.vercel.app
