@@ -1,19 +1,26 @@
-"""Sourcing-decision route stubs (A03). Handlers land in A13/A14."""
+"""Sourcing-decision routes (A14): pursue-at-price or pass, computed in code."""
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 
-from app.schemas import SourcingDecision
+from app.recommend import current_decision, read_award
+from app.schemas import AwardRecord, SourcingDecision
 
 router = APIRouter(prefix="/sourcing-decisions", tags=["sourcing-decisions"])
 
 
+@router.get("/award", response_model=AwardRecord)
+def get_award() -> AwardRecord:
+    """The actual award the recommendation is measured against (A14)."""
+    return read_award()
+
+
 @router.get("", response_model=list[SourcingDecision])
 def list_decisions() -> list[SourcingDecision]:
-    """List sourcing decisions (stub until A14)."""
-    raise HTTPException(status_code=501, detail="Not implemented until A14.")
+    """The current bid recommendation (A14)."""
+    return [current_decision()]
 
 
 @router.post("", response_model=SourcingDecision)
 def make_decision() -> SourcingDecision:
-    """Recommend pursue-at-price or pass, computed in code (stub until A14)."""
-    raise HTTPException(status_code=501, detail="Not implemented until A14.")
+    """Recompute the bid recommendation (A14)."""
+    return current_decision()

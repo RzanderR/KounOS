@@ -1,11 +1,13 @@
 
 import type {
+  AwardRecord,
   HealthStatus,
   Order,
   PassageBytes,
   Quote,
   QuoteComparison,
   Solicitation,
+  SourcingDecision,
 } from "./kounos-types";
 
 
@@ -66,11 +68,21 @@ export function fetchQuotes(): Promise<Quote[] | null> {
   return getJson<Quote[]>("/quotes");
 }
 
-export type { QuoteComparison };
+export type { AwardRecord, QuoteComparison, SourcingDecision };
 
 /** Typed GET /quotes/comparison. Null when unreachable. */
 export function fetchComparison(): Promise<QuoteComparison[] | null> {
   return getJson<QuoteComparison[]>("/quotes/comparison");
+}
+
+/** Typed GET /sourcing-decisions. Null when unreachable. */
+export function fetchDecision(): Promise<SourcingDecision[] | null> {
+  return getJson<SourcingDecision[]>("/sourcing-decisions");
+}
+
+/** Typed GET /sourcing-decisions/award. Null when unreachable. */
+export function fetchAward(): Promise<AwardRecord | null> {
+  return getJson<AwardRecord>("/sourcing-decisions/award");
 }
 
 /** Typed GET /orders. Empty until seeding lands (A16). */
