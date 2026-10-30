@@ -142,6 +142,36 @@ export interface Quote {
   status?: "verified" | "needs_review";
 }
 /**
+ * One computed requirement check for one quote.
+ */
+export interface RequirementCheck {
+  check: "delivery" | "spec" | "sourcing";
+  verdict: "pass" | "fail" | "needs_confirmation";
+  reason: string;
+}
+/**
+ * All requirement checks for one quote plus the overall verdict.
+ */
+export interface QuoteVerdict {
+  quote_id: string;
+  supplier: string;
+  checks?: RequirementCheck[];
+  overall: "pass" | "fail" | "needs_confirmation";
+}
+/**
+ * One quote with its checks and code-computed costs for the screen.
+ */
+export interface QuoteComparison {
+  quote: Quote;
+  verdict: QuoteVerdict;
+  landed_cost: string;
+  margin_at_award: string;
+  safe_bid_per_unit: string;
+  safe_bid_total: string;
+  deposit_due: string;
+  award_total: string;
+}
+/**
  * Computed recommendation: pursue at a price, or pass with reasons.
  */
 export interface SourcingDecision {

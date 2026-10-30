@@ -51,7 +51,7 @@ Deadline: **Wed, Nov 4, 2026, 9 PM ET.** Submit by 2 PM Phoenix time (5 PM ET).
   - Done when: Alder fails on delivery, Cobalt fails on sourcing, Brightline passes.
 - [x] **A12** Cost engine as pure, tested functions: landed cost, margin, lowest safe bid = landed cost ÷ (1 − target margin), cash exposure. Use `Decimal` for money.
   - Done when: tests reproduce the demo numbers: landed costs $79,348 / $78,764 / $82,070; margins 13.6% / 14.3% / 10.7% at the $91,880.12 award; lowest safe bid $91,189.92 for $82,070 at 10%.
-- [ ] **A13** Quote comparison screen: side-by-side quotes with pass or fail checks; a bid-price input that recomputes margins live; supplier selection; a one-page printable sourcing package.
+- [x] **A13** Quote comparison screen: side-by-side quotes with pass or fail checks; a bid-price input that recomputes margins live; supplier selection; a one-page printable sourcing package.
   - Done when: changing the bid updates every margin without a model call.
 - [ ] **A14** Bid recommendation and award reveal: KounOS recommends "pursue at $X" (the lowest safe bid with the chosen supplier) or "pass, because..." (no compliant quote, or the margin floor can't be met), computed in code. It appears next to the actual award's total, date and offers received, with three caveats on screen (only totals are public; today's quotes reflect today's prices; one award is one data point).
   - Done when: it reads `data/awards/`, shows the recommendation and all three caveats, and a test shows "pass" when no quote is compliant.

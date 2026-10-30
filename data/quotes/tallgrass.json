@@ -39,6 +39,7 @@
   "lead_time": "3-4 weeks ARO",
   "lead_time_days_max": 28,
   "payment_terms": "50% deposit with PO, balance net 30 after delivery",
+  "deposit_fraction": "0.5",
   "country_of_origin": "Not stated on quote",
   "notes": [
     "Pricing firm for 30 days.",

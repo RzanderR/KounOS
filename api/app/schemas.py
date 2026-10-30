@@ -153,6 +153,39 @@ class Quote(BaseModel):
     status: Literal["verified", "needs_review"] = "needs_review"
 
 
+CheckVerdict = Literal["pass", "fail", "needs_confirmation"]
+
+
+class RequirementCheck(BaseModel):
+    """One computed requirement check for one quote."""
+
+    check: Literal["delivery", "spec", "sourcing"]
+    verdict: CheckVerdict
+    reason: str
+
+
+class QuoteVerdict(BaseModel):
+    """All requirement checks for one quote plus the overall verdict."""
+
+    quote_id: str
+    supplier: str
+    checks: list[RequirementCheck] = Field(default_factory=list)
+    overall: CheckVerdict
+
+
+class QuoteComparison(BaseModel):
+    """One quote with its checks and code-computed costs for the screen."""
+
+    quote: Quote
+    verdict: QuoteVerdict
+    landed_cost: Decimal
+    margin_at_award: Decimal
+    safe_bid_per_unit: Decimal
+    safe_bid_total: Decimal
+    deposit_due: Decimal
+    award_total: Decimal
+
+
 class SourcingDecision(BaseModel):
     """Computed recommendation: pursue at a price, or pass with reasons."""
 
