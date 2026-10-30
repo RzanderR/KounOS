@@ -12,15 +12,17 @@ import json
 import re
 from decimal import Decimal
 from pathlib import Path
-from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 from app.config import REPO_ROOT
-from app.schemas import Quote, QuoteLine
-
-CheckVerdict = Literal["pass", "fail", "needs_confirmation"]
-
+from app.schemas import (
+    CheckVerdict,
+    Quote,
+    QuoteLine,
+    QuoteVerdict,
+    RequirementCheck,
+)
 
 class RequirementsSpec(BaseModel):
     """What a quote must satisfy, read from the served solicitation."""
@@ -29,23 +31,6 @@ class RequirementsSpec(BaseModel):
     required_part: str
     brand_name_only: bool = True
     sourcing_clause: str = ""
-
-
-class RequirementCheck(BaseModel):
-    """One computed check for one quote."""
-
-    check: Literal["delivery", "spec", "sourcing"]
-    verdict: CheckVerdict
-    reason: str
-
-
-class QuoteVerdict(BaseModel):
-    """All checks for one quote plus the overall verdict."""
-
-    quote_id: str
-    supplier: str
-    checks: list[RequirementCheck] = Field(default_factory=list)
-    overall: CheckVerdict
 
 
 def parse_delivery_days(text: str) -> int:
