@@ -23,6 +23,11 @@ Updated at the end of every task or work session, committed with that work.
 
 ## In progress
 
+- **Merge stack** (all CI-green when last checked; human merges in order): PR #5 (A02–A08) ← PR #6 (fuzzy boxes, Gate 1 tick) ← PR #7 (A10) ← PR #8 (A11) ← PR #9 (A12) ← PR #10 (A13) ← PR #11 (A14) ← PR #12 (A16+A19) ← PR #13 (A17). Branches pushed, no PR yet: `task/A18-voicemail` (pipeline code, live run waits for H09), `task/A20-e2e` (script wiring proven, green run waits for H09).
+- **A10–A14 compare block (all done, PRs open):** one quote schema reads PDF/PNG/photo (live run matches fixtures; Larkspur email is one combined line); A11 checks encode D03 in code; A12 Decimal engine reproduces every vector (safe bid $91,189.92); A13 /quotes screen with live margins, selection, printable package; A14 pursue-at-$91,189.92-Tallgrass recommendation next to the real award ($91,880.12, 2026-09-30, 26 offers) with the three caveats.
+- **A16/A17/A19 order block (done, PRs open):** seed (Tallgrass award Nov 2, due Jan 1 = +60d per D03, +4 background orders) with exact reset; timeline screens with Simulated-award banner; rules (Jan 3 arrival = 2 days late, blocking; margin floor; deposit warning).
+- **A18/A20 (code done, live halves wait for H09):** transcribe→extract→record→apply pipeline with POST /events/ingest; e2e/demo_path.py (Playwright + system Chrome) proven through reset with a clean missing-audio gate.
+- **CI repair (2026-10-29):** the verdict-model move left duplicate classes in `checks.py` uncommitted on the A13 branch, so PRs #10–#13 failed mypy while local runs stayed green. Fixed with one commit on A13 (`edcf63e`) cherry-picked down the whole stack (A14–A20); the `/events` POST-stub retirement rode along to A18/A20. Lesson: commit before branching, and distrust green runs over a dirty tree.
 - **A02** smoke test (`task/A02-smoke-test`, covered by PR #5): code done and run live; merges with the single PR.
 - **Fuzzy-boxes fix** (`task/A08-fuzzy-boxes`, small PR to open): when the exact word-run fails but the fuzzy match passes, `partial_ratio_alignment` gives the char span, mapped back to word boxes; when the span misses snippet words (table row interleaved with columns), the densest query-word window wins. Clicking line 0001 now highlights the 0001 schedule row (18 boxes); all 8 served rows carry boxes. API gates green (ruff, mypy, 58 pytest).
 - **A08** screenshot (human): no file found in `docs/screenshots/` yet — please save it there (open http://localhost:3000/solicitation, click the line-0001 badge for the row highlight). Then agent ticks A08 + A09. Note: [PR #5](https://github.com/RzanderR/KounOS/pull/5) is still OPEN, not merged — it needs a human merge click.
@@ -44,8 +49,14 @@ Updated at the end of every task or work session, committed with that work.
 
 ## Next
 
-1. Human captures the A08 screenshot into `docs/screenshots/` (click the delivery clause badge for the highlight), then agent adds it to PR #5 and ticks A08 + A09 (quote files already in `data/quotes/docs/`).
-2. After CI is green and the human merges: A10–A14, then A16–A20 for Gate 2. Hold triage (A34–A36) until Gate 2 is ticked.
+1. Human: save the A08 screenshot to `docs/screenshots/` (any row badge now highlights; line 0001 shows the table row), merge the stack in order (#5 → #13), record the H09 voicemail + backup email (specs below), confirm the H06 Tallgrass photo file. Then agent: tick A08 + A09, live-run A18/A20, tick them, open their PRs.
+2. Gate 2 (human, due Friday): core story read → compare → recommend → monitor runs end to end. Triage (A34–A36) held until Gate 2 is ticked.
 3. Capture A01 screenshots on a dev machine.
+
+## Human file specs (H06/H09)
+
+- **H06** (already present?): `data/quotes/docs/tallgrass_quote_PRINT_AND_PHOTOGRAPH.pdf` — if that is the phone photo of the printed Tallgrass quote, nothing to do (will tick H06); otherwise replace that exact path with the photo (PDF or JPG).
+- **H09 voicemail:** `data/voicemail/tallgrass_backorder.m4a` (phone voice memo, ~20 seconds). Say all of: supplier "Tallgrass Horticultural Supply", purchase order "PO-001", the greenhouse light fixtures (base plus option, 116 units), backorder reason, new ship date "December 31st", new arrival "January 3rd".
+- **H09 email backup:** `data/voicemail/tallgrass_backorder_email.txt` — the same message as plain text (same facts, same dates).
 
 Branches pushed: `task/A01-scaffold` (merged), `task/workflow-direct` (merged), `task/A02-smoke-test`, `task/A03-contract`, `task/A04-ingest`, `task/A05-extract`, `task/A06-citations`, `task/A07-gaps`, `task/A08-screen` (PR #5).
