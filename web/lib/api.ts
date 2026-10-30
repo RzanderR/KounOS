@@ -1,5 +1,6 @@
 import type {
   AwardRecord,
+  ContractFile,
   Flag,
   HealthStatus,
   Order,
@@ -98,6 +99,11 @@ export type { Flag, OrderDetail };
 /** Typed GET /orders/{id}. Null when unreachable or unknown. */
 export function fetchOrderDetail(orderId: string): Promise<OrderDetail | null> {
   return getJson<OrderDetail>(`/orders/${encodeURIComponent(orderId)}`);
+}
+
+/** Typed GET /orders/{id}/contract-file. Null when unreachable or unknown. */
+export function fetchContractFile(orderId: string): Promise<ContractFile | null> {
+  return getJson<ContractFile>(`/orders/${encodeURIComponent(orderId)}/contract-file`);
 }
 
 /** Typed GET /events/flags. Null when unreachable. */
