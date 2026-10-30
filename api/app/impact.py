@@ -51,8 +51,9 @@ ANALYSIS_PROMPT = (
     "plain sentence per recovery option (expedite_overnight, "
     "request_extension, partial_shipment, switch_supplier) and a one-line "
     "overall note. Never invent a number: repeat the figures exactly; "
-    "never invent ids, lots, units or parties — the note must only react "
-    "to the options above, and the switch_supplier sentence must name the "
+    "never invent ids, lots, units, parties or tool chatter — the note "
+    "is one sentence recommending exactly one of the four options above "
+    "using its figures, and the switch_supplier sentence must name the "
     "failing suppliers from its context line. "
     "Return only JSON matching the schema."
 )
