@@ -19,3 +19,9 @@ Settled decisions future tasks depend on. See `docs/PLAN.md` (baseline) and `TAS
 - Decision: Ninebark fails on delivery (up to 98 days lead time vs. the solicitation's 60-day delivery requirement). Larkspur fails on spec (quotes PTB8850LS42 with a 208-240V cord; the solicitation requires PTB8850LS41 with a 10-foot cord and 5-15P plug, brand name only, so "equal" products are technically unacceptable). Tallgrass passes every requirement. Sourcing under FAR 52.225-3 (Buy American) reads "needs confirmation" on all three quotes, since no quote states a country of origin.
 - Why: A11 requirement checks must encode exactly these verdicts; a missing country-of-origin is not a pass, so code must flag it for a person to confirm rather than guess.
 - Impact: A11 requirement checks (delivery + brand-name/spec + sourcing-needs-confirmation); A16/A19 seed data: rescale the simulated-award dates to the 60-day delivery requirement and keep the Tallgrass delay landing two days late.
+
+## D05 (2026-10-30): The demo is a linked contract file, not a file reader
+
+- Decision: After Gate 2, the product direction is one linked picture per contract and order, Palantir-style: solicitation → requirements → quotes + checks → cost/bid → award → order → events → cash on one screen. Every number is clickable to its lineage (source doc + page, or the calculation and its inputs). A delay event shows its ripple across the linked picture (date, margin, deposit/cash, risk) before the Muse Wonder options. The demo is about connecting the information and deciding, not about reading files.
+- Why: Owner direction — the memorable moments (award reveal, delay rescue) are connection moments; the file-by-file screens prove extraction but not understanding.
+- Impact: New contract-file view + lineage + ripple tasks (A37+); A28/A29 stretch dropped to make room; triage (A34–A36) stays; PLAN scope/stretch and the order-monitor story update accordingly.
