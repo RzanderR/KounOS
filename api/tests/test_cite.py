@@ -13,6 +13,32 @@ def specs() -> IngestedDocument:
     return ingest_pdf(REPO_ROOT / "data" / "solicitations" / "1232SA26Q0557_specifications.pdf")
 
 
+@pytest.fixture(scope="module")
+def terms() -> IngestedDocument:
+    """Ingest the demo terms PDF once for the module."""
+    return ingest_pdf(REPO_ROOT / "data" / "solicitations" / "1232SA26Q0557_terms_and_clauses.pdf")
+
+
+def test_fuzzy_table_row_highlights_the_row(terms: IngestedDocument) -> None:
+    """A reordered row snippet fuzzy-verifies and highlights the table row.
+
+    The CLIN 0001 description is not a verbatim word run (the model moved
+    the quantity), but every word sits in the schedule row, interleaved
+    with the quantity and unit columns.
+    """
+    snippet = (
+        "0001 LED greenhouse light fixtures, brand name to PhotoBio CX 2125, "
+        "850W, 100-277 V 58 EA"
+    )
+    result = check_citation(terms.pages, snippet, 1)
+    assert result.status == "verified"
+    assert result.actual_page is None
+    texts = [box.text for box in result.boxes]
+    assert texts[0] == "0001"
+    assert "58" in texts and "EA" in texts
+    assert texts[-1] == "V"
+
+
 def test_exact_snippet_verifies_with_word_boxes(specs: IngestedDocument) -> None:
     """A verbatim snippet on its page verifies and locates word boxes."""
     result = check_citation(specs.pages, "LED Greenhouse light fixture", 1)
