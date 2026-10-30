@@ -268,3 +268,25 @@ export interface HealthStatus {
   status: "ok";
   demo_mode: string;
 }
+/**
+ * One priced recovery option; figures come from code, words from the model.
+ */
+export interface ImpactOption {
+  name: string;
+  summary: string;
+  cost_delta: string;
+  new_margin_pct?: string | null;
+  new_arrival_date?: string | null;
+  on_time?: boolean;
+  needs_confirmation?: boolean;
+}
+/**
+ * MODEL_IMPACT reading of a delay event with code-priced options.
+ */
+export interface ImpactAnalysis {
+  order_id: string;
+  event_id?: string | null;
+  generated_by: string;
+  options: ImpactOption[];
+  note: string;
+}
