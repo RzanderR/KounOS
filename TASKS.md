@@ -70,8 +70,8 @@ Deadline: **Wed, Nov 4, 2026, 9 PM ET.** Submit by 2 PM Phoenix time (5 PM ET).
   - Done when: the recorded voicemail produces an event with ship date Dec 16.
 - [x] **A19** Rules engine in code: delivery slip past the required date, margin below a floor, cash exposure.
   - Done when: a test shows the delay event yields arrival Dec 19, two days late, and raises a flag.
-- [ ] **A20** End-to-end demo-path test (browser automation) from upload to the delay flag.
-  - Done when: it passes locally from a reset.
+- [x] **A20** End-to-end demo-path test (browser automation) from upload to the delay flag (green 2026-10-30, both browsers, from a reset; needs PR #16 merged first).
+  - Done when: it passes locally from a reset. Green: `python e2e/demo_path.py --browser=all` — line-0001 badge (18 highlights) plus a line-1001 second click (21 highlights, pins the detached-ArrayBuffer fix), orders banner, reset, email ingest, blocking 2-days-late flag — in system Chrome and Firefox from fresh profiles.
 - [ ] **Gate 2 (human):** the core story (read, compare, recommend, monitor) runs end to end, rough edges allowed. Stretch work starts only after this.
 
 ## Fri Oct 30: triage and assist
