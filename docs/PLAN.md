@@ -54,7 +54,7 @@ Four things can disqualify the project: private code, unclear new work, missing 
 - Federal documents are generally not copyrighted, but skip solicitations with contractor-made drawings or vendor brochures attached.
 - Suppliers, quotes, orders and the voicemail are fictional by default and labeled fictional in the data and on screen. A real supplier quote appears only with the supplier's written permission to show it publicly.
 - Only hackathon-built features appear in the video, and the "Simulated award" banner is visible on every order screen.
-- Standard-mode model IDs only (no `-contributor` suffix), so nothing sent is used to train Meta models.
+- Live model runs stay on the contributor tier as an intentional cost choice (D04).
 - A team of four people or fewer.
 
 ## Scope
