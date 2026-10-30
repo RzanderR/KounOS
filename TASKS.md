@@ -19,21 +19,21 @@ Deadline: **Wed, Nov 4, 2026, 9 PM ET.** Submit by 2 PM Phoenix time (5 PM ET).
 - [ ] **H15** Company profile for `data/company_profile.json`: Koun's set-aside certifications and NAICS codes (as registered in SAM.gov), the product categories Koun sells, and a demonstration margin floor (not Koun's real one).
 - [x] **A01** Scaffold the repo: `api/` (FastAPI with a health route and pytest), `web/` (Next.js with Tailwind and shadcn/ui), `.env.example`, `.gitignore`, and scripts for test, lint, typecheck and build. Fill in the commands section of `AGENTS.md`.
   - Done when: API tests pass, the web app builds, both start locally, and `AGENTS.md` lists the real commands.
-- [ ] **A02** Meta API smoke test: `api/scripts/smoke_meta.py` sends one PDF from `data/solicitations/` to `MODEL_READ` with a small JSON schema and prints the parsed result and token usage.
+- [x] **A02** Meta API smoke test: `api/scripts/smoke_meta.py` sends one PDF from `data/solicitations/` to `MODEL_READ` with a small JSON schema and prints the parsed result and token usage.
   - Done when: it runs against the real API, the output validates against a Pydantic model, and token usage is printed.
-- [ ] **A03** Contract first: Pydantic schemas for `CompanyProfile`, `Notice`, `FitAssessment`, `SourceRef`, `Requirement`, `Solicitation`, `AwardRecord`, `Quote`, `QuoteLine`, `SourcingDecision`, `Order`, `SupplierPO`, `Shipment`, `Invoice`, `Event`, `Flag`; API route stubs; TypeScript types generated for `web/`.
+- [x] **A03** Contract first: Pydantic schemas for `CompanyProfile`, `Notice`, `FitAssessment`, `SourceRef`, `Requirement`, `Solicitation`, `AwardRecord`, `Quote`, `QuoteLine`, `SourcingDecision`, `Order`, `SupplierPO`, `Shipment`, `Invoice`, `Event`, `Flag`; API route stubs; TypeScript types generated for `web/`.
   - Done when: schemas and stubs are committed, OpenAPI docs load, and the web app imports the generated types.
 
 ## Tue Oct 27: read the solicitation
 
 - [ ] **H05** Morning: send budgetary quote requests (no live order; ask for written permission to show quotes publicly). Afternoon: follow up by phone.
-- [ ] **A04** PDF ingest with pdfplumber: store each page's text and word bounding boxes.
+- [x] **A04** PDF ingest with pdfplumber: store each page's text and word bounding boxes.
   - Done when: a unit test on a sample PDF returns page count, page text and word coordinates.
-- [ ] **A05** Extraction: send the solicitation PDF to `MODEL_READ` with a schema that requires, per field, a page number and a verbatim snippet. Fields: line items, part number or NSN, quantity, unit, required delivery, key clauses.
+- [x] **A05** Extraction: send the solicitation PDF to `MODEL_READ` with a schema that requires, per field, a page number and a verbatim snippet. Fields: line items, part number or NSN, quantity, unit, required delivery, key clauses.
   - Done when: the demo solicitation returns every line item, and output that fails validation is rejected, not stored.
-- [ ] **A06** Citation check with RapidFuzz: mark each field `verified` or `needs_review` and store the snippet's word boxes.
+- [x] **A06** Citation check with RapidFuzz: mark each field `verified` or `needs_review` and store the snippet's word boxes.
   - Done when: unit tests cover an exact snippet, a hyphenated or line-broken snippet, and a snippet on the wrong page.
-- [ ] **A07** Gap and ambiguity pass (`MODEL_READ`, reasoning effort high): flags such as a missing packaging spec, an unclear unit of issue or conflicting dates, each linked to its clause.
+- [x] **A07** Gap and ambiguity pass (`MODEL_READ`, reasoning effort high): flags such as a missing packaging spec, an unclear unit of issue or conflicting dates, each linked to its clause.
   - Done when: flags appear with clause links on the demo solicitation.
 - [ ] **A08** Solicitation screen: requirements table with verified or needs-review badges; clicking a row jumps the PDF viewer to the highlighted passage; AI results labeled with their model.
   - Done when: a screenshot shows a highlighted passage after clicking a row.

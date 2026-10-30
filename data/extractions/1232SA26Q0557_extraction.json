@@ -1,0 +1,125 @@
+{
+  "solicitation_id": {
+    "value": "1232SA26Q0557",
+    "page": 1,
+    "snippet": "Greenhouse light fixtures, LED for the USDA, ARS, ETSARC-BRL in Fargo, ND Solicitation 1232SA26Q0557"
+  },
+  "title": {
+    "value": "Greenhouse light fixtures, LED for the USDA, ARS, ETSARC-BRL in Fargo, ND",
+    "page": 1,
+    "snippet": "Greenhouse light fixtures, LED for the USDA, ARS, ETSARC-BRL in Fargo, ND Solicitation 1232SA26Q0557"
+  },
+  "agency": {
+    "value": "USDA, ARS, ETSARC-BRL",
+    "page": 1,
+    "snippet": "Greenhouse light fixtures, LED for the USDA, ARS, ETSARC-BRL in Fargo, ND Solicitation 1232SA26Q0557"
+  },
+  "line_items": [
+    {
+      "line": {
+        "value": "0001",
+        "page": 1,
+        "snippet": "0001 LED greenhouse light fixtures, brand name to PhotoBio CX 2125, 850W, 100-277 V 58 EA"
+      },
+      "description": {
+        "value": "LED greenhouse light fixtures, brand name to PhotoBio CX 2125, 850W, 100-277 V",
+        "page": 1,
+        "snippet": "0001 LED greenhouse light fixtures, brand name to PhotoBio CX 2125, 850W, 100-277 V 58 EA"
+      },
+      "part_or_nsn": {
+        "value": "PTB8850LS41",
+        "page": 11,
+        "snippet": "PTB8850LS41 PHOTOBIO CX 2125 850W (100-277V) LED greenhouse light fixtures/bulbs with 1- foot cord and 5-15 P plug"
+      },
+      "quantity": {
+        "value": "58",
+        "page": 1,
+        "snippet": "0001 LED greenhouse light fixtures, brand name to PhotoBio CX 2125, 850W, 100-277 V 58 EA"
+      },
+      "unit": {
+        "value": "EA",
+        "page": 1,
+        "snippet": "0001 LED greenhouse light fixtures, brand name to PhotoBio CX 2125, 850W, 100-277 V 58 EA"
+      }
+    },
+    {
+      "line": {
+        "value": "1001",
+        "page": 1,
+        "snippet": "1001 Optional quantity - LED greenhouse light fixtures, brand name to PhotoBio CX 2125, 850W, 100-277 V 58 EA"
+      },
+      "description": {
+        "value": "Optional quantity - LED greenhouse light fixtures, brand name to PhotoBio CX 2125, 850W, 100-277 V",
+        "page": 1,
+        "snippet": "1001 Optional quantity - LED greenhouse light fixtures, brand name to PhotoBio CX 2125, 850W, 100-277 V 58 EA"
+      },
+      "part_or_nsn": {
+        "value": "PTB8850LS41",
+        "page": 11,
+        "snippet": "PTB8850LS41 PHOTOBIO CX 2125 850W (100-277V) LED greenhouse light fixtures/bulbs with 1- foot cord and 5-15 P plug"
+      },
+      "quantity": {
+        "value": "58",
+        "page": 1,
+        "snippet": "1001 Optional quantity - LED greenhouse light fixtures, brand name to PhotoBio CX 2125, 850W, 100-277 V 58 EA"
+      },
+      "unit": {
+        "value": "EA",
+        "page": 1,
+        "snippet": "1001 Optional quantity - LED greenhouse light fixtures, brand name to PhotoBio CX 2125, 850W, 100-277 V 58 EA"
+      }
+    }
+  ],
+  "required_delivery": {
+    "value": "The USDA requires delivery of all items within 60 days after award.",
+    "page": 12,
+    "snippet": "The USDA requires delivery of all items within 60 days after award."
+  },
+  "sourcing_clause": {
+    "value": "FAR 52.225-3 Buy American--Free Trade Agreements--Israeli Trade Act (Nov 2025) applies; certificate FAR 52.225-4 Buy American-Free Trade Agreements-Israeli Trade Act Certificate (Nov 2025) applies",
+    "page": 4,
+    "snippet": "ΓÿÆ 52.225-3 Buy American--Free Trade Agreements--Israeli Trade Act (Nov 2025)"
+  },
+  "key_clauses": [
+    {
+      "name": "delivery",
+      "detail": {
+        "value": "The USDA requires delivery of all items within 60 days after award. Early deliveries will be accepted.",
+        "page": 12,
+        "snippet": "The USDA requires delivery of all items within 60 days after award."
+      }
+    },
+    {
+      "name": "FOB",
+      "detail": {
+        "value": "F.o.b. destination is requested as the F.O.B. point for all deliverables; All offers will be considered F.O.B. Destination; FAR 52.247-34 F.O.B. Destination applies",
+        "page": 12,
+        "snippet": "F.o.b. destination, is requested as the F.O.B. point for all deliverables."
+      }
+    },
+    {
+      "name": "brand-name requirement",
+      "detail": {
+        "value": "Requirement is brand name to PhotoBio CX 2125, 850W, 100-277V; must be exact brand name, make and model; alternates, substitutes or equal products will not be considered and will be deemed technically unacceptable",
+        "page": 1,
+        "snippet": "This requirement is for LED greenhouse light fixtures, brand name to PhotoBio CX 2125, 850W, 100-277 V with 10-foot cords and a 5-15P plug."
+      }
+    },
+    {
+      "name": "sourcing clause",
+      "detail": {
+        "value": "FAR 52.225-3 Buy American--Free Trade Agreements--Israeli Trade Act (Nov 2025) applies; certificate FAR 52.225-4 Buy American-Free Trade Agreements-Israeli Trade Act Certificate (Nov 2025) applies (checked)",
+        "page": 4,
+        "snippet": "ΓÿÆ 52.225-3 Buy American--Free Trade Agreements--Israeli Trade Act (Nov 2025)"
+      }
+    },
+    {
+      "name": "evaluation basis",
+      "detail": {
+        "value": "Award will be made to the offeror representing the best value to the Government based on Price, Technical Acceptability (acceptable/unacceptable) and Past Performance; lowest priced technically acceptable with acceptable or neutral past performance wins",
+        "page": 11,
+        "snippet": "Award will be made to the offeror representing the best value to the Government."
+      }
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "solicitation_id": "",
+  "title": "LED Greenhouse light fixture",
+  "agency": "USDA-ARS",
+  "line_items": [
+    {
+      "line": "1",
+      "description": "PTB8850LS41 PHOTOBIO CX 2125 850W (100-277V) with 10 cord w/ 5-15P plug",
+      "quantity": 58
+    },
+    {
+      "line": "OPTION 1",
+      "description": "OPTION 1: PTB8850LS41 PHOTOBIO CX 2125 850W (100-277V) with 10 cord w/ 5-15P plug",
+      "quantity": 58
+    }
+  ]
+}
+token_usage: input=5577 output=1852 total=7429

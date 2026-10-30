@@ -1,0 +1,56 @@
+{
+  "fictional": true,
+  "fictional_note": "FICTIONAL - created for the KounOS hackathon demo. Not a real company or a real quote.",
+  "supplier": "Larkspur Grow Systems",
+  "supplier_city": "Bozeman, MT",
+  "contact": "Jordan Pike, Commercial Accounts",
+  "email": "jordan@larkspurgrow.example",
+  "phone": "(406) 555-0177",
+  "quote_number": "email, no quote number",
+  "quote_date": "2026-06-05",
+  "valid_until": "2026-06-19",
+  "document_format": "email screenshot",
+  "solicitation_id": "1232SA26Q0557",
+  "lines": [
+    {
+      "line": "1",
+      "maps_to": "0001 (base)",
+      "part": "PTB8850LS42",
+      "description": "PHOTOBIO CX 2125 LED, 850W, 100-277V, S4 spectrum, 10' 208-240V cord",
+      "quantity": 58,
+      "unit": "EA",
+      "unit_price": "679.00",
+      "extended": "39382.00"
+    },
+    {
+      "line": "2",
+      "maps_to": "1001 (option)",
+      "part": "PTB8850LS42",
+      "description": "PHOTOBIO CX 2125 LED, 850W, 100-277V, S4 spectrum, 10' 208-240V cord",
+      "quantity": 58,
+      "unit": "EA",
+      "unit_price": "679.00",
+      "extended": "39382.00"
+    }
+  ],
+  "freight": "0.00",
+  "freight_terms": "Freight included to Fargo ND",
+  "quote_total": "78764.00",
+  "lead_time": "2-3 weeks ARO, in stock at our Denver warehouse",
+  "lead_time_days_max": 21,
+  "payment_terms": "Net 30",
+  "country_of_origin": "Not stated",
+  "notes": [
+    "Quoted the 208-240V cord because the 120V cord version is backordered."
+  ],
+  "demo_role": "middle price, but quotes the wrong cord and plug",
+  "demo_catch": "Quotes PTB8850LS42 with a 208-240V cord; the solicitation requires a 10-foot cord with a 5-15P plug (PTB8850LS41).",
+  "expected_kounos_results": {
+    "landed_cost": "78764.00",
+    "landed_cost_per_unit": "679.00",
+    "lowest_safe_bid_per_unit_at_10pct": "754.45",
+    "lowest_safe_bid_total_at_10pct": "87516.20",
+    "margin_at_actual_award_price": "14.28%",
+    "deposit_due_with_po": "0.00"
+  }
+}

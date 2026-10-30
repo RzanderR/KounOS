@@ -1,0 +1,76 @@
+{
+  "flags": [
+    {
+      "issue": "Conflicting delivery dates: Delivery Information requires delivery of all items within 60 days after award, which conflicts with Section 3.0 schedule requiring 2 months after award for base quantity and Within 180 days of award for OPTION 1 quantity.",
+      "clause": "Delivery Information vs Section 3.0 Delivery and Incidental Service Schedule",
+      "source": {
+        "file": "Solicitation 1232SA26Q0557.pdf",
+        "page": 12,
+        "snippet": "The USDA requires delivery of all items within 60 days after award."
+      }
+    },
+    {
+      "issue": "Conflicting part descriptions: Evaluation table specifies cord as 1-foot, which conflicts with Statement of Requirement and Attachment A specifying 10-foot cords / 10 cord with 5-15P plug.",
+      "clause": "Evaluation Criteria - Technical Acceptability Nomenclature vs Statement of Requirement",
+      "source": {
+        "file": "Solicitation 1232SA26Q0557.pdf",
+        "page": 11,
+        "snippet": "greenhouse light fixtures/bulbs with 1- foot"
+      }
+    },
+    {
+      "issue": "Conflicting quantities: Section 1.0 and Schedule specify 58 base + 58 option, which conflicts with Evaluation table Quantity column showing 96 and 20.",
+      "clause": "Section 1.0 Quantity and Schedule of Items vs Evaluation Criteria - Technical Acceptability Quantity column",
+      "source": {
+        "file": "Attachment 1 - Statement of Requirement - Specifications.pdf",
+        "page": 1,
+        "snippet": "Quantity: 58+ one option to order 58 more."
+      }
+    },
+    {
+      "issue": "Conflicting part descriptions: solicitation authorizes Alternate Parts if approved form, fit, and function, which conflicts with Evaluation Criteria stating quotations offering alternate, substitute, or equal products will not be considered and will be deemed technically unacceptable.",
+      "clause": "Statement of Requirement Alternate Parts paragraph vs Evaluation Criteria - Technical Acceptability",
+      "source": {
+        "file": "Solicitation 1232SA26Q0557.pdf",
+        "page": 1,
+        "snippet": "Alternate Parts will be authorized if they are an approved alternate part that satisfies all form, fit, and"
+      }
+    },
+    {
+      "issue": "Conflicting part descriptions: Evaluation Criteria prohibits alternate, substitute, or equal products, which conflicts with earlier authorization of approved alternate parts satisfying form, fit, and function.",
+      "clause": "Evaluation Criteria - Technical Acceptability vs Statement of Requirement Alternate Parts paragraph",
+      "source": {
+        "file": "Solicitation 1232SA26Q0557.pdf",
+        "page": 12,
+        "snippet": "Quotations offering alternate, substitute, or “equal” products will not be considered and will"
+      }
+    },
+    {
+      "issue": "Unclear evaluation basis: Price evaluation cites FAR 52.217-8, which is not listed among applicable clauses that list only 52.217-5, 52.217-6, and 52.217-7, so bidder cannot determine option evaluation method.",
+      "clause": "Evaluation Criteria - Price / FAR 52.217-8 vs Other Applicable FAR Provisions",
+      "source": {
+        "file": "Solicitation 1232SA26Q0557.pdf",
+        "page": 11,
+        "snippet": "Total price evaluation will be for the base quantity and the optional quantity in accordance with FAR 52.217-8."
+      }
+    },
+    {
+      "issue": "Unclear evaluation basis: solicitation states award will be best value to the Government, which conflicts with Evaluation Method stating only lowest priced offer will be evaluated for Technical Capability on a lowest-priced technically acceptable basis.",
+      "clause": "Evaluation Criteria - Award basis vs Evaluation Method",
+      "source": {
+        "file": "Solicitation 1232SA26Q0557.pdf",
+        "page": 11,
+        "snippet": "Award will be made to the offeror representing the best value to the Government."
+      }
+    },
+    {
+      "issue": "Missing packaging or labeling spec: Shipping Instructions provide only delivery address with no packaging, marking, labeling, or handling requirements, and Additional Requirements state N/A.",
+      "clause": "Shipping Instructions / Section 5.0 Additional Requirements",
+      "source": {
+        "file": "Solicitation 1232SA26Q0557.pdf",
+        "page": 13,
+        "snippet": "Items shall be shipped to the following address:"
+      }
+    }
+  ]
+}
