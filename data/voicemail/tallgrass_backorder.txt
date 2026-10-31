@@ -1,0 +1,18 @@
+Subject: Backorder notice — PO-001 (116 LED greenhouse fixtures)
+From: Sales <sales@tallgrass-horticultural.example>
+To: Koun County Purchasing <purchasing@koun.example>
+Date: Mon, 15 Dec 2026 09:14:00 -0600
+
+Hi,
+
+This is Tallgrass Horticultural Supply with a backorder notice on
+purchase order PO-001, the 116 LED greenhouse light fixtures
+(base quantity plus option quantity).
+
+Our supplier shorted us on drivers, so we now plan to ship on
+2026-12-31, arriving 2027-01-03. All 116 fixtures are affected;
+nothing else on the order changes.
+
+Sorry for the slip — call if you need anything else.
+
+— Dana, Tallgrass Horticultural Supply
