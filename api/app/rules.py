@@ -4,6 +4,7 @@ Every flag is computed from the stored records; no model call. A flag is
 a finding a person must look at, never an action taken.
 """
 
+from datetime import date
 from decimal import Decimal
 
 from app.compare import MARGIN_FLOOR
@@ -12,20 +13,32 @@ from app.order_store import get_detail, list_orders
 from app.schemas import Flag, OrderDetail
 
 
-def check_delivery(detail: OrderDetail) -> Flag | None:
-    """A dated arrival past the customer date is a blocking slip."""
-    due = detail.order.customer_due_date
+def latest_arrival(detail: OrderDetail) -> date | None:
+    """The latest dated shipment arrival, or None when nothing is dated."""
     arrivals = [
         shipment.arrival_date
         for shipment in detail.shipments
         if shipment.arrival_date is not None
     ]
-    if due is None or not arrivals:
+    return max(arrivals) if arrivals else None
+
+
+def days_late(detail: OrderDetail) -> int:
+    """Days the latest arrival lands past the customer date; 0 when on time."""
+    arrival = latest_arrival(detail)
+    due = detail.order.customer_due_date
+    if arrival is None or due is None or arrival <= due:
+        return 0
+    return (arrival - due).days
+
+
+def check_delivery(detail: OrderDetail) -> Flag | None:
+    """A dated arrival past the customer date is a blocking slip."""
+    latest = latest_arrival(detail)
+    due = detail.order.customer_due_date
+    late = days_late(detail)
+    if latest is None or due is None or late == 0:
         return None
-    latest = max(arrivals)
-    if latest <= due:
-        return None
-    late = (latest - due).days
     return Flag(
         flag_id=f"{detail.order.order_id}-delivery-slip",
         order_id=detail.order.order_id,

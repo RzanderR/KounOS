@@ -39,7 +39,7 @@ def _ingest_cached(path_str: str) -> IngestedDocument:
 
 
 @lru_cache(maxsize=1)
-def _stored_extraction() -> SolicitationExtraction:
+def stored_extraction() -> SolicitationExtraction:
     """The stored model output; invalid JSON fails closed here, not on screen."""
     return SolicitationExtraction.model_validate(
         json.loads(STORED_EXTRACTION.read_text(encoding="utf-8"))
@@ -49,7 +49,7 @@ def _stored_extraction() -> SolicitationExtraction:
 @lru_cache(maxsize=1)
 def demo_id() -> str:
     """The demo solicitation id, read from the stored extraction."""
-    return _stored_extraction().solicitation_id.value
+    return stored_extraction().solicitation_id.value
 
 
 def _cite(
@@ -86,7 +86,7 @@ def _quantity(raw: str) -> tuple[int, bool]:
 
 def build_demo_solicitation(model_read: str) -> Solicitation:
     """Build the demo solicitation from the stored extraction with badges."""
-    extraction = _stored_extraction()
+    extraction = stored_extraction()
     requirements = []
     for item in extraction.line_items:
         quantity, quantity_ok = _quantity(item.quantity.value)

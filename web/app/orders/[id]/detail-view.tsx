@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { errorMessage, fetchFlags, fetchOrderDetail } from "@/lib/api";
@@ -66,7 +67,15 @@ export default function OrderDetailView({ orderId }: { orderId: string }) {
       <h1 className="text-2xl font-semibold">
         {order.order_id} · {order.supplier}
       </h1>
-      <p className="mt-1 text-sm text-muted-foreground">Status: {order.status}</p>
+      <p className="mt-1 text-sm text-muted-foreground">
+        Status: {order.status} ·{" "}
+        <Link
+          href={`/contracts/${encodeURIComponent(order.order_id)}`}
+          className="underline"
+        >
+          Contract file
+        </Link>
+      </p>
       <SimulatedAwardBanner />
 
       {flags.length === 0 ? null : (

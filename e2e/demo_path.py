@@ -15,7 +15,7 @@ the equivalent of a hard refresh):
    its inputs; assert the Delay ripple section precedes Recovery options.
 
 Needs: API on :8000, web on :3000, MODEL_API_KEY for stages 3-4.
-Run (from repo root): python e2e/demo_path.py [--browser chrome|firefox|all]
+Run (from repo root): python e2e/demo_path.py [--browser=chrome|firefox|all]
 """
 
 import sys
@@ -191,11 +191,12 @@ def main(browsers: list[str]) -> int:
 
 
 if __name__ == "__main__":
-    arg = sys.argv[1] if len(sys.argv) > 1 else "--browser=all"
-    if arg == "--browser=chrome":
-        chosen = ["chrome"]
-    elif arg == "--browser=firefox":
-        chosen = ["firefox"]
-    else:
-        chosen = ["chrome", "firefox"]
-    raise SystemExit(main(chosen))
+    choices = {
+        "--browser=chrome": ["chrome"],
+        "--browser=firefox": ["firefox"],
+        "--browser=all": ["chrome", "firefox"],
+    }
+    arg = " ".join(sys.argv[1:]) or "--browser=all"
+    if arg not in choices:
+        raise SystemExit(f"Unknown arguments {arg!r}; use one of {', '.join(choices)}.")
+    raise SystemExit(main(choices[arg]))

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { errorMessage, fetchAward, fetchComparison, fetchDecision } from "@/lib/api";
 import type {
@@ -32,10 +32,30 @@ function money(value: string): string {
   return `$${Number(dollars).toLocaleString("en-US")}.${(cents ?? "00").padEnd(2, "0")}`;
 }
 
-/** Live margin preview at a bid price from the served landed cost. No model call. */
-function marginAtBid(bid: number, landed: number): string {
-  if (!(bid > 0)) return "—";
-  return `${(((bid - landed) / bid) * 100).toFixed(2)}%`;
+/** Whole cents from a money string such as "91880.12"; null when it is not money. */
+function toCents(value: string): bigint | null {
+  const match = /^(\d+)(?:\.(\d{1,2}))?$/.exec(value.trim());
+  if (match === null) return null;
+  return BigInt(match[1]) * BigInt(100) + BigInt((match[2] ?? "").padEnd(2, "0"));
+}
+
+/**
+ * Live margin preview at a bid price from the served landed cost. No model call.
+ * Integer math with half-up rounding, like costs.margin_at_price, so the
+ * preview never disagrees with the API by a cent of a percent.
+ */
+function marginAtBid(bidText: string, landedText: string): string {
+  const bid = toCents(bidText);
+  const landed = toCents(landedText);
+  if (bid === null || landed === null || bid <= BigInt(0)) return "—";
+  const scaled = (bid - landed) * BigInt(10000);
+  const negative = scaled < BigInt(0);
+  const magnitude = negative ? -scaled : scaled;
+  let hundredths = magnitude / bid;
+  if ((magnitude % bid) * BigInt(2) >= bid) hundredths += BigInt(1);
+  const whole = hundredths / BigInt(100);
+  const fraction = (hundredths % BigInt(100)).toString().padStart(2, "0");
+  return `${negative && hundredths > BigInt(0) ? "-" : ""}${whole}.${fraction}%`;
 }
 
 export default function QuotesPage() {
@@ -72,7 +92,6 @@ export default function QuotesPage() {
     };
   }, []);
 
-  const bid = useMemo(() => Number(bidInput), [bidInput]);
   const chosen = rows?.find((row) => row.quote.quote_id === selected) ?? null;
 
   if (error !== null) {
@@ -140,7 +159,7 @@ export default function QuotesPage() {
                 <td className="py-2 pr-4 font-medium">{row.quote.supplier}</td>
                 <td className="py-2 pr-4">{money(row.quote.total)}</td>
                 <td className="py-2 pr-4">{money(row.landed_cost)}</td>
-                <td className="py-2 pr-4">{marginAtBid(bid, Number(row.landed_cost))}</td>
+                <td className="py-2 pr-4">{marginAtBid(bidInput, row.landed_cost)}</td>
                 <td className="py-2 pr-4">{money(row.safe_bid_total)}</td>
                 <td className="py-2 pr-4">
                   <ul className="space-y-1">
