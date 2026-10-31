@@ -76,12 +76,12 @@ Deadline: **Wed, Nov 4, 2026, 9 PM ET.** Submit by 2 PM Phoenix time (5 PM ET).
 
 ## Contract file (after Gate 2, D05; triage A34–A36 stays)
 
-- [ ] **A37** Lineage API: one endpoint per order returning the linked picture (solicitation → requirements → quotes + checks → cost/bid → award → order → events → cash) with per-number lineage — source doc + page for extracted numbers (reusing A06 citations and quote-extraction refs), calculation + inputs for computed numbers (reusing the A12 cost engine).
+- [x] **A37** Lineage API (PR #20; `api/tests/test_lineage.py`): one endpoint per order returning the linked picture (solicitation → requirements → quotes + checks → cost/bid → award → order → events → cash) with per-number lineage — source doc + page for extracted numbers (reusing A06 citations and quote-extraction refs), calculation + inputs for computed numbers (reusing the A12 cost engine).
   - Done when: every number on the demo order resolves to a doc page or a named calculation with inputs, covered by a test.
-- [ ] **A21** (existing, prerequisite for A39) impact analysis on `MODEL_IMPACT` with priced options.
-- [ ] **A38** Contract-file screen: the linked picture on one screen; clicking any number opens its lineage (doc passage with highlight, or calculation with inputs).
+- [x] **A21** (prerequisite for A39) done in PR #19; full entry under Fri Oct 30.
+- [x] **A38** Contract-file screen (PR #21; `docs/screenshots/contract-file-ORD-001.png`): the linked picture on one screen; clicking any number opens its lineage (doc passage with highlight, or calculation with inputs).
   - Done when: a screenshot shows the linked picture and one open lineage.
-- [ ] **A39** Delay ripple: when the Tallgrass delay event lands, the screen first shows the ripple across the linked picture (date, margin, deposit/cash, risk), then the A21 Muse Wonder options.
+- [x] **A39** Delay ripple (PR #22; `docs/screenshots/contract-file-ripple.png`, ripple-before-options asserted by the A40 e2e): when the Tallgrass delay event lands, the screen first shows the ripple across the linked picture (date, margin, deposit/cash, risk), then the A21 Muse Wonder options.
   - Done when: the e2e delay path asserts the ripple figures before the options.
 - [ ] **A40** Extend the end-to-end test to the contract file (lineage click + ripple), passing locally from a reset and on the live link from a fresh browser.
 

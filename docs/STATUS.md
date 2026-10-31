@@ -23,32 +23,40 @@ Updated at the end of every task or work session, committed with that work.
 
 - **Badge PDF fix (2026-10-30, `task/A08-pdf-bytes`):** badge clicks failed with pdf.js `NetworkError` / CORS errors because download managers (IDM duplicated/intercepted the direct `.pdf` response) and pdf.js's own range loader break cross-origin. The viewer now fetches `GET /solicitations/{id}/passage-bytes?file=…` (same guarded file as base64 inside `application/json`, no `.pdf` path; pinned by `test_passage_bytes.py`) via the app fetch, decodes to bytes, and passes a memoized `{ data }` object to `<Document>` (fresh literal per render re-transferred the buffer → `DataCloneError`). CORS allowed origins come from config with `Content-Length/Content-Range/Accept-Ranges` exposed. Verified live from fresh profiles: system Chrome AND Firefox — badge click renders the canvas with 18 highlight overlays, `passage-bytes` 200, zero console errors. API gates green (ruff, mypy, 62 pytest); web `lint` + `typecheck` + `build` green. Follow-up: clicking a second badge in the same PDF raised `DataCloneError` (detached ArrayBuffer) because the byte cache handed out the same buffer react-pdf had already transferred to its worker; the cache now hands each viewer its own `bytes.slice()` copy, verified by clicking two badges in a row in both browsers with zero errors. Human screenshot saved to `docs/screenshots/` for the PR.
 - Screenshot retry: the badge viewer works again — please re-capture `docs/screenshots/` (open http://localhost:3000/solicitation from a hard refresh, click the line-0001 badge for the row highlight).
+- **Merged 2026-10-30 (laptop session):** #5–#13 (A02–A08 screen, fuzzy boxes, pdf-bytes fix, A10–A14, A16+A19, A17).
+- **Builder change (owner, 2026-10-30):** Claude Code replaces Muse Code as the builder on the home desktop. `CLAUDE.md` imports `AGENTS.md`; `.claude/settings.json` denies reading `.env`. Muse-only skill references in `AGENTS.md`/`docs/WORKFLOW.md` are ignored.
+- **Desktop setup (2026-10-30):** Python 3.12.10 + `api/.venv`, `npm ci`, Playwright (Python, in the venv) with Chromium + Firefox. Checks green on `main`: ruff, mypy, 117 pytest, eslint, tsc, build.
+- **Merged 2026-10-30 (desktop, owner-approved), in order, CI green before and after each:** #15 D04, #16 A18 email ingest, #17 A20 e2e, #18 D05 + PLAN/TASKS, #19 A21 impact, #20 A37 lineage, #21 A38 contract-file screen, #22 A39 ripple, #23 A34–A36 triage code, #24 A40 e2e extension. Conflicts were additive (DECISIONS D04/D05; schemas + generated types for impact/lineage/ripple; `web/lib/api.ts` fetchers) and kept both sides; types regenerated with `scripts/generate_types.py`.
+- **e2e on merged `main` (desktop, Chrome):** stages 1–2 green (two badge clicks: 18 then 21 highlights, no errors; orders banner). Stages 3–4 need `MODEL_API_KEY` (no `.env` on the desktop yet).
+- **A25 prep (PR #25, still draft):** branch brought up to `main`. `render.yaml` fixed: no `rootDir` (Render hides files outside it and the API reads `../data`), build/start from repo root with a buildFilter on `api/` + `data/`, `runtime: python`, `plan: free` (omitting it means a paid instance), `PYTHON_VERSION=3.12.10` (Render's default is 3.14). The e2e takes `KOUNOS_API_URL` / `KOUNOS_WEB_URL` for the live link. A missing model key now answers 503 with a clear reason instead of a bare 500.
 
 ## In progress
 
-- **A02** smoke test (`task/A02-smoke-test`, covered by PR #5): code done and run live; merges with the single PR.
-- **Fuzzy-boxes fix** (`task/A08-fuzzy-boxes`, small PR to open): when the exact word-run fails but the fuzzy match passes, `partial_ratio_alignment` gives the char span, mapped back to word boxes; when the span misses snippet words (table row interleaved with columns), the densest query-word window wins. Clicking line 0001 now highlights the 0001 schedule row (18 boxes); all 8 served rows carry boxes. API gates green (ruff, mypy, 58 pytest).
-- **A08** screenshot (human): no file found in `docs/screenshots/` yet — please save it there (open http://localhost:3000/solicitation, click the line-0001 badge for the row highlight). Then agent ticks A08 + A09. Note: [PR #5](https://github.com/RzanderR/KounOS/pull/5) is still OPEN, not merged — it needs a human merge click.
-- Project-local skills installed (untracked, not for commit): caveman, ponytail, rtk, mattpocock set — 73 skills under `.agents/skills/` plus `skills-lock.json`.
+- **A25 deploy** (Sat Oct 31, PR #25 draft): Render API from the blueprint + Vercel `web/`; then the e2e against the live link; then merge #25 and tick A25 + A40.
 
 ## Blocked (on what or whom)
 
-- Gate 1 ticked 2026-10-29 on human order (evidence: live extraction re-run, 8/8 rows `verified`; gap pass reproduces all three known ambiguities). A08/A09 ticks wait for the screenshot file.
-- H03 remainder: two eval solicitations; H06: Tallgrass print-and-photograph; A01 screenshots need a dev machine with a browser.
-- A01 home-page screenshots (API ok / unreachable) — needs a dev machine with a browser; neither sandbox nor CI can bind ports or run one.
+- **Owner:** `.env` on the desktop (`MODEL_API_KEY`; `MODEL_READ=muse-spark-1.3-contributor` per D04) — e2e stages 3–4 and every live model call need it.
+- **Owner:** Render + Vercel accounts and the `MODEL_API_KEY` secret on Render (H10).
+- **Owner:** tick Gate 2 in `TASKS.md` (the laptop handoff says it was ticked by the owner, but `main` still shows it open).
+- **Owner:** H15 `data/company_profile.json` and H16 notice batch in `data/notices/` — triage (A34–A36) live runs wait on them.
+- **Owner:** A08/A09 ticks: `docs/screenshots/Screenshot 2026-10-30 135200.png` may be the A08 highlight capture; confirm it, then tick A08 + A09.
+- **Desktop:** Playwright Firefox fails to launch ("side-by-side configuration is incorrect"), most likely the missing Microsoft Visual C++ Redistributable (x64). Chrome runs.
+- H03 remainder (two eval solicitations), H06 (Tallgrass photo), H07 (eval labels), A15 eval script.
 
 ## Decisions
 
 - [D01](docs/DECISIONS.md#d01-2026-10-26-quote-amounts-and-sourcing-clause-rescale-to-the-real-solicitation): quote amounts and sourcing clause rescale to the real solicitation once H03 lands.
 - [D02](docs/DECISIONS.md#d02-2026-10-26-gate-1-failure-swaps-in-an-eval-solicitation-before-screens): gate-1 failure swaps in an eval solicitation before screens.
 - [D03](docs/DECISIONS.md#d03-2026-10-28-demo-quote-verdicts-and-sourcing-status-for-a11-and-a16a19-dates): Ninebark fails delivery (98d vs 60), Larkspur fails spec (PTB8850LS42, brand name only), Tallgrass passes; sourcing "needs confirmation" on all three (no country of origin); A16/A19 dates rescale to the 60-day requirement with the delay landing two days late.
-- Single-agent loop, briefs optional, Muse reviews (human decision 2026-10-27; PR #3).
-- Single PR for A02–A08 from `task/A08-screen` (human decision 2026-10-28; PR #5).
+- [D04](docs/DECISIONS.md#d04-2026-10-30-live-model-runs-stay-on-the-contributor-tier-for-cost): live model runs stay on the `-contributor` tier for cost. Open point: `AGENTS.md` (hard rules) and `docs/PLAN.md` still say "never use `-contributor`"; the owner should reconcile them.
+- [D05](docs/DECISIONS.md#d05-2026-10-30-the-demo-is-a-linked-contract-file-not-a-file-reader): the demo is a linked contract file (A37–A40); A28/A29 dropped.
+- Builder: Claude Code on the home desktop (owner, 2026-10-30), replacing Muse Code.
 
 ## Next
 
-1. Human captures the A08 screenshot into `docs/screenshots/` (click the delivery clause badge for the highlight), then agent adds it to PR #5 and ticks A08 + A09 (quote files already in `data/quotes/docs/`).
-2. After CI is green and the human merges: A10–A14, then A16–A20 for Gate 2. Hold triage (A34–A36) until Gate 2 is ticked.
-3. Capture A01 screenshots on a dev machine.
+1. Saturday A25: Render blueprint from PR #25's branch → `/health` ok → Vercel project (root `web`, `NEXT_PUBLIC_API_URL` = Render URL, set before the first build) → set Render `CORS_ORIGINS` to the Vercel production URL → wake the API, `POST /demo/reset`, `POST /events/ingest` `{"order_id":"ORD-001","source":"email","filename":"tallgrass_backorder.txt"}` → `KOUNOS_API_URL=… KOUNOS_WEB_URL=… python e2e/demo_path.py --browser=chrome` → merge #25, tick A25 + A40. The free instance sleeps and its in-memory state resets to the seed, so repeat the reset + ingest before every demo.
+2. H15 + H16, then triage live runs (A34–A36 ticks).
+3. A22 number grounding, A23 draft note, A24 Ask KounOS; A26 polish, A27 replay mode.
 
-Branches pushed: `task/A01-scaffold` (merged), `task/workflow-direct` (merged), `task/A02-smoke-test`, `task/A03-contract`, `task/A04-ingest`, `task/A05-extract`, `task/A06-citations`, `task/A07-gaps`, `task/A08-screen` (PR #5), `task/A08-pdf-bytes` (PR #14, badge PDF fix, CI pending).
+Open PRs: #25 (A25 deploy, draft until the live e2e passes); #26 (laptop handoff note + Muse `skills-lock.json`), superseded by this status update and safe to close.
