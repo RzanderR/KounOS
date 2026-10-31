@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 
-import { fetchSolicitation, passageBytesUrl } from "@/lib/api";
+import { errorMessage, fetchSolicitation, passageBytesUrl } from "@/lib/api";
 import type {
   KeyClause,
   Requirement,
@@ -48,16 +48,17 @@ function Badge({ status }: { status: "verified" | "needs_review" | null | undefi
 
 export default function SolicitationPage() {
   const [solicitation, setSolicitation] = useState<Solicitation | null>(null);
-  const [failed, setFailed] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [selection, setSelection] = useState<Selection | null>(null);
 
   useEffect(() => {
     let cancelled = false;
     async function load() {
-      const data = await fetchSolicitation(DEMO_ID);
-      if (!cancelled) {
-        if (data === null) setFailed(true);
-        else setSolicitation(data);
+      try {
+        const data = await fetchSolicitation(DEMO_ID);
+        if (!cancelled) setSolicitation(data);
+      } catch (err) {
+        if (!cancelled) setError(errorMessage(err));
       }
     }
     void load();
@@ -66,13 +67,12 @@ export default function SolicitationPage() {
     };
   }, []);
 
-  if (failed) {
+  if (error !== null) {
     return (
       <main className="mx-auto w-full max-w-5xl px-6 py-10">
         <h1 className="text-2xl font-semibold">Solicitation</h1>
         <p role="alert" className="mt-4 text-sm">
-          The API is unreachable. Start it with <code>uvicorn app.main:app --reload</code> from
-          api/ and reload.
+          {error}
         </p>
       </main>
     );

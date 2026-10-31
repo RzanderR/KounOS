@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-import { fetchAward, fetchComparison, fetchDecision } from "@/lib/api";
+import { errorMessage, fetchAward, fetchComparison, fetchDecision } from "@/lib/api";
 import type {
   AwardRecord,
   QuoteComparison,
@@ -40,7 +40,7 @@ function marginAtBid(bid: number, landed: number): string {
 
 export default function QuotesPage() {
   const [rows, setRows] = useState<QuoteComparison[] | null>(null);
-  const [failed, setFailed] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [bidInput, setBidInput] = useState("91880.12");
   const [selected, setSelected] = useState<string | null>(null);
   const [decision, setDecision] = useState<SourcingDecision | null>(null);
@@ -49,22 +49,21 @@ export default function QuotesPage() {
   useEffect(() => {
     let cancelled = false;
     async function load() {
-      const [data, decisions, awardData] = await Promise.all([
-        fetchComparison(),
-        fetchDecision(),
-        fetchAward(),
-      ]);
-      if (!cancelled) {
-        if (data === null || decisions === null || awardData === null) setFailed(true);
-        else {
-          setRows(data);
-          setDecision(decisions[0] ?? null);
-          setAwardRecord(awardData);
-          const firstPassing = data.find((row) => row.verdict.overall !== "fail");
-          const firstId: unknown =
-            firstPassing?.quote.quote_id ?? data[0]?.quote.quote_id;
-          setSelected(typeof firstId === "string" ? firstId : null);
-        }
+      try {
+        const [data, decisions, awardData] = await Promise.all([
+          fetchComparison(),
+          fetchDecision(),
+          fetchAward(),
+        ]);
+        if (cancelled) return;
+        setRows(data);
+        setDecision(decisions[0] ?? null);
+        setAwardRecord(awardData);
+        const firstPassing = data.find((row) => row.verdict.overall !== "fail");
+        const firstId: unknown = firstPassing?.quote.quote_id ?? data[0]?.quote.quote_id;
+        setSelected(typeof firstId === "string" ? firstId : null);
+      } catch (err) {
+        if (!cancelled) setError(errorMessage(err));
       }
     }
     void load();
@@ -76,13 +75,12 @@ export default function QuotesPage() {
   const bid = useMemo(() => Number(bidInput), [bidInput]);
   const chosen = rows?.find((row) => row.quote.quote_id === selected) ?? null;
 
-  if (failed) {
+  if (error !== null) {
     return (
       <main className="mx-auto w-full max-w-6xl px-6 py-10">
         <h1 className="text-2xl font-semibold">Quotes</h1>
         <p role="alert" className="mt-4 text-sm">
-          The API is unreachable. Start it with <code>uvicorn app.main:app --reload</code> from
-          api/ and reload.
+          {error}
         </p>
       </main>
     );

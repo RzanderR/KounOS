@@ -19,8 +19,13 @@ export default function Home() {
   useEffect(() => {
     let cancelled = false;
     async function checkApi() {
-      const health = await fetchHealth();
-      if (!cancelled) setStatus(health === null ? "unreachable" : "ok");
+      let next: ApiStatus = "ok";
+      try {
+        await fetchHealth();
+      } catch {
+        next = "unreachable";
+      }
+      if (!cancelled) setStatus(next);
     }
     void checkApi();
     return () => {
