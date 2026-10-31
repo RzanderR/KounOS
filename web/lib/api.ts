@@ -2,8 +2,10 @@ import type {
   AwardRecord,
   ContractFile,
   Ripple,
+  FitAssessment,
   Flag,
   HealthStatus,
+  Notice,
   Order,
 
   OrderDetail,
@@ -146,6 +148,16 @@ async function postJson<T>(path: string, body: unknown): Promise<T | null> {
   } catch {
     return null;
   }
+}
+
+/** Typed GET /notices. Empty until the H16 batch lands. */
+export function fetchNotices(): Promise<Notice[] | null> {
+  return getJson<Notice[]>("/notices");
+}
+
+/** Typed GET /notices/{id}/fit. Null when unscorable (H15 profile pending). */
+export function fetchFit(noticeId: string): Promise<FitAssessment | null> {
+  return getJson<FitAssessment>(`/notices/${encodeURIComponent(noticeId)}/fit`);
 }
 
 /** Typed GET /events/flags. Null when unreachable. */
