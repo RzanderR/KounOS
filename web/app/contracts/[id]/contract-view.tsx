@@ -1,0 +1,157 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
+import { fetchContractFile } from "@/lib/api";
+import type { ContractFile, LinkedFigure } from "@/lib/kounos-types";
+import { SimulatedAwardBanner } from "../../orders/banner";
+
+const SECTION_TITLES: Record<string, string> = {
+  requirements: "Requirements",
+  quotes: "Quotes and checks",
+  cost_bid: "Cost and bid",
+  award: "Award",
+  order: "Order",
+  events: "Events",
+  cash: "Cash",
+};
+
+function LineagePanel({ figure }: { figure: LinkedFigure }) {
+  const lineage = figure.lineage;
+  return (
+    <div className="mt-2 rounded border p-3 text-sm">
+      <p className="font-medium">
+        {figure.label}: {figure.value}
+      </p>
+      {lineage.kind === "doc" ? (
+        <>
+          <p className="mt-2 text-muted-foreground">
+            Source: {lineage.file ?? "unknown file"}
+            {lineage.page === null || lineage.page === undefined
+              ? ""
+              : `, page ${lineage.page}`}
+          </p>
+          {lineage.snippet === null || lineage.snippet === undefined ? null : (
+            <blockquote className="mt-2 border-l-2 pl-3">
+              “{lineage.snippet}”
+            </blockquote>
+          )}
+          {lineage.file !== null &&
+          lineage.file !== undefined &&
+          lineage.file.startsWith("data/solicitations/") ? (
+            <p className="mt-2">
+              <a className="underline" href="/solicitation">
+                Open in the solicitation reader
+              </a>
+            </p>
+          ) : null}
+        </>
+      ) : (
+        <>
+          <p className="mt-2 text-muted-foreground">
+            Calculated by <code>{lineage.calculation ?? "code"}</code>
+          </p>
+          <table className="mt-2 w-full border-collapse">
+            <tbody>
+              {Object.entries(lineage.inputs ?? {}).map(([name, input]) => (
+                <tr key={name} className="border-b align-top">
+                  <td className="py-1 pr-4 font-medium">{name}</td>
+                  <td className="py-1">{input}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
+      )}
+    </div>
+  );
+}
+
+export default function ContractView({ orderId }: { orderId: string }) {
+  const [file, setFile] = useState<ContractFile | null>(null);
+  const [failed, setFailed] = useState(false);
+  const [selection, setSelection] = useState<LinkedFigure | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      const data = await fetchContractFile(orderId);
+      if (!cancelled) {
+        if (data === null) setFailed(true);
+        else setFile(data);
+      }
+    }
+    void load();
+    return () => {
+      cancelled = true;
+    };
+  }, [orderId]);
+
+  if (failed) {
+    return (
+      <main className="mx-auto w-full max-w-5xl px-6 py-10">
+        <h1 className="text-2xl font-semibold">Contract file</h1>
+        <p role="alert" className="mt-4 text-sm">
+          The API is unreachable or the order is unknown. Start it with{" "}
+          <code>uvicorn app.main:app --reload</code> from api/ and reload.
+        </p>
+      </main>
+    );
+  }
+  if (file === null) {
+    return (
+      <main className="mx-auto w-full max-w-5xl px-6 py-10">
+        <h1 className="text-2xl font-semibold">Contract file</h1>
+        <p className="mt-4 text-sm text-muted-foreground">Loading…</p>
+      </main>
+    );
+  }
+
+  return (
+    <main className="mx-auto w-full max-w-5xl px-6 py-10">
+      <h1 className="text-2xl font-semibold">Contract file</h1>
+      <p className="mt-1 text-sm text-muted-foreground">
+        {file.order_id} · {file.solicitation_id} · every number links to its source
+      </p>
+      <SimulatedAwardBanner />
+
+      {(file.sections ?? []).map((section) => (
+        <section
+          key={section.name}
+          aria-label={SECTION_TITLES[section.name] ?? section.name}
+          className="mt-8"
+        >
+          <h2 className="text-lg font-medium">
+            {SECTION_TITLES[section.name] ?? section.name}
+          </h2>
+          <ul className="mt-2">
+            {(section.figures ?? []).map((figure) => (
+              <li key={figure.label} className="border-b py-2">
+                <button
+                  type="button"
+                  className="flex w-full cursor-pointer gap-4 text-left text-sm"
+                  onClick={() => setSelection(figure)}
+                  aria-label={`Show lineage for ${figure.label}`}
+                >
+                  <span className="w-56 shrink-0 font-medium">{figure.label}</span>
+                  <span className="underline decoration-dotted">{figure.value}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+
+      <section aria-label="Lineage" className="mt-8">
+        <h2 className="text-lg font-medium">Lineage</h2>
+        {selection === null ? (
+          <p className="mt-2 text-sm text-muted-foreground">
+            Select any number to see where it came from.
+          </p>
+        ) : (
+          <LineagePanel figure={selection} />
+        )}
+      </section>
+    </main>
+  );
+}
