@@ -3,8 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { fetchContractFile, fetchImpactAnalysis, fetchRipple } from "@/lib/api";
-import type { ImpactAnalysisShim } from "@/lib/api";
-import type { ContractFile, LinkedFigure, Ripple } from "@/lib/kounos-types";
+import type { ContractFile, ImpactAnalysis, LinkedFigure, Ripple } from "@/lib/kounos-types";
 import { SimulatedAwardBanner } from "../../orders/banner";
 
 const SECTION_TITLES: Record<string, string> = {
@@ -73,7 +72,7 @@ export default function ContractView({ orderId }: { orderId: string }) {
   const [failed, setFailed] = useState(false);
   const [selection, setSelection] = useState<LinkedFigure | null>(null);
   const [ripple, setRipple] = useState<Ripple | null>(null);
-  const [impact, setImpact] = useState<ImpactAnalysisShim | null>(null);
+  const [impact, setImpact] = useState<ImpactAnalysis | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -193,9 +192,17 @@ export default function ContractView({ orderId }: { orderId: string }) {
       {impact === null ? null : (
         <section aria-label="Recovery options" className="mt-8">
           <h2 className="text-lg font-medium">Recovery options</h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Analysis by {impact.generated_by}
-          </p>
+          {impact.grounded === false ? (
+            <p role="alert" className="mt-1 text-sm text-amber-700">
+              Explanation from {impact.generated_by} withheld: it cited figures no tool returned (
+              {(impact.ungrounded_figures ?? []).join(", ")}). Showing code-computed options and
+              rule-based flags instead.
+            </p>
+          ) : (
+            <p className="mt-1 text-sm text-muted-foreground">
+              Analysis by {impact.generated_by}
+            </p>
+          )}
           <ul className="mt-2">
             {(impact.options ?? []).map((option) => (
               <li key={option.name} className="border-b py-2 text-sm">

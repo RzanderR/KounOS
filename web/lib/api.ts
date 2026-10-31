@@ -1,6 +1,7 @@
 import type {
   AwardRecord,
   ContractFile,
+  ImpactAnalysis,
   Ripple,
   FitAssessment,
   Flag,
@@ -115,25 +116,8 @@ export function fetchRipple(orderId: string): Promise<Ripple | null> {
 }
 
 /** Typed POST /impact/analyze. Null when unreachable or not yet served. */
-export function fetchImpactAnalysis(orderId: string): Promise<ImpactAnalysisShim | null> {
-  return postJson<ImpactAnalysisShim>("/impact/analyze", { order_id: orderId });
-}
-
-/** Local copy of the A21 analysis shape; the generated type lands with #19. */
-export interface ImpactAnalysisShim {
-  order_id: string;
-  event_id: string | null;
-  generated_by: string;
-  options: {
-    name: string;
-    summary: string;
-    cost_delta: string;
-    new_margin_pct: string | null;
-    new_arrival_date: string | null;
-    on_time: boolean;
-    needs_confirmation: boolean;
-  }[];
-  note: string;
+export function fetchImpactAnalysis(orderId: string): Promise<ImpactAnalysis | null> {
+  return postJson<ImpactAnalysis>("/impact/analyze", { order_id: orderId });
 }
 
 async function postJson<T>(path: string, body: unknown): Promise<T | null> {

@@ -13,7 +13,7 @@ from decimal import Decimal
 
 from openai import OpenAI
 
-from app import costs, order_store
+from app import costs, grounding, order_store
 from app.checks import demo_verdicts
 from app.config import ModelKeyMissing, Settings
 from app.rules import evaluate
@@ -93,6 +93,12 @@ def order_facts(order_id: str) -> dict[str, object]:
         "arrival_date": ship.arrival_date.isoformat()
         if ship and ship.arrival_date
         else None,
+        "days_late": (ship.arrival_date - order.customer_due_date).days
+        if ship
+        and ship.arrival_date
+        and order.customer_due_date
+        and ship.arrival_date > order.customer_due_date
+        else 0,
         "flags": [flag.message for flag in evaluate(detail)],
     }
 
@@ -136,7 +142,9 @@ def priced_options(order_id: str) -> list[ImpactOption]:
     failures = "; ".join(
         f"{verdict.supplier} fails "
         + ", ".join(
-            check.reason for check in verdict.checks if check.verdict == "fail"
+            check.reason.rstrip(".")
+            for check in verdict.checks
+            if check.verdict == "fail"
         )
         for verdict in demo_verdicts()
         if verdict.overall == "fail"
@@ -173,6 +181,32 @@ def _request(model: str, prompt: str, settings: Settings) -> dict[str, object]:
     return parsed
 
 
+def plain_summary(option: ImpactOption) -> str:
+    """A code-written sentence for one option, used when model prose is rejected."""
+    parts = [option.name.replace("_", " ").capitalize()]
+    if option.cost_delta:
+        parts.append(f"adds ${option.cost_delta:,.2f}")
+    if option.new_margin_pct is not None:
+        parts.append(f"margin {option.new_margin_pct}%")
+    if option.new_arrival_date is not None:
+        timing = "on time" if option.on_time else "late"
+        parts.append(f"arrives {option.new_arrival_date.isoformat()} ({timing})")
+    if option.needs_confirmation:
+        parts.append("needs confirmation before use")
+    sentence = "; ".join(parts) + "."
+    return f"{sentence} {option.summary}" if option.summary else sentence
+
+
+def ground(
+    summaries: dict[str, str], note: str, allowed: list[grounding.Figure]
+) -> list[str]:
+    """Every figure in the model prose that no tool returned (A22)."""
+    ungrounded: list[str] = []
+    for text in [*summaries.values(), note]:
+        ungrounded.extend(grounding.check(text, allowed).ungrounded)
+    return ungrounded
+
+
 def analyze(order_id: str, settings: Settings) -> ImpactAnalysis:
     """Price the options in code, have the model explain them.
 
@@ -207,6 +241,19 @@ def analyze(order_id: str, settings: Settings) -> ImpactAnalysis:
     note = raw.get("note")
     if not isinstance(note, str):
         raise ValueError(f"Impact model returned no note: {raw!r}.")
+    prose = {name: str(summaries.get(name) or "") for name in OPTION_NAMES}
+    allowed = grounding.tool_figures([facts, [opt.model_dump() for opt in options]])
+    ungrounded = ground(prose, note, allowed)
+    if ungrounded:
+        # Discard all model prose: code-written sentences and the rule flags.
+        raw_flags = facts["flags"]
+        flags = [str(flag) for flag in raw_flags] if isinstance(raw_flags, list) else []
+        prose = {opt.name: plain_summary(opt) for opt in options}
+        note = (
+            "Rule-based flags: " + "; ".join(flag.rstrip(".") for flag in flags) + "."
+            if flags
+            else "No rule-based flags."
+        )
     latest_event = detail.events[-1].event_id if detail.events else None
     return ImpactAnalysis(
         order_id=order_id,
@@ -215,7 +262,7 @@ def analyze(order_id: str, settings: Settings) -> ImpactAnalysis:
         options=[
             ImpactOption(
                 name=opt.name,
-                summary=str(summaries.get(opt.name) or opt.summary),
+                summary=prose[opt.name] or opt.summary,
                 cost_delta=opt.cost_delta,
                 new_margin_pct=opt.new_margin_pct,
                 new_arrival_date=opt.new_arrival_date,
@@ -225,6 +272,8 @@ def analyze(order_id: str, settings: Settings) -> ImpactAnalysis:
             for opt in options
         ],
         note=note,
+        grounded=not ungrounded,
+        ungrounded_figures=ungrounded,
     )
 
 

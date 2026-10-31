@@ -298,6 +298,7 @@ Built by Koun Logistics LLC with Muse Code (Meta) for implementation, planning a
 - Simulated order timeline linking commitment, PO, shipment, invoice and payment
 - Voicemail-to-event pipeline with Muse Voice Transcribe
 - Risk rules and Muse Wonder impact analysis with priced recovery options
+- Number grounding: an explanation citing any figure no tool returned is discarded and replaced by code-written option text and the rule-based flags
 - Draft notes for human review
 - Ask KounOS assistant with record-linked answers
 - Seed, reset and replay mode for the demo
