@@ -11,18 +11,18 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from app.config import REPO_ROOT, Settings
-from app.fit import FitExtraction, build_notice, extract_fit_facts
+from app.fit import FitExtraction, cited_notice, extract_fit_facts
 
 
 def main(pdf_paths: list[Path]) -> int:
-    """Extract each notice, print the validated Notice record."""
+    """Extract each notice, check its citations, print the Notice record."""
     settings = Settings()
     if not settings.model_api_key:
         print("MODEL_API_KEY is not set (repo-root .env).", file=sys.stderr)
         return 2
     for pdf_path in pdf_paths:
         extraction: FitExtraction = extract_fit_facts(pdf_path, settings)
-        notice = build_notice(pdf_path.stem, extraction)
+        notice = cited_notice(pdf_path.stem, pdf_path, extraction)
         print(json.dumps(json.loads(notice.model_dump_json()), indent=2))
     return 0
 

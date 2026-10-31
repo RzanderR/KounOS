@@ -1,0 +1,599 @@
+{
+  "notice_id": "1232SA26Q0557_terms_and_clauses",
+  "title": "Greenhouse light fixtures, LED for the USDA, ARS, ETSARC-BRL in Fargo, ND",
+  "agency": "USDA, ARS, ETSARC-BRL",
+  "set_aside": "total small business",
+  "product_category": "LED greenhouse light fixtures",
+  "quantity": null,
+  "delivery_window": "within 60 days after award",
+  "estimated_value": null,
+  "competition_signal": null,
+  "url": null,
+  "posted": null,
+  "citations": [
+    {
+      "name": "title",
+      "summary": "Greenhouse light fixtures, LED for the USDA, ARS, ETSARC-BRL in Fargo, ND",
+      "source": {
+        "file": "data/solicitations/1232SA26Q0557_terms_and_clauses.pdf",
+        "page": 1,
+        "snippet": "Greenhouse light fixtures, LED for the USDA, ARS, ETSARC-BRL in Fargo, ND"
+      },
+      "citation_status": "verified",
+      "boxes": [
+        {
+          "text": "Greenhouse",
+          "x0": 92.64,
+          "top": 42.3119999999999,
+          "x1": 162.792,
+          "bottom": 54.3119999999999
+        },
+        {
+          "text": "light",
+          "x0": 166.07999999999998,
+          "top": 42.3119999999999,
+          "x1": 191.43599999999998,
+          "bottom": 54.3119999999999
+        },
+        {
+          "text": "fixtures,",
+          "x0": 194.76,
+          "top": 42.3119999999999,
+          "x1": 241.41720000000004,
+          "bottom": 54.3119999999999
+        },
+        {
+          "text": "LED",
+          "x0": 244.80120000000005,
+          "top": 42.3119999999999,
+          "x1": 268.82520000000005,
+          "bottom": 54.3119999999999
+        },
+        {
+          "text": "for",
+          "x0": 272.1612000000001,
+          "top": 42.3119999999999,
+          "x1": 288.10920000000016,
+          "bottom": 54.3119999999999
+        },
+        {
+          "text": "the",
+          "x0": 291.48120000000006,
+          "top": 42.3119999999999,
+          "x1": 309.43320000000006,
+          "bottom": 54.3119999999999
+        },
+        {
+          "text": "USDA,",
+          "x0": 312.8412,
+          "top": 42.3119999999999,
+          "x1": 349.8984,
+          "bottom": 54.3119999999999
+        },
+        {
+          "text": "ARS,",
+          "x0": 352.8023999999999,
+          "top": 42.3119999999999,
+          "x1": 381.4583999999999,
+          "bottom": 54.3119999999999
+        },
+        {
+          "text": "ETSARC-BRL",
+          "x0": 384.8423999999999,
+          "top": 42.3119999999999,
+          "x1": 462.8519999999999,
+          "bottom": 54.3119999999999
+        },
+        {
+          "text": "in",
+          "x0": 465.9599999999999,
+          "top": 42.3119999999999,
+          "x1": 476.65199999999993,
+          "bottom": 54.3119999999999
+        },
+        {
+          "text": "Fargo,",
+          "x0": 479.99999999999994,
+          "top": 42.3119999999999,
+          "x1": 516.6972,
+          "bottom": 54.3119999999999
+        },
+        {
+          "text": "ND",
+          "x0": 520.0812,
+          "top": 42.3119999999999,
+          "x1": 537.3851999999999,
+          "bottom": 54.3119999999999
+        }
+      ]
+    },
+    {
+      "name": "agency",
+      "summary": "USDA, ARS, ETSARC-BRL",
+      "source": {
+        "file": "data/solicitations/1232SA26Q0557_terms_and_clauses.pdf",
+        "page": 1,
+        "snippet": "LED for the USDA, ARS, ETSARC-BRL in Fargo, ND"
+      },
+      "citation_status": "verified",
+      "boxes": [
+        {
+          "text": "LED",
+          "x0": 244.80120000000005,
+          "top": 42.3119999999999,
+          "x1": 268.82520000000005,
+          "bottom": 54.3119999999999
+        },
+        {
+          "text": "for",
+          "x0": 272.1612000000001,
+          "top": 42.3119999999999,
+          "x1": 288.10920000000016,
+          "bottom": 54.3119999999999
+        },
+        {
+          "text": "the",
+          "x0": 291.48120000000006,
+          "top": 42.3119999999999,
+          "x1": 309.43320000000006,
+          "bottom": 54.3119999999999
+        },
+        {
+          "text": "USDA,",
+          "x0": 312.8412,
+          "top": 42.3119999999999,
+          "x1": 349.8984,
+          "bottom": 54.3119999999999
+        },
+        {
+          "text": "ARS,",
+          "x0": 352.8023999999999,
+          "top": 42.3119999999999,
+          "x1": 381.4583999999999,
+          "bottom": 54.3119999999999
+        },
+        {
+          "text": "ETSARC-BRL",
+          "x0": 384.8423999999999,
+          "top": 42.3119999999999,
+          "x1": 462.8519999999999,
+          "bottom": 54.3119999999999
+        },
+        {
+          "text": "in",
+          "x0": 465.9599999999999,
+          "top": 42.3119999999999,
+          "x1": 476.65199999999993,
+          "bottom": 54.3119999999999
+        },
+        {
+          "text": "Fargo,",
+          "x0": 479.99999999999994,
+          "top": 42.3119999999999,
+          "x1": 516.6972,
+          "bottom": 54.3119999999999
+        },
+        {
+          "text": "ND",
+          "x0": 520.0812,
+          "top": 42.3119999999999,
+          "x1": 537.3851999999999,
+          "bottom": 54.3119999999999
+        }
+      ]
+    },
+    {
+      "name": "set_aside",
+      "summary": "total small business",
+      "source": {
+        "file": "data/solicitations/1232SA26Q0557_terms_and_clauses.pdf",
+        "page": 3,
+        "snippet": "52.219-6 Notice of Total Small Business Aside (Nov 2025)"
+      },
+      "citation_status": "verified",
+      "boxes": [
+        {
+          "text": "52.219-6",
+          "x0": 89.28,
+          "top": 283.27104,
+          "x1": 132.73824,
+          "bottom": 294.31104000000005
+        },
+        {
+          "text": "Notice",
+          "x0": 144.0,
+          "top": 283.99104,
+          "x1": 177.73824,
+          "bottom": 295.03104
+        },
+        {
+          "text": "of",
+          "x0": 180.84048,
+          "top": 283.99104,
+          "x1": 191.117616,
+          "bottom": 295.03104
+        },
+        {
+          "text": "Total",
+          "x0": 194.28499200000002,
+          "top": 283.99104,
+          "x1": 219.670368,
+          "bottom": 295.03104
+        },
+        {
+          "text": "Small",
+          "x0": 222.72513600000002,
+          "top": 283.99104,
+          "x1": 252.073872,
+          "bottom": 295.03104
+        },
+        {
+          "text": "Business",
+          "x0": 255.12974400000002,
+          "top": 283.99104,
+          "x1": 304.10318399999994,
+          "bottom": 295.03104
+        },
+        {
+          "text": "Aside",
+          "x0": 306.72187199999996,
+          "top": 283.99104,
+          "x1": 336.7396319999999,
+          "bottom": 295.03104
+        },
+        {
+          "text": "(Nov",
+          "x0": 339.71712,
+          "top": 283.99104,
+          "x1": 364.21819200000004,
+          "bottom": 295.03104
+        },
+        {
+          "text": "2025)",
+          "x0": 367.3204320000001,
+          "top": 283.99104,
+          "x1": 395.34547200000014,
+          "bottom": 295.03104
+        }
+      ]
+    },
+    {
+      "name": "product_category",
+      "summary": "LED greenhouse light fixtures",
+      "source": {
+        "file": "data/solicitations/1232SA26Q0557_terms_and_clauses.pdf",
+        "page": 1,
+        "snippet": "This requirement is for LED greenhouse light fixtures, brand name to PhotoBio CX 2125,"
+      },
+      "citation_status": "verified",
+      "boxes": [
+        {
+          "text": "This",
+          "x0": 71.28,
+          "top": 99.77999999999997,
+          "x1": 93.96000000000001,
+          "bottom": 111.77999999999997
+        },
+        {
+          "text": "requirement",
+          "x0": 97.32000000000001,
+          "top": 99.77999999999997,
+          "x1": 161.376,
+          "bottom": 111.77999999999997
+        },
+        {
+          "text": "is",
+          "x0": 164.76,
+          "top": 99.77999999999997,
+          "x1": 173.39999999999998,
+          "bottom": 111.77999999999997
+        },
+        {
+          "text": "for",
+          "x0": 176.75999999999996,
+          "top": 99.77999999999997,
+          "x1": 190.83599999999998,
+          "bottom": 111.77999999999997
+        },
+        {
+          "text": "LED",
+          "x0": 194.03999999999996,
+          "top": 99.77999999999997,
+          "x1": 217.46519999999995,
+          "bottom": 111.77999999999997
+        },
+        {
+          "text": "greenhouse",
+          "x0": 220.79999999999995,
+          "top": 99.77999999999997,
+          "x1": 284.23199999999997,
+          "bottom": 111.77999999999997
+        },
+        {
+          "text": "light",
+          "x0": 287.52,
+          "top": 99.77999999999997,
+          "x1": 309.57600000000014,
+          "bottom": 111.77999999999997
+        },
+        {
+          "text": "fixtures,",
+          "x0": 312.84000000000015,
+          "top": 99.77999999999997,
+          "x1": 354.81600000000014,
+          "bottom": 111.77999999999997
+        },
+        {
+          "text": "brand",
+          "x0": 358.20000000000016,
+          "top": 99.77999999999997,
+          "x1": 388.8720000000003,
+          "bottom": 111.77999999999997
+        },
+        {
+          "text": "name",
+          "x0": 392.1600000000003,
+          "top": 99.77999999999997,
+          "x1": 422.2320000000003,
+          "bottom": 111.77999999999997
+        },
+        {
+          "text": "to",
+          "x0": 425.5200000000003,
+          "top": 99.77999999999997,
+          "x1": 435.55200000000036,
+          "bottom": 111.77999999999997
+        },
+        {
+          "text": "PhotoBio",
+          "x0": 438.8400000000004,
+          "top": 99.77999999999997,
+          "x1": 487.6296000000003,
+          "bottom": 111.77999999999997
+        },
+        {
+          "text": "CX",
+          "x0": 491.0376000000001,
+          "top": 99.77999999999997,
+          "x1": 507.6840000000001,
+          "bottom": 111.77999999999997
+        },
+        {
+          "text": "2125,",
+          "x0": 510.9600000000001,
+          "top": 99.77999999999997,
+          "x1": 541.0560000000002,
+          "bottom": 111.77999999999997
+        }
+      ]
+    },
+    {
+      "name": "quantity",
+      "summary": "58 base + 58 optional",
+      "source": {
+        "file": "data/solicitations/1232SA26Q0557_terms_and_clauses.pdf",
+        "page": 1,
+        "snippet": "58 EA $ $ 1001 Optional quantity - LED greenhouse light fixtures, brand"
+      },
+      "citation_status": "needs_review",
+      "boxes": []
+    },
+    {
+      "name": "delivery_window",
+      "summary": "within 60 days after award",
+      "source": {
+        "file": "data/solicitations/1232SA26Q0557_terms_and_clauses.pdf",
+        "page": 12,
+        "snippet": "The USDA requires delivery of all items within 60 days after award."
+      },
+      "citation_status": "verified",
+      "boxes": [
+        {
+          "text": "The",
+          "x0": 71.28,
+          "top": 625.5,
+          "x1": 91.99199999999999,
+          "bottom": 637.5
+        },
+        {
+          "text": "USDA",
+          "x0": 95.4,
+          "top": 625.5,
+          "x1": 128.724,
+          "bottom": 637.5
+        },
+        {
+          "text": "requires",
+          "x0": 131.39999999999998,
+          "top": 625.5,
+          "x1": 174.71999999999997,
+          "bottom": 637.5
+        },
+        {
+          "text": "delivery",
+          "x0": 178.07999999999996,
+          "top": 625.5,
+          "x1": 219.3611999999999,
+          "bottom": 637.5
+        },
+        {
+          "text": "of",
+          "x0": 222.7211999999999,
+          "top": 625.5,
+          "x1": 232.7771999999999,
+          "bottom": 637.5
+        },
+        {
+          "text": "all",
+          "x0": 236.16119999999987,
+          "top": 625.5,
+          "x1": 248.18519999999984,
+          "bottom": 637.5
+        },
+        {
+          "text": "items",
+          "x0": 251.52119999999982,
+          "top": 625.5,
+          "x1": 280.20119999999974,
+          "bottom": 637.5
+        },
+        {
+          "text": "within",
+          "x0": 283.56119999999976,
+          "top": 625.5,
+          "x1": 314.1132,
+          "bottom": 637.5
+        },
+        {
+          "text": "60",
+          "x0": 317.4012,
+          "top": 625.5,
+          "x1": 330.79320000000007,
+          "bottom": 637.5
+        },
+        {
+          "text": "days",
+          "x0": 334.08119999999997,
+          "top": 625.5,
+          "x1": 359.5212,
+          "bottom": 637.5
+        },
+        {
+          "text": "after",
+          "x0": 362.76120000000003,
+          "top": 625.5,
+          "x1": 386.9172000000001,
+          "bottom": 637.5
+        },
+        {
+          "text": "award.",
+          "x0": 390.12120000000016,
+          "top": 625.5,
+          "x1": 426.2172000000003,
+          "bottom": 637.5
+        }
+      ]
+    },
+    {
+      "name": "estimated_value",
+      "summary": "not stated",
+      "source": {
+        "file": "data/solicitations/1232SA26Q0557_terms_and_clauses.pdf",
+        "page": 1,
+        "snippet": "Estimated Quantity Unit of Issue Unit Cost Total"
+      },
+      "citation_status": "needs_review",
+      "boxes": []
+    },
+    {
+      "name": "competition_signal",
+      "summary": "not stated",
+      "source": {
+        "file": "data/solicitations/1232SA26Q0557_terms_and_clauses.pdf",
+        "page": 11,
+        "snippet": "Award will be made to the offeror representing the best value to the Government."
+      },
+      "citation_status": "verified",
+      "boxes": [
+        {
+          "text": "Award",
+          "x0": 476.8800000000002,
+          "top": 200.2199999999999,
+          "x1": 510.6732000000002,
+          "bottom": 212.2199999999999
+        },
+        {
+          "text": "will",
+          "x0": 514.0812000000001,
+          "top": 200.2199999999999,
+          "x1": 530.6652,
+          "bottom": 212.2199999999999
+        },
+        {
+          "text": "be",
+          "x0": 534.0011999999999,
+          "top": 200.2199999999999,
+          "x1": 547.3931999999999,
+          "bottom": 212.2199999999999
+        },
+        {
+          "text": "made",
+          "x0": 71.76,
+          "top": 214.6199999999999,
+          "x1": 101.83200000000001,
+          "bottom": 226.6199999999999
+        },
+        {
+          "text": "to",
+          "x0": 105.24000000000001,
+          "top": 214.6199999999999,
+          "x1": 115.15200000000002,
+          "bottom": 226.6199999999999
+        },
+        {
+          "text": "the",
+          "x0": 118.56000000000002,
+          "top": 214.6199999999999,
+          "x1": 135.192,
+          "bottom": 226.6199999999999
+        },
+        {
+          "text": "offeror",
+          "x0": 138.6,
+          "top": 214.6199999999999,
+          "x1": 173.076,
+          "bottom": 226.6199999999999
+        },
+        {
+          "text": "representing",
+          "x0": 176.39999999999998,
+          "top": 214.6199999999999,
+          "x1": 243.0731999999999,
+          "bottom": 226.6199999999999
+        },
+        {
+          "text": "the",
+          "x0": 246.4811999999999,
+          "top": 214.6199999999999,
+          "x1": 263.1131999999999,
+          "bottom": 226.6199999999999
+        },
+        {
+          "text": "best",
+          "x0": 266.5211999999999,
+          "top": 214.6199999999999,
+          "x1": 289.17719999999997,
+          "bottom": 226.6199999999999
+        },
+        {
+          "text": "value",
+          "x0": 292.5612,
+          "top": 214.6199999999999,
+          "x1": 321.0732000000001,
+          "bottom": 226.6199999999999
+        },
+        {
+          "text": "to",
+          "x0": 324.4812000000001,
+          "top": 214.6199999999999,
+          "x1": 334.51320000000015,
+          "bottom": 226.6199999999999
+        },
+        {
+          "text": "the",
+          "x0": 337.8012000000001,
+          "top": 214.6199999999999,
+          "x1": 354.5532000000002,
+          "bottom": 226.6199999999999
+        },
+        {
+          "text": "Government.",
+          "x0": 357.8412000000002,
+          "top": 214.6199999999999,
+          "x1": 427.1772000000003,
+          "bottom": 226.6199999999999
+        }
+      ]
+    }
+  ]
+}

@@ -104,6 +104,8 @@ class Notice(BaseModel):
     competition_signal: str | None = None
     url: str | None = None
     posted: date | None = None
+    # Every extracted fact with its page, snippet and A06 citation status.
+    citations: list[KeyClause] = Field(default_factory=list)
 
 
 class FitAssessment(BaseModel):
