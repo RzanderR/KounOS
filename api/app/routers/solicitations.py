@@ -1,4 +1,4 @@
-"""Solicitation routes (A03 stubs, A08 demo endpoint)."""
+"""Solicitation routes: the demo solicitation and its PDFs (A08)."""
 
 import base64
 
@@ -12,20 +12,14 @@ from app.schemas import PassageBytes, Solicitation
 router = APIRouter(prefix="/solicitations", tags=["solicitations"])
 
 
-@router.get("", response_model=list[Solicitation])
-def list_solicitations() -> list[Solicitation]:
-    """List ingested solicitations (stub until A05)."""
-    raise HTTPException(status_code=501, detail="Not implemented until A05.")
-
-
 @router.get("/{solicitation_id}", response_model=Solicitation)
 def get_solicitation(
     solicitation_id: str, settings: Settings = Depends(get_settings)
 ) -> Solicitation:
     """The demo solicitation with code-checked citations (A08).
 
-    Built from the hand-checked answer key; the provenance note names the
-    pending live MODEL_READ extraction. Unknown ids 404.
+    Built from the stored MODEL_READ extraction, every citation re-checked
+    in code; the provenance note names the stored file. Unknown ids 404.
     """
     if solicitation_id != demo_id():
         raise HTTPException(
@@ -60,21 +54,3 @@ def get_passage_bytes(solicitation_id: str, file: str) -> PassageBytes:
     if path.parent != ATTACHMENTS_DIR.resolve() or not path.is_file():
         raise HTTPException(status_code=404, detail="Unknown attachment.")
     return PassageBytes(file=file, data=base64.b64encode(path.read_bytes()).decode("ascii"))
-
-
-@router.post("/{solicitation_id}/extract", response_model=Solicitation)
-def extract_solicitation(solicitation_id: str) -> Solicitation:
-    """Run MODEL_READ extraction over the solicitation PDFs (stub until A05)."""
-    raise HTTPException(
-        status_code=501,
-        detail=f"Not implemented until A05: {solicitation_id}.",
-    )
-
-
-@router.post("/{solicitation_id}/gap-pass")
-def gap_pass(solicitation_id: str) -> None:
-    """Run the gap and ambiguity pass (stub until A07)."""
-    raise HTTPException(
-        status_code=501,
-        detail=f"Not implemented until A07: {solicitation_id}.",
-    )

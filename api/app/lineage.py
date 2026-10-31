@@ -5,17 +5,15 @@ reusing the A06 citation data. A calc figure names the code function and
 its inputs, reusing the A12 cost engine and A11 checks. Nothing here
 calls a model: the solicitation builder re-checks stored output in code.
 
-Event-sourced figures resolve to the ingest call that recorded them; file
-linkage for those lands with the A39 ripple.
+Event-sourced figures resolve to the ingest call that recorded them.
 """
 
-import json
 import re
 from decimal import Decimal
 
 from app import costs, order_store
 from app.checks import demo_verdicts, load_quote_fixture
-from app.compare import MARGIN_FLOOR
+from app.compare import AWARD_FILE, MARGIN_FLOOR, award_json, deposit_fraction
 from app.config import REPO_ROOT, Settings
 from app.demo_solicitation import ATTACHMENTS_DIR, build_demo_solicitation
 from app.recommend import SOLICITATION_ID, read_award
@@ -139,7 +137,8 @@ def cost_figures() -> list[LinkedFigure]:
     landed = costs.landed_cost(quote)
     per_unit, safe_bid = costs.lowest_safe_bid(quote, MARGIN_FLOOR)
     margin = costs.margin_at_price(landed, safe_bid)
-    deposit = costs.deposit_due(quote.total, Decimal("0.5"))
+    fraction = deposit_fraction(QUOTE_ID)
+    deposit = costs.deposit_due(quote.total, fraction)
     return [
         LinkedFigure(
             label="Landed cost",
@@ -181,7 +180,7 @@ def cost_figures() -> list[LinkedFigure]:
             value=str(deposit),
             lineage=calc(
                 "costs.deposit_due",
-                {"quote_total": str(quote.total), "fraction": "0.5"},
+                {"quote_total": str(quote.total), "fraction": str(fraction)},
             ),
         ),
     ]
@@ -190,12 +189,8 @@ def cost_figures() -> list[LinkedFigure]:
 def award_figures() -> list[LinkedFigure]:
     """The real award off data/awards."""
     award = read_award()
-    raw = json.loads(
-        (REPO_ROOT / "data" / "awards" / "1232SA26Q0557.json").read_text(
-            encoding="utf-8"
-        )
-    )
-    file = "data/awards/1232SA26Q0557.json"
+    raw = award_json()
+    file = AWARD_FILE
     return [
         LinkedFigure(
             label="Award total",
@@ -278,7 +273,7 @@ def order_figures(detail: OrderDetail) -> list[LinkedFigure]:
 
 
 def event_figures(detail: OrderDetail) -> list[LinkedFigure]:
-    """Recorded events; file linkage for these lands with the A39 ripple."""
+    """Each recorded delay's new ship date, traced to the ingest call."""
     figures = []
     for event in detail.events:
         if event.new_ship_date is None:

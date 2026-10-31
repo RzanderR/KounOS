@@ -73,11 +73,6 @@ export async function fetchHealth(): Promise<HealthStatus> {
   return data;
 }
 
-/** Typed GET /solicitations. Empty until extraction lands (A05). */
-export function fetchSolicitations(): Promise<Solicitation[]> {
-  return getJson<Solicitation[]>("/solicitations");
-}
-
 /** Typed GET /solicitations/{id}. */
 export function fetchSolicitation(solicitationId: string): Promise<Solicitation> {
   return getJson<Solicitation>(`/solicitations/${encodeURIComponent(solicitationId)}`);
@@ -104,7 +99,7 @@ export async function fetchPassageBytes(url: string): Promise<Uint8Array> {
   return bytes;
 }
 
-/** Typed GET /quotes. Empty until intake lands (A10). */
+/** Typed GET /quotes: the three curated demo quotes (A10). */
 export function fetchQuotes(): Promise<Quote[]> {
   return getJson<Quote[]>("/quotes");
 }
