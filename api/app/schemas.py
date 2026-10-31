@@ -305,6 +305,22 @@ class ImpactAnalysis(BaseModel):
     note: str
 
 
+class Ripple(BaseModel):
+    """What the latest delay event changes: date, margin, cash, risk (A39)."""
+
+    order_id: str
+    event_id: str
+    arrival_date: date | None = None
+    customer_due_date: date | None = None
+    days_late: int
+    margin_now: Decimal
+    margin_expedited: Decimal
+    expedite_cost: Decimal
+    deposit_due: Decimal
+    invoice_balance: Decimal
+    risks: list[str] = Field(default_factory=list)
+
+
 class FigureLineage(BaseModel):
     """Where one figure comes from: a doc passage or a code calculation."""
 

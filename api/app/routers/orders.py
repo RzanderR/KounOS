@@ -2,9 +2,9 @@
 
 from fastapi import APIRouter, Depends, HTTPException
 
-from app import lineage, order_store
+from app import lineage, order_store, ripple
 from app.config import Settings, get_settings
-from app.schemas import ContractFile, Order, OrderDetail
+from app.schemas import ContractFile, Order, OrderDetail, Ripple
 
 router = APIRouter(prefix="/orders", tags=["orders"])
 demo_router = APIRouter(prefix="/demo", tags=["demo"])
@@ -32,6 +32,18 @@ def get_contract_file(
     """The whole linked picture for one order with per-figure lineage (A37)."""
     try:
         return lineage.build_contract_file(order_id, settings)
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+
+@router.get("/{order_id}/ripple", response_model=Ripple | None)
+def get_ripple(order_id: str) -> Ripple | None:
+    """The latest delay's ripple across date, margin, cash and risk (A39).
+
+    Null when the order is on track: the screen shows no ripple section.
+    """
+    try:
+        return ripple.build_ripple(order_id)
     except ValueError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
 
