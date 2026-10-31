@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 
 from app import impact
-from app.config import Settings, get_settings
+from app.config import ModelKeyMissing, Settings, get_settings
 from app.schemas import ImpactAnalysis
 
 router = APIRouter(prefix="/impact", tags=["impact"])
@@ -25,3 +25,5 @@ def analyze_impact(
         return impact.analyze(body.order_id, settings)
     except ValueError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except ModelKeyMissing as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc

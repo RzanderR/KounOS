@@ -26,6 +26,16 @@ class Settings(BaseSettings):
     demo_mode: Literal["live", "replay"] = "live"
 
 
+class ModelKeyMissing(RuntimeError):
+    """MODEL_API_KEY is absent; routes answer 503 instead of a bare 500."""
+
+    def __init__(self) -> None:
+        super().__init__(
+            "MODEL_API_KEY is not set (repo-root .env locally, or the host's "
+            "environment variables when deployed)."
+        )
+
+
 def get_settings() -> Settings:
     """Build settings from the current environment (read per request)."""
     return Settings()
