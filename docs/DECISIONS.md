@@ -20,6 +20,12 @@ Settled decisions future tasks depend on. See `docs/PLAN.md` (baseline) and `TAS
 - Why: A11 requirement checks must encode exactly these verdicts; a missing country-of-origin is not a pass, so code must flag it for a person to confirm rather than guess.
 - Impact: A11 requirement checks (delivery + brand-name/spec + sourcing-needs-confirmation); A16/A19 seed data: rescale the simulated-award dates to the 60-day delivery requirement and keep the Tallgrass delay landing two days late.
 
+## D04 (2026-10-30): Live model runs stay on the contributor tier for cost
+
+- Decision: `MODEL_READ` remains `muse-spark-1.3-contributor` in `.env`. The stored live outputs (smoke, extraction, gap pass) stand as-is; nothing is re-run on another tier.
+- Why: Owner direction — the contributor tier is an intentional cost choice, not a misconfiguration.
+- Impact: A02/A05/A07 provenance notes keep naming the contributor model; future live runs use the same tier unless a new decision says otherwise.
+
 ## D05 (2026-10-30): The demo is a linked contract file, not a file reader
 
 - Decision: After Gate 2, the product direction is one linked picture per contract and order, Palantir-style: solicitation → requirements → quotes + checks → cost/bid → award → order → events → cash on one screen. Every number is clickable to its lineage (source doc + page, or the calculation and its inputs). A delay event shows its ripple across the linked picture (date, margin, deposit/cash, risk) before the Muse Wonder options. The demo is about connecting the information and deciding, not about reading files.
