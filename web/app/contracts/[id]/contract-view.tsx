@@ -77,17 +77,19 @@ export default function ContractView({ orderId }: { orderId: string }) {
   useEffect(() => {
     let cancelled = false;
     async function load() {
-      const [data, rippleData, impactData] = await Promise.all([
+      const [data, rippleData] = await Promise.all([
         fetchContractFile(orderId),
         fetchRipple(orderId),
-        fetchImpactAnalysis(orderId),
       ]);
-      if (!cancelled) {
-        if (data === null) setFailed(true);
-        else setFile(data);
-        setRipple(rippleData);
-        setImpact(impactData);
-      }
+      if (cancelled) return;
+      if (data === null) setFailed(true);
+      else setFile(data);
+      setRipple(rippleData);
+      // Recovery options only exist for a late order, and the model call is
+      // slow, so it loads after the rest of the page is on screen.
+      if (rippleData === null || rippleData.days_late <= 0) return;
+      const impactData = await fetchImpactAnalysis(orderId);
+      if (!cancelled) setImpact(impactData);
     }
     void load();
     return () => {

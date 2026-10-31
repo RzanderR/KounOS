@@ -49,8 +49,13 @@ def recommend(
             award_total=award.total,
         )
     best = min(eligible, key=lambda row: row.safe_bid_total)
+    standing = (
+        "passes every requirement check"
+        if best.verdict.overall == "pass"
+        else "fails no requirement check but has open items"
+    )
     reasons = [
-        f"{best.quote.supplier} passes every requirement check at "
+        f"{best.quote.supplier} {standing}; lowest safe bid "
         f"{best.safe_bid_total} with a {floor * 100:.0f}% margin floor."
     ]
     if best.verdict.overall == "needs_confirmation":

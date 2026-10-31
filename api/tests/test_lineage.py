@@ -94,3 +94,22 @@ def test_endpoint_serves_the_chain() -> None:
     assert response.status_code == 200
     body = response.json()
     assert [section["name"] for section in body["sections"]] == EXPECTED_SECTIONS
+
+
+def test_other_orders_carry_no_demo_figures() -> None:
+    """ORD-002 is a GSA office order: no LED solicitation, quote or award."""
+    reset()
+    contract_file = build_contract_file("ORD-002", Settings())
+    assert contract_file.solicitation_id == "SIM-GSA-001"
+    assert [section.name for section in contract_file.sections] == [
+        "order",
+        "events",
+        "cash",
+    ]
+    values = [
+        figure.value
+        for section in contract_file.sections
+        for figure in section.figures
+    ]
+    assert "12400.00" in values
+    assert "91189.92" not in values and "82070.00" not in values
