@@ -1,17 +1,30 @@
-"""Event and flag routes (A18/A19)."""
+"""Event routes (A18): voicemail/email intake plus stored events and flags."""
 
-from fastapi import APIRouter, HTTPException
+from typing import Literal
+
+from fastapi import APIRouter, Depends, HTTPException
+from pydantic import BaseModel
 
 from app import order_store
+from app.config import Settings, get_settings
 from app.rules import evaluate_all
 from app.schemas import Event, Flag
+from app.voicemail import ingest_file
 
 router = APIRouter(prefix="/events", tags=["events"])
 
 
+class IngestBody(BaseModel):
+    """One delay message to ingest from data/voicemail/."""
+
+    order_id: str
+    source: Literal["voicemail", "email"]
+    filename: str
+
+
 @router.get("", response_model=list[Event])
 def list_events() -> list[Event]:
-    """Events across every tracked order (none seeded; A18 records them)."""
+    """Events across every tracked order (A18 records them)."""
     events: list[Event] = []
     for order in order_store.list_orders():
         detail = order_store.get_detail(order.order_id)
@@ -20,10 +33,18 @@ def list_events() -> list[Event]:
     return events
 
 
-@router.post("", response_model=Event)
-def record_event() -> Event:
-    """Record a voicemail/email/system event (stub until A18)."""
-    raise HTTPException(status_code=501, detail="Not implemented until A18.")
+@router.post("/ingest", response_model=Event)
+def ingest_event(body: IngestBody, settings: Settings = Depends(get_settings)) -> Event:
+    """Ingest one voicemail or backup email into an order event (A18)."""
+    detail = order_store.get_detail(body.order_id)
+    if detail is None:
+        raise HTTPException(status_code=404, detail=f"Unknown order: {body.order_id}.")
+    try:
+        return ingest_file(body.order_id, body.source, body.filename, settings, detail)
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
 @router.get("/flags", response_model=list[Flag])

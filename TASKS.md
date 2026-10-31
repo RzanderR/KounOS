@@ -65,14 +65,25 @@ Deadline: **Wed, Nov 4, 2026, 9 PM ET.** Submit by 2 PM Phoenix time (5 PM ET).
 - [x] **A16** Seed data: the simulated award (award Nov 2, 2026; delivery due Dec 17; Brightline ships Nov 30, arrives Dec 3) plus four background orders in healthy or minor-issue states. `POST /demo/reset` restores it.
   - Done when: reset restores the exact seeded state, and every order screen shows the "Simulated award" banner.
 - [x] **A17** Order timeline screen linking customer commitment, supplier PO, shipment, invoice and payment.
-- [ ] **H09** Record the 20-second Brightline voicemail (backorder; shipping moves 16 days to Dec 16) into `data/voicemail/`, plus the same message as an email for backup.
-- [ ] **A18** Voicemail to event: `MODEL_TRANSCRIBE` transcribes the audio, then `MODEL_READ` extracts supplier, PO, affected items, new ship date and confidence into an `Event`. The email backup goes through the same extraction.
-  - Done when: the recorded voicemail produces an event with ship date Dec 16.
+- [ ] **H09** Record the 20-second Tallgrass voicemail (backorder; shipping moves to Dec 31, arrival Jan 3) into `data/voicemail/` — DROPPED per owner direction 2026-10-30 (no voicemail; the delay ships via the email backup below, which is done).
+- [x] **A18** Voicemail to event (done via the email backup, owner direction 2026-10-30 — no voicemail): `MODEL_TRANSCRIBE` transcribes the audio, then `MODEL_READ` extracts supplier, PO, affected items, new ship date and confidence into an `Event`. The email backup goes through the same extraction.
+  - Done when: the recorded voicemail produces an event with ship date Dec 16. Email path done: `data/voicemail/tallgrass_backorder.txt` ingested live through `POST /events/ingest` (source `email`) → event ships 2026-12-31, arrives 2027-01-03, stored as `data/extractions/tallgrass_backorder_event.json`; flags show arrival 2 days late.
 - [x] **A19** Rules engine in code: delivery slip past the required date, margin below a floor, cash exposure.
   - Done when: a test shows the delay event yields arrival Dec 19, two days late, and raises a flag.
-- [ ] **A20** End-to-end demo-path test (browser automation) from upload to the delay flag.
-  - Done when: it passes locally from a reset.
+- [x] **A20** End-to-end demo-path test (browser automation) from upload to the delay flag (green 2026-10-30, both browsers, from a reset; needs PR #16 merged first).
+  - Done when: it passes locally from a reset. Green: `python e2e/demo_path.py --browser=all` — line-0001 badge (18 highlights) plus a line-1001 second click (21 highlights, pins the detached-ArrayBuffer fix), orders banner, reset, email ingest, blocking 2-days-late flag — in system Chrome and Firefox from fresh profiles.
 - [ ] **Gate 2 (human):** the core story (read, compare, recommend, monitor) runs end to end, rough edges allowed. Stretch work starts only after this.
+
+## Contract file (after Gate 2, D05; triage A34–A36 stays)
+
+- [ ] **A37** Lineage API: one endpoint per order returning the linked picture (solicitation → requirements → quotes + checks → cost/bid → award → order → events → cash) with per-number lineage — source doc + page for extracted numbers (reusing A06 citations and quote-extraction refs), calculation + inputs for computed numbers (reusing the A12 cost engine).
+  - Done when: every number on the demo order resolves to a doc page or a named calculation with inputs, covered by a test.
+- [ ] **A21** (existing, prerequisite for A39) impact analysis on `MODEL_IMPACT` with priced options.
+- [ ] **A38** Contract-file screen: the linked picture on one screen; clicking any number opens its lineage (doc passage with highlight, or calculation with inputs).
+  - Done when: a screenshot shows the linked picture and one open lineage.
+- [ ] **A39** Delay ripple: when the Tallgrass delay event lands, the screen first shows the ripple across the linked picture (date, margin, deposit/cash, risk), then the A21 Muse Wonder options.
+  - Done when: the e2e delay path asserts the ripple figures before the options.
+- [ ] **A40** Extend the end-to-end test to the contract file (lineage click + ripple), passing locally from a reset and on the live link from a fresh browser.
 
 ## Fri Oct 30: triage and assist
 
@@ -83,7 +94,7 @@ Deadline: **Wed, Nov 4, 2026, 9 PM ET.** Submit by 2 PM Phoenix time (5 PM ET).
 - [ ] **A36** Triage screen: the batch ranked by fit, pursue or pass with per-factor reasons and citations, the model label on extracted facts; opening a notice goes to the solicitation screen.
   - Done when: a screenshot shows the ranked batch and one notice's reasons.
 
-- [ ] **A21** Read-only agent tools (order, commitments, alternate quotes, margin, cash gap) and the impact analysis on `MODEL_IMPACT` with priced options: expedite (about $1,100 overnight, on time, margin 13.1% to 11.1%), request a two-day extension, partial shipment if allowed, and why switching suppliers fails. Falls back to `MODEL_READ` if `MODEL_IMPACT` is unavailable.
+- [x] **A21** Read-only agent tools (order, commitments, alternate quotes, margin, cash gap) and the impact analysis on `MODEL_IMPACT` with priced options (live run stored as `data/extractions/impact_ord-001.json`; all four options with engine-matching figures, expedite recommended): expedite (about $1,100 overnight, on time, margin 10.00% to 8.79% at the $91,189.92 safe bid), request a two-day extension, partial shipment if allowed, and why switching suppliers fails. Falls back to `MODEL_READ` if `MODEL_IMPACT` is unavailable.
   - Done when: the analysis names all four options with numbers that match the cost engine.
 - [ ] **A22** Number-grounding check: reject any explanation containing a figure no tool returned, and show the plain rule-based flag instead.
   - Done when: a test with an invented number is rejected.
@@ -96,11 +107,11 @@ Deadline: **Wed, Nov 4, 2026, 9 PM ET.** Submit by 2 PM Phoenix time (5 PM ET).
 - [ ] **A25** Deploy the front end and API; run the end-to-end test against the live link.
 - [ ] **A26** Polish the four screens, including loading and error states; run `/taste` on each.
 - [ ] **A27** Replay mode (`DEMO_MODE=replay`) serving stored responses for the scripted path, with a visible indicator in the UI.
-- [ ] **A28** Stretch, only after Gate 2: shutdown scenario toggle that pushes government payment dates out and shows cash exposure per order.
+- [ ] **A28** DROPPED by D05 (room for the contract file): shutdown scenario toggle.
 
 ## Sun Nov 1: harden
 
-- [ ] **A29** Stretch: award backtest on 5 to 10 more past awards using public list prices; chart lowest safe bid against each actual award for the README.
+- [ ] **A29** DROPPED by D05 (room for the contract file): award backtest.
 - [ ] **A30** Fix every blocking issue from reviews; extend the end-to-end test to start at triage; it passes on the live link from a fresh browser.
 - [ ] **A31** README sync: architecture, model map, "Built during the hackathon" list, third-party table, eval table.
 

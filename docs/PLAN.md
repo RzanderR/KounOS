@@ -10,7 +10,7 @@ KounOS does two jobs for a small government supplier: **decide which contracts a
 
 The demo in one breath: KounOS sorts a batch of real civilian-agency notices into pursue and pass, with a reason for each. We open the best fit, a recently awarded solicitation for electrical supplies. KounOS extracts line items, quantities, the delivery requirement and key clauses, each linked to the exact page and passage it came from. We drop in three supplier quotes. The cheapest misses the delivery date, the second fails a sourcing requirement, and the third meets everything at a thinner margin. The user picks it, gets a sourcing package, and KounOS's recommendation, "pursue at $X", appears next to the price the government actually paid.
 
-Then we replay the contract as if Koun had won, under a clearly labeled simulated award. The supplier leaves a voicemail about a 16-day slip. KounOS ties it to the customer commitment, shows the delivery will now miss by 2 days, prices each recovery option against margin and cash, and drafts a note for a human to review. KounOS never bids or sends anything; Koun's people make every external move.
+Then we replay the contract as if Koun had won, under a clearly labeled simulated award. The supplier emails a backorder notice (ship moves to Dec 31, arrival Jan 3). KounOS ties it to the customer commitment, shows the delivery will now miss by 2 days, prices each recovery option against margin and cash, and drafts a note for a human to review. KounOS never bids or sends anything; Koun's people make every external move.
 
 Target: a 3-minute video in which every frame shows something built during the hackathon.
 
@@ -54,12 +54,12 @@ Four things can disqualify the project: private code, unclear new work, missing 
 - Federal documents are generally not copyrighted, but skip solicitations with contractor-made drawings or vendor brochures attached.
 - Suppliers, quotes, orders and the voicemail are fictional by default and labeled fictional in the data and on screen. A real supplier quote appears only with the supplier's written permission to show it publicly.
 - Only hackathon-built features appear in the video, and the "Simulated award" banner is visible on every order screen.
-- Standard-mode model IDs only (no `-contributor` suffix), so nothing sent is used to train Meta models.
+- Live model runs stay on the contributor tier as an intentional cost choice (D04).
 - A team of four people or fewer.
 
 ## Scope
 
-Four screens plus an assistant panel are the whole product. Stretch work starts only after the core story runs end to end (Gate 2, Thursday night).
+Four screens plus an assistant panel are the whole product, joined after Gate 2 by one linked contract-file view per contract and order (D05). Stretch work starts only after the core story runs end to end (Gate 2, Thursday night).
 
 **Must-have: job 1, decide what's worth pursuing**
 
@@ -70,14 +70,15 @@ Four screens plus an assistant panel are the whole product. Stretch work starts 
 **Must-have: job 2, keep awarded orders on track**
 
 4. **Order monitor.** A clearly labeled simulated award replays the contract as if Koun had won, linking the customer commitment to the supplier PO, shipment, invoice and payment dates. A supplier update (voicemail or email) becomes an event, rules raise a flag, and Muse Wonder explains the impact, prices recovery options and drafts a note for review.
+5. **Contract file (after Gate 2, D05).** One linked picture per contract and order on a single screen: solicitation → requirements → quotes + checks → cost/bid → award → order → events → cash. Every number is clickable to its lineage (source doc + page, or the calculation and its inputs). When a delay event lands, the screen first shows its ripple across the linked picture (date, margin, deposit/cash, risk), then the Muse Wonder options.
 5. **Ask KounOS.** A side panel that answers "Which orders need attention today?" across five seeded orders, with every answer linking to the records it used.
 
-**Stretch, in priority order**
+**Stretch, in priority order (shutdown scenario and award backtest dropped by D05 for the contract file)**
 
-1. Shutdown scenario: a toggle that pushes government payment dates out and shows cash exposure per order. Federal funding currently runs through Dec 11, 2026, and the demo order invoices after that date.
-2. Award backtest: estimate 5 to 10 more past awards from public list prices and chart KounOS's lowest safe bid against each actual award in the README.
-3. An eval page showing extraction accuracy per field on the labeled solicitations.
-4. A scanned, image-only solicitation to show the reader doesn't depend on a text layer.
+
+
+1. An eval page showing extraction accuracy per field on the labeled solicitations.
+2. A scanned, image-only solicitation to show the reader doesn't depend on a text layer.
 
 **Out of scope** (say so in the README): live SAM.gov or DIBBS feeds (triage runs on a saved batch), bid submission, sending any email or message, logins and multiple users or companies, accounting integrations, and any real supplier or customer data.
 

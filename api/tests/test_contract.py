@@ -15,7 +15,7 @@ POST_STUBS = [
     "/solicitations/1232SA26Q0557/extract",
     "/solicitations/1232SA26Q0557/gap-pass",
     "/quotes/extract",
-    "/events",
+
 ]
 
 
@@ -25,7 +25,7 @@ def test_openapi_lists_stub_routes() -> None:
     assert response.status_code == 200
     paths = response.json()["paths"]
     prefixes = ("/solicitations", "/quotes", "/sourcing-decisions", "/orders")
-    prefixes += ("/notices", "/events")
+    prefixes += ("/notices", "/events", "/impact")
     for prefix in prefixes:
         assert any(path.startswith(prefix) for path in paths), prefix
 

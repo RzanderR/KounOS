@@ -1,0 +1,10 @@
+{
+  "confidence": 1.0,
+  "event_id": "EVT-d7816b63",
+  "new_ship_date": "2026-12-31",
+  "order_id": "ORD-001",
+  "received_at": "2026-10-30T21:24:46.232380Z",
+  "source": "email",
+  "summary": "Tallgrass Horticultural Supply reports a delay on PO-001 (116 LED greenhouse light fixtures): now shipping 2026-12-31 arriving 2027-01-03.",
+  "supplier": "Tallgrass Horticultural Supply"
+}
