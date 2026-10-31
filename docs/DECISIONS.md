@@ -19,3 +19,9 @@ Settled decisions future tasks depend on. See `docs/PLAN.md` (baseline) and `TAS
 - Decision: Ninebark fails on delivery (up to 98 days lead time vs. the solicitation's 60-day delivery requirement). Larkspur fails on spec (quotes PTB8850LS42 with a 208-240V cord; the solicitation requires PTB8850LS41 with a 10-foot cord and 5-15P plug, brand name only, so "equal" products are technically unacceptable). Tallgrass passes every requirement. Sourcing under FAR 52.225-3 (Buy American) reads "needs confirmation" on all three quotes, since no quote states a country of origin.
 - Why: A11 requirement checks must encode exactly these verdicts; a missing country-of-origin is not a pass, so code must flag it for a person to confirm rather than guess.
 - Impact: A11 requirement checks (delivery + brand-name/spec + sourcing-needs-confirmation); A16/A19 seed data: rescale the simulated-award dates to the 60-day delivery requirement and keep the Tallgrass delay landing two days late.
+
+## D04 (2026-10-30): Live model runs stay on the contributor tier for cost
+
+- Decision: `MODEL_READ` remains `muse-spark-1.3-contributor` in `.env`. The stored live outputs (smoke, extraction, gap pass) stand as-is; nothing is re-run on another tier.
+- Why: Owner direction — the contributor tier is an intentional cost choice, not a misconfiguration.
+- Impact: A02/A05/A07 provenance notes keep naming the contributor model; future live runs use the same tier unless a new decision says otherwise.
