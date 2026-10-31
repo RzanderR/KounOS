@@ -16,15 +16,18 @@ the equivalent of a hard refresh):
 
 Needs: API on :8000, web on :3000, MODEL_API_KEY for stages 3-4.
 Run (from repo root): python e2e/demo_path.py [--browser chrome|firefox|all]
+Live link (A25): set KOUNOS_API_URL and KOUNOS_WEB_URL to the deployed URLs,
+e.g. KOUNOS_API_URL=https://kounos-api.onrender.com KOUNOS_WEB_URL=https://<app>.vercel.app
 """
 
+import os
 import sys
 import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-API = "http://localhost:8000"
-WEB = "http://localhost:3000"
+API = os.environ.get("KOUNOS_API_URL", "http://localhost:8000").rstrip("/")
+WEB = os.environ.get("KOUNOS_WEB_URL", "http://localhost:3000").rstrip("/")
 ORDER = "ORD-001"
 EMAIL = "tallgrass_backorder.txt"
 
