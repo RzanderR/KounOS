@@ -25,3 +25,9 @@ Settled decisions future tasks depend on. See `docs/PLAN.md` (baseline) and `TAS
 - Decision: `MODEL_READ` remains `muse-spark-1.3-contributor` in `.env`. The stored live outputs (smoke, extraction, gap pass) stand as-is; nothing is re-run on another tier.
 - Why: Owner direction — the contributor tier is an intentional cost choice, not a misconfiguration.
 - Impact: A02/A05/A07 provenance notes keep naming the contributor model; future live runs use the same tier unless a new decision says otherwise.
+
+## D05 (2026-10-30): The demo is a linked contract file, not a file reader
+
+- Decision: After Gate 2, the product direction is one linked picture per contract and order, Palantir-style: solicitation → requirements → quotes + checks → cost/bid → award → order → events → cash on one screen. Every number is clickable to its lineage (source doc + page, or the calculation and its inputs). A delay event shows its ripple across the linked picture (date, margin, deposit/cash, risk) before the Muse Wonder options. The demo is about connecting the information and deciding, not about reading files.
+- Why: Owner direction — the memorable moments (award reveal, delay rescue) are connection moments; the file-by-file screens prove extraction but not understanding.
+- Impact: New contract-file view + lineage + ripple tasks (A37+); A28/A29 stretch dropped to make room; triage (A34–A36) stays; PLAN scope/stretch and the order-monitor story update accordingly.

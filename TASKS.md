@@ -74,6 +74,17 @@ Deadline: **Wed, Nov 4, 2026, 9 PM ET.** Submit by 2 PM Phoenix time (5 PM ET).
   - Done when: it passes locally from a reset. Green: `python e2e/demo_path.py --browser=all` — line-0001 badge (18 highlights) plus a line-1001 second click (21 highlights, pins the detached-ArrayBuffer fix), orders banner, reset, email ingest, blocking 2-days-late flag — in system Chrome and Firefox from fresh profiles.
 - [ ] **Gate 2 (human):** the core story (read, compare, recommend, monitor) runs end to end, rough edges allowed. Stretch work starts only after this.
 
+## Contract file (after Gate 2, D05; triage A34–A36 stays)
+
+- [ ] **A37** Lineage API: one endpoint per order returning the linked picture (solicitation → requirements → quotes + checks → cost/bid → award → order → events → cash) with per-number lineage — source doc + page for extracted numbers (reusing A06 citations and quote-extraction refs), calculation + inputs for computed numbers (reusing the A12 cost engine).
+  - Done when: every number on the demo order resolves to a doc page or a named calculation with inputs, covered by a test.
+- [ ] **A21** (existing, prerequisite for A39) impact analysis on `MODEL_IMPACT` with priced options.
+- [ ] **A38** Contract-file screen: the linked picture on one screen; clicking any number opens its lineage (doc passage with highlight, or calculation with inputs).
+  - Done when: a screenshot shows the linked picture and one open lineage.
+- [ ] **A39** Delay ripple: when the Tallgrass delay event lands, the screen first shows the ripple across the linked picture (date, margin, deposit/cash, risk), then the A21 Muse Wonder options.
+  - Done when: the e2e delay path asserts the ripple figures before the options.
+- [ ] **A40** Extend the end-to-end test to the contract file (lineage click + ripple), passing locally from a reset and on the live link from a fresh browser.
+
 ## Fri Oct 30: triage and assist
 
 - [ ] **A34** Fit facts: for each notice in the triage batch, `MODEL_READ` extracts set-aside, product category, quantities, delivery window, estimated value and any competition signal, each with a page and snippet checked by the A06 citation check.
@@ -96,11 +107,11 @@ Deadline: **Wed, Nov 4, 2026, 9 PM ET.** Submit by 2 PM Phoenix time (5 PM ET).
 - [ ] **A25** Deploy the front end and API; run the end-to-end test against the live link.
 - [ ] **A26** Polish the four screens, including loading and error states; run `/taste` on each.
 - [ ] **A27** Replay mode (`DEMO_MODE=replay`) serving stored responses for the scripted path, with a visible indicator in the UI.
-- [ ] **A28** Stretch, only after Gate 2: shutdown scenario toggle that pushes government payment dates out and shows cash exposure per order.
+- [ ] **A28** DROPPED by D05 (room for the contract file): shutdown scenario toggle.
 
 ## Sun Nov 1: harden
 
-- [ ] **A29** Stretch: award backtest on 5 to 10 more past awards using public list prices; chart lowest safe bid against each actual award for the README.
+- [ ] **A29** DROPPED by D05 (room for the contract file): award backtest.
 - [ ] **A30** Fix every blocking issue from reviews; extend the end-to-end test to start at triage; it passes on the live link from a fresh browser.
 - [ ] **A31** README sync: architecture, model map, "Built during the hackathon" list, third-party table, eval table.
 
