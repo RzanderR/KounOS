@@ -303,6 +303,10 @@ class ImpactAnalysis(BaseModel):
     generated_by: str
     options: list[ImpactOption]
     note: str
+    # A22: False when the model's prose cited a figure no tool returned; the
+    # summaries and note are then code-written and the prose is discarded.
+    grounded: bool = True
+    ungrounded_figures: list[str] = Field(default_factory=list)
 
 
 class Ripple(BaseModel):

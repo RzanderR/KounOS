@@ -96,7 +96,7 @@ Deadline: **Wed, Nov 4, 2026, 9 PM ET.** Submit by 2 PM Phoenix time (5 PM ET).
 
 - [x] **A21** Read-only agent tools (order, commitments, alternate quotes, margin, cash gap) and the impact analysis on `MODEL_IMPACT` with priced options (live run stored as `data/extractions/impact_ord-001.json`; all four options with engine-matching figures, expedite recommended): expedite (about $1,100 overnight, on time, margin 10.00% to 8.79% at the $91,189.92 safe bid), request a two-day extension, partial shipment if allowed, and why switching suppliers fails. Falls back to `MODEL_READ` if `MODEL_IMPACT` is unavailable.
   - Done when: the analysis names all four options with numbers that match the cost engine.
-- [ ] **A22** Number-grounding check: reject any explanation containing a figure no tool returned, and show the plain rule-based flag instead.
+- [x] **A22** Number-grounding check (`api/app/grounding.py`; `tests/test_grounding.py::test_invented_number_is_rejected`; `docs/screenshots/a22-narrative-withheld.jpg`): reject any explanation containing a figure no tool returned, and show the plain rule-based flag instead.
   - Done when: a test with an invented number is rejected.
 - [ ] **A23** Draft note to the contracting officer or supplier for a person to edit. No send capability anywhere.
 - [ ] **A24** Ask KounOS panel: answers "Which orders need attention today?" from read-only tools across the five seeded orders, linking every record used.

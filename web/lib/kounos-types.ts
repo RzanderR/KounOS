@@ -289,6 +289,8 @@ export interface ImpactAnalysis {
   generated_by: string;
   options: ImpactOption[];
   note: string;
+  grounded?: boolean;
+  ungrounded_figures?: string[];
 }
 /**
  * Where one figure comes from: a doc passage or a code calculation.
