@@ -59,6 +59,13 @@ ANALYSIS_PROMPT = (
 )
 
 
+class NoDelay(Exception):
+    """The order arrives on time, so there is nothing to recover from."""
+
+    def __init__(self, order_id: str) -> None:
+        super().__init__(f"{order_id} arrives on time; no delay to analyze.")
+
+
 def _detail(order_id: str) -> OrderDetail:
     """The order or a 404-style ValueError for the router to translate."""
     detail = order_store.get_detail(order_id)
@@ -212,10 +219,13 @@ def analyze(order_id: str, settings: Settings) -> ImpactAnalysis:
 
     Figures always come from :func:`priced_options`; the model contributes
     only the summaries and the note. Falls back to MODEL_READ when
-    MODEL_IMPACT is unavailable.
+    MODEL_IMPACT is unavailable. Raises :class:`NoDelay` for an on-time
+    order before any model call.
     """
     detail = _detail(order_id)
     facts = order_facts(order_id)
+    if facts["days_late"] == 0:
+        raise NoDelay(order_id)
     options = priced_options(order_id)
     prompt = (
         f"{ANALYSIS_PROMPT}\n\nTool output:\n{json.dumps(facts, indent=2)}"

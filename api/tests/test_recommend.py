@@ -63,3 +63,22 @@ def test_http_decisions_serve_recommendation() -> None:
     response = client.post("/sourcing-decisions")
     assert response.status_code == 200
     assert response.json()["supplier"] == "Tallgrass Horticultural Supply"
+
+
+def test_open_items_are_not_called_a_pass() -> None:
+    """Tallgrass needs sourcing confirmation, so it does not "pass every check"."""
+    decision = current_decision()
+    assert not any("passes every requirement check" in r for r in decision.reasons)
+    assert any("country of origin" in r.lower() for r in decision.reasons)
+
+
+def test_all_pass_quote_says_it_passes() -> None:
+    """With every check passing, the lead reason says so and lists no open items."""
+    rows = build_comparison()
+    for row in rows:
+        for check in row.verdict.checks:
+            check.verdict = "pass"
+        row.verdict.overall = "pass"
+    decision = recommend(rows, read_award())
+    assert "passes every requirement check" in decision.reasons[0]
+    assert len(decision.reasons) == 1

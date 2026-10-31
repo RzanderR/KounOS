@@ -18,7 +18,7 @@ from app.checks import demo_verdicts, load_quote_fixture
 from app.compare import MARGIN_FLOOR
 from app.config import REPO_ROOT, Settings
 from app.demo_solicitation import ATTACHMENTS_DIR, build_demo_solicitation
-from app.recommend import read_award
+from app.recommend import SOLICITATION_ID, read_award
 from app.schemas import (
     ContractFile,
     ContractSection,
@@ -298,17 +298,19 @@ def event_figures(detail: OrderDetail) -> list[LinkedFigure]:
 
 def cash_figures(detail: OrderDetail) -> list[LinkedFigure]:
     """Cash tied up before the customer pays, off the PO and cost engine."""
-    quote = load_quote_fixture(QUOTE_ID)
     file = "data/orders/seed.json"
-    figures = [
-        LinkedFigure(
-            label="Cash exposure",
-            value=str(costs.cash_exposure(quote)),
-            lineage=calc(
-                "costs.cash_exposure", {"landed": str(costs.landed_cost(quote))}
-            ),
+    figures = []
+    if detail.order.solicitation_id == SOLICITATION_ID:
+        quote = load_quote_fixture(QUOTE_ID)
+        figures.append(
+            LinkedFigure(
+                label="Cash exposure",
+                value=str(costs.cash_exposure(quote)),
+                lineage=calc(
+                    "costs.cash_exposure", {"landed": str(costs.landed_cost(quote))}
+                ),
+            )
         )
-    ]
     if detail.po is not None:
         figures.append(
             LinkedFigure(
@@ -321,12 +323,15 @@ def cash_figures(detail: OrderDetail) -> list[LinkedFigure]:
 
 
 def build_contract_file(order_id: str, settings: Settings) -> ContractFile:
-    """The whole linked picture for one order, every figure resolved."""
+    """The whole linked picture for one order, every figure resolved.
+
+    Only the demo order has a stored solicitation, quotes and award; the
+    other seeded orders get their order, event and cash links alone.
+    """
     detail = _detail(order_id)
-    return ContractFile(
-        order_id=order_id,
-        solicitation_id=detail.order.solicitation_id,
-        sections=[
+    sections = []
+    if detail.order.solicitation_id == SOLICITATION_ID:
+        sections = [
             ContractSection(
                 name="requirements",
                 figures=requirement_figures(settings.model_read),
@@ -334,8 +339,14 @@ def build_contract_file(order_id: str, settings: Settings) -> ContractFile:
             ContractSection(name="quotes", figures=quote_figures()),
             ContractSection(name="cost_bid", figures=cost_figures()),
             ContractSection(name="award", figures=award_figures()),
-            ContractSection(name="order", figures=order_figures(detail)),
-            ContractSection(name="events", figures=event_figures(detail)),
-            ContractSection(name="cash", figures=cash_figures(detail)),
-        ],
+        ]
+    sections += [
+        ContractSection(name="order", figures=order_figures(detail)),
+        ContractSection(name="events", figures=event_figures(detail)),
+        ContractSection(name="cash", figures=cash_figures(detail)),
+    ]
+    return ContractFile(
+        order_id=order_id,
+        solicitation_id=detail.order.solicitation_id,
+        sections=sections,
     )
