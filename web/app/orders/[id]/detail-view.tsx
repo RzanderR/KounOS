@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { fetchFlags, fetchOrderDetail } from "@/lib/api";
+import { errorMessage, fetchFlags, fetchOrderDetail } from "@/lib/api";
 import type { Flag, OrderDetail } from "@/lib/kounos-types";
 import { SimulatedAwardBanner } from "../banner";
 
@@ -18,21 +18,21 @@ function TimelineRow({ label, value }: { label: string; value: string }) {
 export default function OrderDetailView({ orderId }: { orderId: string }) {
   const [detail, setDetail] = useState<OrderDetail | null>(null);
   const [flags, setFlags] = useState<Flag[] | null>(null);
-  const [failed, setFailed] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
     async function load() {
-      const [orderData, flagData] = await Promise.all([
-        fetchOrderDetail(orderId),
-        fetchFlags(),
-      ]);
-      if (!cancelled) {
-        if (orderData === null || flagData === null) setFailed(true);
-        else {
-          setDetail(orderData);
-          setFlags(flagData.filter((flag) => flag.order_id === orderData.order.order_id));
-        }
+      try {
+        const [orderData, flagData] = await Promise.all([
+          fetchOrderDetail(orderId),
+          fetchFlags(),
+        ]);
+        if (cancelled) return;
+        setDetail(orderData);
+        setFlags(flagData.filter((flag) => flag.order_id === orderData.order.order_id));
+      } catch (err) {
+        if (!cancelled) setError(errorMessage(err));
       }
     }
     void load();
@@ -41,13 +41,12 @@ export default function OrderDetailView({ orderId }: { orderId: string }) {
     };
   }, [orderId]);
 
-  if (failed) {
+  if (error !== null) {
     return (
       <main className="mx-auto w-full max-w-5xl px-6 py-10">
         <h1 className="text-2xl font-semibold">Order</h1>
         <p role="alert" className="mt-4 text-sm">
-          The API is unreachable or the order is unknown. Start it with{" "}
-          <code>uvicorn app.main:app --reload</code> from api/ and reload.
+          {error}
         </p>
       </main>
     );

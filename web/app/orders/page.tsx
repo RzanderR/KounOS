@@ -3,21 +3,22 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-import { fetchOrders } from "@/lib/api";
+import { errorMessage, fetchOrders } from "@/lib/api";
 import type { Order } from "@/lib/kounos-types";
 import { SimulatedAwardBanner } from "./banner";
 
 export default function OrdersPage() {
   const [orders, setOrders] = useState<Order[] | null>(null);
-  const [failed, setFailed] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
     async function load() {
-      const data = await fetchOrders();
-      if (!cancelled) {
-        if (data === null) setFailed(true);
-        else setOrders(data);
+      try {
+        const data = await fetchOrders();
+        if (!cancelled) setOrders(data);
+      } catch (err) {
+        if (!cancelled) setError(errorMessage(err));
       }
     }
     void load();
@@ -26,13 +27,12 @@ export default function OrdersPage() {
     };
   }, []);
 
-  if (failed) {
+  if (error !== null) {
     return (
       <main className="mx-auto w-full max-w-5xl px-6 py-10">
         <h1 className="text-2xl font-semibold">Orders</h1>
         <p role="alert" className="mt-4 text-sm">
-          The API is unreachable. Start it with <code>uvicorn app.main:app --reload</code> from
-          api/ and reload.
+          {error}
         </p>
       </main>
     );
