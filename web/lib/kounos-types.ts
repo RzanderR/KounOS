@@ -268,3 +268,75 @@ export interface HealthStatus {
   status: "ok";
   demo_mode: string;
 }
+/**
+ * One priced recovery option; figures come from code, words from the model.
+ */
+export interface ImpactOption {
+  name: string;
+  summary: string;
+  cost_delta: string;
+  new_margin_pct?: string | null;
+  new_arrival_date?: string | null;
+  on_time?: boolean;
+  needs_confirmation?: boolean;
+}
+/**
+ * MODEL_IMPACT reading of a delay event with code-priced options.
+ */
+export interface ImpactAnalysis {
+  order_id: string;
+  event_id?: string | null;
+  generated_by: string;
+  options: ImpactOption[];
+  note: string;
+}
+/**
+ * Where one figure comes from: a doc passage or a code calculation.
+ */
+export interface FigureLineage {
+  kind: "doc" | "calc";
+  file?: string | null;
+  page?: number | null;
+  snippet?: string | null;
+  calculation?: string | null;
+  inputs?: Record<string, string>;
+}
+/**
+ * One number on the contract file with its lineage.
+ */
+export interface LinkedFigure {
+  label: string;
+  value: string;
+  lineage: FigureLineage;
+}
+/**
+ * One link of the chain: requirements, quotes, cost/bid, award, order, events, cash.
+ */
+export interface ContractSection {
+  name: string;
+  figures: LinkedFigure[];
+}
+/**
+ * The whole linked picture for one order (A37).
+ */
+export interface ContractFile {
+  order_id: string;
+  solicitation_id: string;
+  sections: ContractSection[];
+}
+/**
+ * What the latest delay event changes: date, margin, cash, risk (A39).
+ */
+export interface Ripple {
+  order_id: string;
+  event_id: string;
+  arrival_date?: string | null;
+  customer_due_date?: string | null;
+  days_late: number;
+  margin_now: string;
+  margin_expedited: string;
+  expedite_cost: string;
+  deposit_due: string;
+  invoice_balance: string;
+  risks?: string[];
+}
