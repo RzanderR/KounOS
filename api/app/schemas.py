@@ -303,3 +303,37 @@ class ImpactAnalysis(BaseModel):
     generated_by: str
     options: list[ImpactOption]
     note: str
+
+
+class FigureLineage(BaseModel):
+    """Where one figure comes from: a doc passage or a code calculation."""
+
+    kind: Literal["doc", "calc"]
+    file: str | None = None
+    page: int | None = None
+    snippet: str | None = None
+    calculation: str | None = None
+    inputs: dict[str, str] = Field(default_factory=dict)
+
+
+class LinkedFigure(BaseModel):
+    """One number on the contract file with its lineage."""
+
+    label: str
+    value: str
+    lineage: FigureLineage
+
+
+class ContractSection(BaseModel):
+    """One link of the chain: requirements, quotes, cost/bid, award, order, events, cash."""
+
+    name: str
+    figures: list[LinkedFigure]
+
+
+class ContractFile(BaseModel):
+    """The whole linked picture for one order (A37)."""
+
+    order_id: str
+    solicitation_id: str
+    sections: list[ContractSection]

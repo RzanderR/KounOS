@@ -290,3 +290,37 @@ export interface ImpactAnalysis {
   options: ImpactOption[];
   note: string;
 }
+/**
+ * Where one figure comes from: a doc passage or a code calculation.
+ */
+export interface FigureLineage {
+  kind: "doc" | "calc";
+  file?: string | null;
+  page?: number | null;
+  snippet?: string | null;
+  calculation?: string | null;
+  inputs?: Record<string, string>;
+}
+/**
+ * One number on the contract file with its lineage.
+ */
+export interface LinkedFigure {
+  label: string;
+  value: string;
+  lineage: FigureLineage;
+}
+/**
+ * One link of the chain: requirements, quotes, cost/bid, award, order, events, cash.
+ */
+export interface ContractSection {
+  name: string;
+  figures: LinkedFigure[];
+}
+/**
+ * The whole linked picture for one order (A37).
+ */
+export interface ContractFile {
+  order_id: string;
+  solicitation_id: string;
+  sections: ContractSection[];
+}

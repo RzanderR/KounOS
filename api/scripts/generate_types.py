@@ -57,6 +57,10 @@ MODELS: list[type[BaseModel]] = [
     schemas.HealthStatus,
     schemas.ImpactOption,
     schemas.ImpactAnalysis,
+    schemas.FigureLineage,
+    schemas.LinkedFigure,
+    schemas.ContractSection,
+    schemas.ContractFile,
 ]
 
 
@@ -76,6 +80,9 @@ def ts_type(annotation: object) -> str:
     args = typing.get_args(annotation)
     if origin is typing.Literal:
         return " | ".join(f'"{value}"' for value in args)
+    if origin is dict:
+        key, value = args
+        return f"Record<{ts_type(key)}, {ts_type(value)}>"
     if origin is list:
         (item,) = args
         return f"{ts_type(item)}[]"
