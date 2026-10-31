@@ -2,7 +2,8 @@
 
 Veto model like the A11 checks: any failing factor makes the notice a
 pass (don't pursue). Missing facts fail closed with a "not stated"
-reason — the code never guesses what the notice doesn't say. Weights
+reason — the code never guesses what the notice doesn't say. A fact whose
+citation did not verify (A34) fails closed too, saying so. Weights
 are equal by documented choice; the company profile carries facts, not
 weights.
 """
@@ -101,12 +102,28 @@ CHECKS = {
 }
 
 
+# The Notice field each factor reads, where the names differ.
+FACTOR_FIELDS = {"competition": "competition_signal"}
+
+
 def score_notice(notice: Notice, profile: CompanyProfile) -> FitAssessment:
     """Pursue only when every factor passes, each with its reason."""
+    unverified = {
+        cited.name: cited.summary
+        for cited in notice.citations
+        if cited.citation_status == "needs_review"
+    }
     reasons = []
     pursued = True
     for factor in FACTORS:
-        passed, reason = CHECKS[factor](notice, profile)
+        field = FACTOR_FIELDS.get(factor, factor)
+        if field in unverified:
+            passed, reason = False, (
+                f"Read as {unverified[field]!r} but its citation did not verify; "
+                "confirm it in the notice."
+            )
+        else:
+            passed, reason = CHECKS[factor](notice, profile)
         reasons.append(f"{factor}: {reason}")
         pursued = pursued and passed
     return FitAssessment(
