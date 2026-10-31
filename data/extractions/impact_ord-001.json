@@ -1,0 +1,44 @@
+{
+  "order_id": "ORD-001",
+  "event_id": "EVT-7b36d6f9",
+  "generated_by": "muse-wonder-1.0",
+  "options": [
+    {
+      "name": "expedite_overnight",
+      "summary": "The expedite_overnight option has a cost_delta of 1100.00, a new_margin_pct of 8.79, and a new_arrival_date of 2027-01-01, and it is on time.",
+      "cost_delta": "1100.00",
+      "new_margin_pct": "8.79",
+      "new_arrival_date": "2027-01-01",
+      "on_time": true,
+      "needs_confirmation": false
+    },
+    {
+      "name": "request_extension",
+      "summary": "The request_extension option has a cost_delta of 0, a new_margin_pct of 10.00, and a new_arrival_date of 2027-01-03, and it is not on time.",
+      "cost_delta": "0",
+      "new_margin_pct": "10.00",
+      "new_arrival_date": "2027-01-03",
+      "on_time": false,
+      "needs_confirmation": false
+    },
+    {
+      "name": "partial_shipment",
+      "summary": "The partial_shipment option has a cost_delta of 0, no new_margin_pct or new_arrival_date given, and it is not on time.",
+      "cost_delta": "0",
+      "new_margin_pct": null,
+      "new_arrival_date": null,
+      "on_time": false,
+      "needs_confirmation": true
+    },
+    {
+      "name": "switch_supplier",
+      "summary": "The switch_supplier option has a cost_delta of 0, no new_margin_pct or new_arrival_date given, and it is not on time, with no compliant alternate because Ninebark Lighting Supply and Larkspur Grow Systems fail.",
+      "cost_delta": "0",
+      "new_margin_pct": null,
+      "new_arrival_date": null,
+      "on_time": false,
+      "needs_confirmation": false
+    }
+  ],
+  "note": "Overall, expedite_overnight is recommended with a cost_delta of 1100.00, a new_margin_pct of 8.79, and a new_arrival_date of 2027-01-01."
+}

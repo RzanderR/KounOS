@@ -55,6 +55,8 @@ MODELS: list[type[BaseModel]] = [
     schemas.OrderDetail,
     schemas.Flag,
     schemas.HealthStatus,
+    schemas.ImpactOption,
+    schemas.ImpactAnalysis,
     schemas.FigureLineage,
     schemas.LinkedFigure,
     schemas.ContractSection,
