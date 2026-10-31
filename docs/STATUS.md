@@ -30,13 +30,14 @@ Updated at the end of every task or work session, committed with that work.
 - **e2e on merged `main` (desktop, Chrome):** stages 1–2 green (two badge clicks: 18 then 21 highlights, no errors; orders banner). Stages 3–4 need `MODEL_API_KEY` (no `.env` on the desktop yet).
 - **A25 prep (PR #25, still draft):** branch brought up to `main`. `render.yaml` fixed: no `rootDir` (Render hides files outside it and the API reads `../data`), build/start from repo root with a buildFilter on `api/` + `data/`, `runtime: python`, `plan: free` (omitting it means a paid instance), `PYTHON_VERSION=3.12.10` (Render's default is 3.14). The e2e takes `KOUNOS_API_URL` / `KOUNOS_WEB_URL` for the live link. A missing model key now answers 503 with a clear reason instead of a bare 500.
 
+- **A22 number grounding (2026-10-31, `task/A22-grounding`):** `api/app/grounding.py` extracts every figure from model prose (money, numbers, percentages, ISO / named / slash dates; digits inside ids like ORD-001 ignored) and checks each against the figures the tools handed the model (order facts incl. new `days_late`, code-priced options, flag text). Exact match, or a rounding that keeps at least one decimal ("8.8%" for 8.79 passes, "9%" fails). Any miss discards all model prose: code-written option sentences + the rule-based flags as the note, `grounded: false` + `ungrounded_figures` in `ImpactAnalysis`, and an amber "explanation withheld" notice on the contract file. The stored A21 live run and a fresh live Muse Wonder run both pass grounded. Web now uses the generated `ImpactAnalysis` type (shim removed). Checks: ruff, mypy, 127 pytest, eslint, tsc, build; e2e green end to end in Chrome with the desktop `.env`.
+
 ## In progress
 
 - **A25 deploy** (Sat Oct 31, PR #25 draft): Render API from the blueprint + Vercel `web/`; then the e2e against the live link; then merge #25 and tick A25 + A40.
 
 ## Blocked (on what or whom)
 
-- **Owner:** `.env` on the desktop (`MODEL_API_KEY`; `MODEL_READ=muse-spark-1.3-contributor` per D04) — e2e stages 3–4 and every live model call need it.
 - **Owner:** Render + Vercel accounts and the `MODEL_API_KEY` secret on Render (H10).
 - **Owner:** tick Gate 2 in `TASKS.md` (the laptop handoff says it was ticked by the owner, but `main` still shows it open).
 - **Owner:** H15 `data/company_profile.json` and H16 notice batch in `data/notices/` — triage (A34–A36) live runs wait on them.
@@ -57,6 +58,6 @@ Updated at the end of every task or work session, committed with that work.
 
 1. Saturday A25: Render blueprint from PR #25's branch → `/health` ok → Vercel project (root `web`, `NEXT_PUBLIC_API_URL` = Render URL, set before the first build) → set Render `CORS_ORIGINS` to the Vercel production URL → wake the API, `POST /demo/reset`, `POST /events/ingest` `{"order_id":"ORD-001","source":"email","filename":"tallgrass_backorder.txt"}` → `KOUNOS_API_URL=… KOUNOS_WEB_URL=… python e2e/demo_path.py --browser=chrome` → merge #25, tick A25 + A40. The free instance sleeps and its in-memory state resets to the seed, so repeat the reset + ingest before every demo.
 2. H15 + H16, then triage live runs (A34–A36 ticks).
-3. A22 number grounding, A23 draft note, A24 Ask KounOS; A26 polish, A27 replay mode.
+3. A27 replay mode, A24 Ask KounOS (reuse `grounding.check` on its answers), A23 draft note; A26 polish.
 
 Open PRs: #25 (A25 deploy, draft until the live e2e passes); #26 (laptop handoff note + Muse `skills-lock.json`), superseded by this status update and safe to close.
