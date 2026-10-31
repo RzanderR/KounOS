@@ -281,3 +281,25 @@ class HealthStatus(BaseModel):
 
     status: Literal["ok"]
     demo_mode: str
+
+
+class ImpactOption(BaseModel):
+    """One priced recovery option; figures come from code, words from the model."""
+
+    name: str
+    summary: str
+    cost_delta: Decimal
+    new_margin_pct: Decimal | None = None
+    new_arrival_date: date | None = None
+    on_time: bool = False
+    needs_confirmation: bool = False
+
+
+class ImpactAnalysis(BaseModel):
+    """MODEL_IMPACT reading of a delay event with code-priced options."""
+
+    order_id: str
+    event_id: str | None = None
+    generated_by: str
+    options: list[ImpactOption]
+    note: str
