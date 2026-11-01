@@ -153,6 +153,20 @@ def test_analyze_unknown_order_404s() -> None:
     assert response.status_code == 404
 
 
+def test_analyze_without_model_key_is_503() -> None:
+    """A missing MODEL_API_KEY answers 503 with a clear reason, not a bare 500."""
+    from app.config import get_settings
+
+    apply_delay()
+    app.dependency_overrides[get_settings] = lambda: Settings(model_api_key=None)
+    try:
+        response = client.post("/impact/analyze", json={"order_id": "ORD-001"})
+    finally:
+        app.dependency_overrides.pop(get_settings, None)
+    assert response.status_code == 503
+    assert "MODEL_API_KEY" in response.json()["detail"]
+
+
 def test_on_time_order_is_not_analyzed(monkeypatch: pytest.MonkeyPatch) -> None:
     """No delay, no recovery options and no model call."""
     reset()

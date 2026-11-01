@@ -90,3 +90,24 @@ def test_ingest_endpoint_validates_before_models() -> None:
         json={"order_id": "ORD-001", "source": "voicemail", "filename": "x.m4a"},
     )
     assert response.status_code == 404
+
+
+def test_ingest_without_model_key_is_503() -> None:
+    """A missing MODEL_API_KEY answers 503 with a clear reason, not a bare 500."""
+    from app.config import Settings, get_settings
+
+    reset()
+    app.dependency_overrides[get_settings] = lambda: Settings(model_api_key=None)
+    try:
+        response = client.post(
+            "/events/ingest",
+            json={
+                "order_id": "ORD-001",
+                "source": "email",
+                "filename": "tallgrass_backorder.txt",
+            },
+        )
+    finally:
+        app.dependency_overrides.pop(get_settings, None)
+    assert response.status_code == 503
+    assert "MODEL_API_KEY" in response.json()["detail"]

@@ -16,7 +16,7 @@ from openai import OpenAI
 from pydantic import BaseModel, Field
 
 from app import replay
-from app.config import REPO_ROOT, Settings
+from app.config import REPO_ROOT, ModelKeyMissing, Settings
 from app.schemas import Event, OrderDetail
 
 VOICEMAIL_DIR = REPO_ROOT / "data" / "voicemail"
@@ -65,7 +65,7 @@ class ExtractedEvent(BaseModel):
 def transcribe_audio(audio_path: Path, settings: Settings) -> str:
     """Transcribe a voicemail with MODEL_TRANSCRIBE."""
     if not settings.model_api_key:
-        raise RuntimeError("MODEL_API_KEY is not set (repo-root .env).")
+        raise ModelKeyMissing()
     client = OpenAI(base_url=settings.meta_base_url, api_key=settings.model_api_key)
     with audio_path.open("rb") as audio:
         transcript = client.audio.transcriptions.create(
@@ -79,7 +79,7 @@ def extract_event_from_text(
 ) -> ExtractedEvent:
     """Extract the delay event from a transcript or email body."""
     if not settings.model_api_key:
-        raise RuntimeError("MODEL_API_KEY is not set (repo-root .env).")
+        raise ModelKeyMissing()
     client = OpenAI(base_url=settings.meta_base_url, api_key=settings.model_api_key)
     response = client.responses.create(
         model=settings.model_read,
