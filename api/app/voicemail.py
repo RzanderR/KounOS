@@ -15,6 +15,7 @@ from uuid import uuid4
 from openai import OpenAI
 from pydantic import BaseModel, Field
 
+from app import replay
 from app.config import REPO_ROOT, ModelKeyMissing, Settings
 from app.schemas import Event, OrderDetail
 
@@ -131,17 +132,25 @@ def ingest_file(
     settings: Settings,
     detail: OrderDetail,
 ) -> Event:
-    """Transcribe (audio) or read (email), extract, store and apply one message."""
+    """Transcribe (audio) or read (email), extract, store and apply one message.
+
+    In replay mode the stored extraction for this file stands in for the
+    model calls (A27); building and applying the event is the same code.
+    """
     path = resolve_file(filename)
-    if source == "voicemail":
-        if path.suffix.lower() not in AUDIO_SUFFIXES:
-            raise ValueError(f"Not an audio file: {filename}")
-        transcript = transcribe_audio(path, settings)
+    if source == "voicemail" and path.suffix.lower() not in AUDIO_SUFFIXES:
+        raise ValueError(f"Not an audio file: {filename}")
+    if source == "email" and path.suffix.lower() != ".txt":
+        raise ValueError(f"Not a text backup: {filename}")
+    if settings.demo_mode == "replay":
+        record = replay.stored(f"event_{path.stem}")
+        extracted = ExtractedEvent.model_validate(record["response"])
     else:
-        if path.suffix.lower() != ".txt":
-            raise ValueError(f"Not a text backup: {filename}")
-        transcript = path.read_text(encoding="utf-8")
-    extracted = extract_event_from_text(transcript, settings)
+        if source == "voicemail":
+            transcript = transcribe_audio(path, settings)
+        else:
+            transcript = path.read_text(encoding="utf-8")
+        extracted = extract_event_from_text(transcript, settings)
     event = build_event(
         order_id,
         source,

@@ -3,7 +3,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 
-from app import impact
+from app import impact, replay
 from app.config import ModelKeyMissing, Settings, get_settings
 from app.schemas import ImpactAnalysis
 
@@ -27,5 +27,5 @@ def analyze_impact(
         raise HTTPException(status_code=409, detail=str(exc)) from exc
     except ValueError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
-    except ModelKeyMissing as exc:
+    except (replay.NoReplay, ModelKeyMissing) as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from exc
