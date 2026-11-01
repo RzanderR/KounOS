@@ -4,7 +4,7 @@
 
 Built by Koun Logistics LLC for **[HACKATHON NAME]** on Meta's Muse models through the Meta Model API.
 
-**[▶ Demo video](TODO)** · **[Live demo](TODO)** · **[What we built this week](#built-during-the-hackathon)**
+**[▶ Demo video](TODO)** · **[Live demo](https://kounos-web.vercel.app)** · **[What we built this week](#built-during-the-hackathon)**
 
 > **Hackathon prototype.** Everything in this repository was built between October 26 and November 4, 2026. The solicitation and award record are public federal documents. Suppliers, quotes, orders and the voicemail are fictional unless marked otherwise, and the awarded order is simulated. KounOS never submits bids or sends messages; people do.
 
@@ -71,7 +71,7 @@ KounOS does two jobs. The prototype proves both end to end on real contracts tha
 
 ## Demo
 
-**[▶ Demo video](TODO)** (3 minutes) · **[Live demo](TODO)**
+**[▶ Demo video](TODO)** (3 minutes) · **[Live demo](https://kounos-web.vercel.app)**
 
 | Time | What you see |
 | --- | --- |
