@@ -1,0 +1,13 @@
+{
+  "source": "data/extractions/impact_ord-001.json",
+  "model": "muse-wonder-1.0",
+  "response": {
+    "summaries": {
+      "expedite_overnight": "The expedite_overnight option has a cost_delta of 1100.00, a new_margin_pct of 8.79, and a new_arrival_date of 2027-01-01, and it is on time.",
+      "request_extension": "The request_extension option has a cost_delta of 0, a new_margin_pct of 10.00, and a new_arrival_date of 2027-01-03, and it is not on time.",
+      "partial_shipment": "The partial_shipment option has a cost_delta of 0, no new_margin_pct or new_arrival_date given, and it is not on time.",
+      "switch_supplier": "The switch_supplier option has a cost_delta of 0, no new_margin_pct or new_arrival_date given, and it is not on time, with no compliant alternate because Ninebark Lighting Supply and Larkspur Grow Systems fail."
+    },
+    "note": "Overall, expedite_overnight is recommended with a cost_delta of 1100.00, a new_margin_pct of 8.79, and a new_arrival_date of 2027-01-01."
+  }
+}

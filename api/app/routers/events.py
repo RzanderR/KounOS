@@ -5,7 +5,7 @@ from typing import Literal
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 
-from app import order_store
+from app import order_store, replay
 from app.config import Settings, get_settings
 from app.rules import evaluate_all
 from app.schemas import Event, Flag
@@ -45,6 +45,8 @@ def ingest_event(body: IngestBody, settings: Settings = Depends(get_settings)) -
         raise HTTPException(status_code=404, detail=str(exc)) from exc
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except replay.NoReplay as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
 
 
 @router.get("/flags", response_model=list[Flag])

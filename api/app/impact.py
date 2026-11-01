@@ -12,7 +12,7 @@ from decimal import Decimal
 
 from openai import OpenAI
 
-from app import costs, grounding, order_store
+from app import costs, grounding, order_store, replay
 from app.checks import demo_verdicts
 from app.config import Settings
 from app.rules import days_late, evaluate, latest_arrival
@@ -212,7 +212,8 @@ def analyze(order_id: str, settings: Settings) -> ImpactAnalysis:
     Figures always come from :func:`priced_options`; the model contributes
     only the summaries and the note. Falls back to MODEL_READ when
     MODEL_IMPACT is unavailable. Raises :class:`NoDelay` for an on-time
-    order before any model call.
+    order before any model call. In replay mode the stored response is
+    validated and grounded exactly like a live one (A27).
     """
     detail = _detail(order_id)
     facts = order_facts(order_id)
@@ -231,12 +232,16 @@ def analyze(order_id: str, settings: Settings) -> ImpactAnalysis:
             for opt in options
         )
     )
-    try:
-        raw = _request(settings.model_impact, prompt, settings)
-        used = settings.model_impact
-    except Exception:
-        raw = _request(settings.model_read, prompt, settings)
-        used = settings.model_read
+    if settings.demo_mode == "replay":
+        record = replay.stored(f"impact_{order_id}")
+        raw, used = record["response"], f"{record['model']} (replay)"
+    else:
+        try:
+            raw = _request(settings.model_impact, prompt, settings)
+            used = settings.model_impact
+        except Exception:
+            raw = _request(settings.model_read, prompt, settings)
+            used = settings.model_read
     summaries = raw.get("summaries")
     if not isinstance(summaries, dict):
         raise ValueError(f"Impact model returned no summaries: {raw!r}.")

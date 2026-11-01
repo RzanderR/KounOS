@@ -106,7 +106,7 @@ Deadline: **Wed, Nov 4, 2026, 9 PM ET.** Submit by 2 PM Phoenix time (5 PM ET).
 
 - [ ] **A25** Deploy the front end and API; run the end-to-end test against the live link.
 - [ ] **A26** Polish the four screens, including loading and error states; run `/taste` on each.
-- [ ] **A27** Replay mode (`DEMO_MODE=replay`) serving stored responses for the scripted path, with a visible indicator in the UI.
+- [x] **A27** Replay mode (`DEMO_MODE=replay`) serving stored responses for the scripted path, with a visible indicator in the UI.
 - [ ] **A28** DROPPED by D05 (room for the contract file): shutdown scenario toggle.
 
 ## Sun Nov 1: harden

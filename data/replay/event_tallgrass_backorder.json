@@ -1,0 +1,11 @@
+{
+  "source": "data/extractions/tallgrass_backorder_event.json",
+  "response": {
+    "supplier": "Tallgrass Horticultural Supply",
+    "po_id": "PO-001",
+    "affected_items": "116 LED greenhouse light fixtures",
+    "new_ship_date": "2026-12-31",
+    "new_arrival_date": "2027-01-03",
+    "confidence": 1.0
+  }
+}
