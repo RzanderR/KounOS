@@ -14,7 +14,7 @@ from openai import OpenAI
 
 from app import costs, grounding, order_store
 from app.checks import demo_verdicts
-from app.config import Settings
+from app.config import ModelKeyMissing, Settings
 from app.rules import days_late, evaluate, latest_arrival
 from app.schemas import ImpactAnalysis, ImpactOption, OrderDetail
 
@@ -162,7 +162,7 @@ def priced_options(order_id: str) -> list[ImpactOption]:
 def _request(model: str, prompt: str, settings: Settings) -> dict[str, object]:
     """One strict-schema MODEL call returning parsed JSON."""
     if not settings.model_api_key:
-        raise RuntimeError("MODEL_API_KEY is not set (repo-root .env).")
+        raise ModelKeyMissing()
     client = OpenAI(base_url=settings.meta_base_url, api_key=settings.model_api_key)
     response = client.responses.create(
         model=model,

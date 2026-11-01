@@ -1,0 +1,42 @@
+# Render blueprint for the KounOS demo API (A25).
+#
+# Saturday flow: Render dashboard -> New -> Blueprint -> pick the repo.
+# Render prompts for every `sync: false` variable on first apply.
+# No rootDir on purpose: Render hides files outside a service's root directory,
+# and the API reads ../data (solicitation PDFs, quotes, extractions). Commands
+# run from the repo root instead; buildFilter limits autodeploys to api/ and data/.
+# PYTHON_VERSION pins the 3.12 that CI uses (Render's default is 3.14).
+# Free plan: the service sleeps after ~15 idle minutes, and order state lives
+# in memory, so a restart returns to the seed. Before a demo, wake it, then
+# POST /demo/reset and re-ingest the email (see docs/STATUS.md).
+# After the API is live, deploy the web/ app on Vercel with
+# NEXT_PUBLIC_API_URL pointing at this service, then set CORS_ORIGINS below
+# to the real Vercel production URL (comma-separated if more than one).
+
+services:
+  - type: web
+    name: kounos-api
+    runtime: python
+    plan: free
+    buildCommand: pip install -r api/requirements.txt
+    startCommand: cd api && uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    buildFilter:
+      paths:
+        - api/**
+        - data/**
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.10
+      - key: MODEL_API_KEY
+        sync: false
+      - key: MODEL_READ
+        value: muse-spark-1.3
+      - key: MODEL_IMPACT
+        value: muse-wonder-1.0
+      - key: MODEL_TRANSCRIBE
+        value: muse-voice-transcribe-1.0
+      - key: DEMO_MODE
+        value: live
+      - key: CORS_ORIGINS
+        value: https://kounos-web.vercel.app

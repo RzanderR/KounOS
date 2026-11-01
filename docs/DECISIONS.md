@@ -20,11 +20,11 @@ Settled decisions future tasks depend on. See `docs/PLAN.md` (baseline) and `TAS
 - Why: A11 requirement checks must encode exactly these verdicts; a missing country-of-origin is not a pass, so code must flag it for a person to confirm rather than guess.
 - Impact: A11 requirement checks (delivery + brand-name/spec + sourcing-needs-confirmation); A16/A19 seed data: rescale the simulated-award dates to the 60-day delivery requirement and keep the Tallgrass delay landing two days late.
 
-## D04 (2026-10-30): Live model runs stay on the contributor tier for cost
+## D04 (2026-10-30, updated 2026-10-31): Contributor tier only for local dev on public or fictional data
 
-- Decision: `MODEL_READ` remains `muse-spark-1.3-contributor` in `.env`. The stored live outputs (smoke, extraction, gap pass) stand as-is; nothing is re-run on another tier.
-- Why: Owner direction — the contributor tier is an intentional cost choice, not a misconfiguration.
-- Impact: A02/A05/A07 provenance notes keep naming the contributor model; future live runs use the same tier unless a new decision says otherwise.
+- Decision: A `-contributor` model ID (such as `muse-spark-1.3-contributor`) is allowed only for local development on public or fictional data. Real Koun data and the hosted demo always use standard model IDs: `render.yaml` sets `MODEL_READ=muse-spark-1.3`. The stored live outputs from contributor runs on public data (smoke, extraction, gap pass) stand as-is; nothing is re-run on another tier.
+- Why: Owner direction — the contributor tier is an intentional cost choice for local work, but it lets Meta train on prompts and completions, so it never sees real business data or serves the public deployment.
+- Impact: A02/A05/A07 provenance notes keep naming the contributor model. A local `.env` may keep the contributor tier; the hosted demo labels its results with the standard model.
 
 ## D05 (2026-10-30): The demo is a linked contract file, not a file reader
 
