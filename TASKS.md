@@ -83,7 +83,7 @@ Deadline: **Wed, Nov 4, 2026, 9 PM ET.** Submit by 2 PM Phoenix time (5 PM ET).
   - Done when: a screenshot shows the linked picture and one open lineage.
 - [x] **A39** Delay ripple (PR #22; `docs/screenshots/contract-file-ripple.png`, ripple-before-options asserted by the A40 e2e): when the Tallgrass delay event lands, the screen first shows the ripple across the linked picture (date, margin, deposit/cash, risk), then the A21 Muse Wonder options.
   - Done when: the e2e delay path asserts the ripple figures before the options.
-- [ ] **A40** Extend the end-to-end test to the contract file (lineage click + ripple), passing locally from a reset and on the live link from a fresh browser.
+- [x] **A40** Extend the end-to-end test to the contract file (lineage click + ripple), passing locally from a reset and on the live link from a fresh browser.
 
 ## Fri Oct 30: triage and assist
 
@@ -104,7 +104,7 @@ Deadline: **Wed, Nov 4, 2026, 9 PM ET.** Submit by 2 PM Phoenix time (5 PM ET).
 
 ## Sat Oct 31: deploy, polish and stretch
 
-- [ ] **A25** Deploy the front end and API; run the end-to-end test against the live link.
+- [x] **A25** Deploy the front end and API; run the end-to-end test against the live link.
 - [ ] **A26** Polish the four screens, including loading and error states; run `/taste` on each.
 - [ ] **A27** Replay mode (`DEMO_MODE=replay`) serving stored responses for the scripted path, with a visible indicator in the UI.
 - [ ] **A28** DROPPED by D05 (room for the contract file): shutdown scenario toggle.
