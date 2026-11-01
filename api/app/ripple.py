@@ -1,15 +1,14 @@
 """Delay ripple (A39): what one delay changes, computed in code.
 
 Date, margin, deposit/cash and risk for the order's latest delay event.
-Standalone on purpose: it reuses only costs/rules/store so the ripple
-works without the A21 module. The overnight figure below must match
-impact.EXPEDITE_OVERNIGHT; both are pinned to the same margin math.
+The expedite figure is the same one the impact analysis prices (A21).
 """
 
 from decimal import Decimal
 
 from app import costs, order_store
-from app.rules import evaluate
+from app.impact import EXPEDITE_OVERNIGHT
+from app.rules import days_late, evaluate, latest_arrival
 from app.schemas import OrderDetail, Ripple
 
 
@@ -32,31 +31,23 @@ def build_ripple(order_id: str) -> Ripple | None:
     if not delayed:
         return None
     event = delayed[-1]
-    ship = detail.shipments[0] if detail.shipments else None
-    arrival = ship.arrival_date if ship else None
-    due = order.customer_due_date
-    days_late = (
-        (arrival - due).days
-        if arrival is not None and due is not None and arrival > due
-        else 0
-    )
     bid = order.bid_price or Decimal("0")
     landed = order.landed_cost or Decimal("0")
-    expedite_landed = landed + Decimal("1100.00")
+    expedite_landed = landed + EXPEDITE_OVERNIGHT
     balance = sum(
         (inv.amount for inv in detail.invoices if not inv.paid), Decimal("0")
     )
     return Ripple(
         order_id=order_id,
         event_id=event.event_id,
-        arrival_date=arrival,
-        customer_due_date=due,
-        days_late=days_late,
+        arrival_date=latest_arrival(detail),
+        customer_due_date=order.customer_due_date,
+        days_late=days_late(detail),
         margin_now=costs.margin_at_price(landed, bid) if bid > 0 else Decimal("0"),
         margin_expedited=costs.margin_at_price(expedite_landed, bid)
         if bid > 0
         else Decimal("0"),
-        expedite_cost=Decimal("1100.00"),
+        expedite_cost=EXPEDITE_OVERNIGHT,
         deposit_due=detail.po.deposit_due if detail.po else Decimal("0"),
         invoice_balance=balance,
         risks=[flag.message for flag in evaluate(detail)],

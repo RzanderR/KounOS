@@ -10,7 +10,7 @@ from decimal import Decimal
 import pytest
 from fastapi.testclient import TestClient
 
-from app import fit, score
+from app import cite, fit, score
 from app.config import REPO_ROOT
 from app.fit import CitedFact, FitExtraction, build_notice
 from app.main import app
@@ -40,6 +40,21 @@ def extraction(**overrides: str) -> FitExtraction:
     return FitExtraction(**{key: fact(value) for key, value in values.items()})
 
 
+def make_notice(
+    notice_id: str, ext: FitExtraction, unverified: tuple[str, ...] = ()
+) -> Notice:
+    """A notice built from ``ext``; facts in ``unverified`` fail the A06 check."""
+    citations = {
+        field: cite.CitationResult(
+            status="needs_review" if field in unverified else "verified",
+            page=1,
+            snippet=getattr(ext, field).snippet,
+        )
+        for field in fit.FIT_FIELDS
+    }
+    return build_notice(notice_id, ext, citations, f"data/notices/{notice_id}.pdf")
+
+
 def profile() -> CompanyProfile:
     """Koun's fixture profile: small-business electrical supplier."""
     return CompanyProfile(
@@ -53,7 +68,7 @@ def profile() -> CompanyProfile:
 
 def test_not_stated_facts_stay_missing() -> None:
     """'not stated' is never guessed into the record."""
-    notice = build_notice(
+    notice = make_notice(
         "N-1",
         extraction(set_aside="not stated", quantity="not stated"),
     )
@@ -64,17 +79,17 @@ def test_not_stated_facts_stay_missing() -> None:
 
 def test_record_parses_numbers() -> None:
     """Quantity and value parse; unparseable values stay missing."""
-    notice = build_notice("N-1", extraction())
+    notice = make_notice("N-1", extraction())
     assert notice.quantity == 58
     assert notice.estimated_value == Decimal("91880.12")
-    broken = build_notice("N-2", extraction(quantity="several", estimated_value="TBD"))
+    broken = make_notice("N-2", extraction(quantity="several", estimated_value="TBD"))
     assert broken.quantity is None
     assert broken.estimated_value is None
 
 
 def test_demo_like_notice_scores_pursue() -> None:
     """The demo-shaped notice pursues with a reason per factor."""
-    assessment = score.score_notice(build_notice("demo", extraction()), profile())
+    assessment = score.score_notice(make_notice("demo", extraction()), profile())
     assert assessment.verdict == "pursue"
     assert len(assessment.reasons) == 5
 
@@ -92,7 +107,7 @@ def test_demo_like_notice_scores_pursue() -> None:
 def test_each_factor_can_veto(factor: str, field: str, value: str) -> None:
     """One failing factor makes the notice a pass, naming the factor."""
     assessment = score.score_notice(
-        build_notice("N-1", extraction(**{field: value})), profile()
+        make_notice("N-1", extraction(**{field: value})), profile()
     )
     assert assessment.verdict == "pass"
     assert any(reason.startswith(f"{factor}:") for reason in assessment.reasons)
@@ -101,7 +116,7 @@ def test_each_factor_can_veto(factor: str, field: str, value: str) -> None:
 def test_unrestricted_set_aside_passes() -> None:
     """Open competition needs no certificate."""
     assessment = score.score_notice(
-        build_notice("N-1", extraction(set_aside="Unrestricted")), profile()
+        make_notice("N-1", extraction(set_aside="Unrestricted")), profile()
     )
     assert assessment.verdict == "pursue"
 
@@ -153,3 +168,49 @@ def test_fit_without_profile_is_503(monkeypatch: pytest.MonkeyPatch) -> None:
     response = client.get("/notices/demo/fit")
     assert response.status_code == 503
     assert "H15" in response.json()["detail"]
+
+
+def test_every_fact_keeps_its_citation() -> None:
+    """Each fact carries its page, snippet and A06 status for the screen."""
+    record = make_notice("N-1", extraction())
+    assert [c.name for c in record.citations] == list(fit.FIT_FIELDS)
+    assert all(c.citation_status == "verified" for c in record.citations)
+    assert record.citations[0].source.file == "data/notices/N-1.pdf"
+
+
+def test_unverified_fact_is_not_scored() -> None:
+    """A fact whose snippet fails the A06 check never drives the verdict."""
+    record = make_notice("N-1", extraction(), unverified=("set_aside",))
+    assert record.set_aside is None
+    statuses = {c.name: c.citation_status for c in record.citations}
+    assert statuses["set_aside"] == "needs_review"
+    assert statuses["product_category"] == "verified"
+    assessment = score.score_notice(record, profile())
+    assert assessment.verdict == "pass"
+    assert any(
+        reason.startswith("set_aside:") and "did not verify" in reason
+        for reason in assessment.reasons
+    )
+
+
+def test_cited_notice_checks_the_pdf() -> None:
+    """End to end on a real PDF: a real passage verifies, invented ones don't."""
+    pdf = REPO_ROOT / "data" / "solicitations" / "1232SA26Q0557_terms_and_clauses.pdf"
+    ext = extraction()
+    ext.product_category = CitedFact(
+        value="LED greenhouse fixtures",
+        page=1,
+        snippet=(
+            "0001 LED greenhouse light fixtures, brand name to PhotoBio "
+            "CX 2125, 850W, 100-277 V 58 EA"
+        ),
+    )
+    record = fit.cited_notice("demo", pdf, ext)
+    statuses = {c.name: c.citation_status for c in record.citations}
+    assert statuses["product_category"] == "verified"
+    assert record.product_category == "LED greenhouse fixtures"
+    assert statuses["set_aside"] == "needs_review"
+    assert record.set_aside is None
+    assert record.citations[0].source.file == (
+        "data/solicitations/1232SA26Q0557_terms_and_clauses.pdf"
+    )

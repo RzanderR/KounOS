@@ -4,7 +4,9 @@ Sends one notice PDF as-is and requires every fit fact back with a
 1-based page number and a verbatim snippet (~5 words or more). Anything
 that fails validation is rejected, never stored. Facts read "not stated"
 stay missing on the Notice: never guessed. Snippets are checked with the
-A06 citation checker against the ingested notice PDF.
+A06 citation checker against the ingested notice PDF; a fact whose
+snippet does not verify also stays missing, so it never drives scoring,
+and its citation is kept on the Notice marked ``needs_review``.
 """
 
 import base64
@@ -19,7 +21,7 @@ from pydantic import BaseModel
 from app import cite
 from app.config import REPO_ROOT, Settings
 from app.ingest import ingest_pdf
-from app.schemas import Notice
+from app.schemas import KeyClause, Notice, SourceRef
 
 NOTICES_DIR = REPO_ROOT / "data" / "notices"
 
@@ -170,20 +172,48 @@ def _parse_decimal(value: str | None) -> Decimal | None:
         return None
 
 
-def build_notice(notice_id: str, extraction: FitExtraction) -> Notice:
-    """A validated Notice record; unstated facts stay None, never guessed."""
-    quantity = _parse_int(_present(extraction.quantity.value))
-    value = _parse_decimal(_present(extraction.estimated_value.value))
+def build_notice(
+    notice_id: str,
+    extraction: FitExtraction,
+    citations: dict[str, cite.CitationResult],
+    pdf_file: str,
+) -> Notice:
+    """A Notice from checked facts; unstated or unverified facts stay None."""
+
+    def checked(field: str) -> str | None:
+        if citations[field].status != "verified":
+            return None
+        fact: CitedFact = getattr(extraction, field)
+        return _present(fact.value)
+
+    cited = []
+    for field in FIT_FIELDS:
+        fact = getattr(extraction, field)
+        result = citations[field]
+        cited.append(
+            KeyClause(
+                name=field,
+                summary=fact.value,
+                source=SourceRef(
+                    file=pdf_file,
+                    page=result.actual_page or result.page,
+                    snippet=fact.snippet,
+                ),
+                citation_status=result.status,
+                boxes=result.boxes,
+            )
+        )
     return Notice(
         notice_id=notice_id,
         title=extraction.title.value,
         agency=extraction.agency.value,
-        set_aside=_present(extraction.set_aside.value),
-        product_category=_present(extraction.product_category.value),
-        quantity=quantity,
-        delivery_window=_present(extraction.delivery_window.value),
-        estimated_value=value,
-        competition_signal=_present(extraction.competition_signal.value),
+        set_aside=checked("set_aside"),
+        product_category=checked("product_category"),
+        quantity=_parse_int(checked("quantity")),
+        delivery_window=checked("delivery_window"),
+        estimated_value=_parse_decimal(checked("estimated_value")),
+        competition_signal=checked("competition_signal"),
+        citations=cited,
     )
 
 
@@ -209,6 +239,20 @@ def check_fit_facts(
         fact: CitedFact = getattr(extraction, field)
         results[field] = cite.check_citation(pages, fact.snippet, fact.page)
     return results
+
+
+def cited_notice(notice_id: str, pdf_path: Path, extraction: FitExtraction) -> Notice:
+    """Check every fact against the notice PDF, then build the record."""
+    resolved = pdf_path.resolve()
+    root = REPO_ROOT.resolve()
+    pdf_file = (
+        resolved.relative_to(root).as_posix()
+        if resolved.is_relative_to(root)
+        else pdf_path.name
+    )
+    return build_notice(
+        notice_id, extraction, check_fit_facts(pdf_path, extraction), pdf_file
+    )
 
 
 def list_notice_ids() -> list[str]:

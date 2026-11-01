@@ -128,15 +128,13 @@ def tool_figures(values: Iterable[object]) -> list[Figure]:
         if isinstance(value, dict):
             for item in value.values():
                 walk(item)
-        elif isinstance(value, (list, tuple, set)):
+        elif isinstance(value, (list, tuple)):
             for item in value:
                 walk(item)
         elif isinstance(value, date):
             found.append(Figure(raw=value.isoformat(), day=value))
         elif isinstance(value, (int, Decimal)):
             found.append(Figure(raw=str(value), number=Decimal(value)))
-        elif isinstance(value, float):
-            found.append(Figure(raw=str(value), number=Decimal(str(value))))
         else:
             found.extend(extract_figures(str(value)))
 

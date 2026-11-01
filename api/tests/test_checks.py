@@ -78,3 +78,11 @@ def test_delivery_term_and_far_number_parse() -> None:
         parse_delivery_days("delivery TBD")
     with pytest.raises(ValueError):
         parse_far_number("no clause number here")
+
+
+def test_demo_spec_is_read_from_the_solicitation() -> None:
+    """The checks use the stored extraction's terms, which match D03."""
+    spec = demo_spec()
+    assert spec.delivery_limit_days == 60
+    assert spec.required_part == "PTB8850LS41"
+    assert spec.sourcing_clause == "FAR 52.225-3"

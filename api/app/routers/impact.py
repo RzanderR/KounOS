@@ -23,6 +23,8 @@ def analyze_impact(
     """Price the recovery options in code, have the model explain them."""
     try:
         return impact.analyze(body.order_id, settings)
+    except impact.NoDelay as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
     except ValueError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
     except ModelKeyMissing as exc:

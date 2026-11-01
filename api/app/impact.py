@@ -8,7 +8,6 @@ the impact model is unavailable.
 """
 
 import json
-from datetime import date
 from decimal import Decimal
 
 from openai import OpenAI
@@ -16,7 +15,7 @@ from openai import OpenAI
 from app import costs, grounding, order_store
 from app.checks import demo_verdicts
 from app.config import ModelKeyMissing, Settings
-from app.rules import evaluate
+from app.rules import days_late, evaluate, latest_arrival
 from app.schemas import ImpactAnalysis, ImpactOption, OrderDetail
 
 # Demo assumption: overnight freight to pull the Tallgrass shipment back
@@ -59,6 +58,13 @@ ANALYSIS_PROMPT = (
 )
 
 
+class NoDelay(Exception):
+    """The order arrives on time, so there is nothing to recover from."""
+
+    def __init__(self, order_id: str) -> None:
+        super().__init__(f"{order_id} arrives on time; no delay to analyze.")
+
+
 def _detail(order_id: str) -> OrderDetail:
     """The order or a 404-style ValueError for the router to translate."""
     detail = order_store.get_detail(order_id)
@@ -77,6 +83,7 @@ def order_facts(order_id: str) -> dict[str, object]:
         (inv.amount for inv in detail.invoices if not inv.paid), Decimal("0")
     )
     ship = detail.shipments[0] if detail.shipments else None
+    arrival = latest_arrival(detail)
     return {
         "order_id": order.order_id,
         "supplier": order.supplier,
@@ -90,15 +97,8 @@ def order_facts(order_id: str) -> dict[str, object]:
         "deposit_due": str(detail.po.deposit_due) if detail.po else None,
         "invoice_balance": str(invoice_balance),
         "ship_date": ship.ship_date.isoformat() if ship and ship.ship_date else None,
-        "arrival_date": ship.arrival_date.isoformat()
-        if ship and ship.arrival_date
-        else None,
-        "days_late": (ship.arrival_date - order.customer_due_date).days
-        if ship
-        and ship.arrival_date
-        and order.customer_due_date
-        and ship.arrival_date > order.customer_due_date
-        else 0,
+        "arrival_date": arrival.isoformat() if arrival else None,
+        "days_late": days_late(detail),
         "flags": [flag.message for flag in evaluate(detail)],
     }
 
@@ -110,8 +110,7 @@ def priced_options(order_id: str) -> list[ImpactOption]:
     bid = order.bid_price or Decimal("0")
     landed = order.landed_cost or Decimal("0")
     due = order.customer_due_date
-    ship = detail.shipments[0] if detail.shipments else None
-    arrival = ship.arrival_date if ship else None
+    arrival = latest_arrival(detail)
 
     expedite_landed = landed + EXPEDITE_OVERNIGHT
     expedite = ImpactOption(
@@ -212,10 +211,13 @@ def analyze(order_id: str, settings: Settings) -> ImpactAnalysis:
 
     Figures always come from :func:`priced_options`; the model contributes
     only the summaries and the note. Falls back to MODEL_READ when
-    MODEL_IMPACT is unavailable.
+    MODEL_IMPACT is unavailable. Raises :class:`NoDelay` for an on-time
+    order before any model call.
     """
     detail = _detail(order_id)
     facts = order_facts(order_id)
+    if facts["days_late"] == 0:
+        raise NoDelay(order_id)
     options = priced_options(order_id)
     prompt = (
         f"{ANALYSIS_PROMPT}\n\nTool output:\n{json.dumps(facts, indent=2)}"
@@ -276,10 +278,3 @@ def analyze(order_id: str, settings: Settings) -> ImpactAnalysis:
         ungrounded_figures=ungrounded,
     )
 
-
-def current_arrival(order_id: str) -> date | None:
-    """The order's first shipment arrival, for ripple math (A39 helper)."""
-    detail = _detail(order_id)
-    if not detail.shipments or detail.shipments[0].arrival_date is None:
-        return None
-    return detail.shipments[0].arrival_date

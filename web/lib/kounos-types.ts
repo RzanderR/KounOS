@@ -93,6 +93,7 @@ export interface Notice {
   competition_signal?: string | null;
   url?: string | null;
   posted?: string | null;
+  citations?: KeyClause[];
 }
 /**
  * Pursue-or-pass verdict for one notice, with a reason per factor.

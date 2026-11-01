@@ -11,11 +11,11 @@ unacceptable). Sourcing never guesses: a missing country of origin is
 import json
 import re
 from decimal import Decimal
-from pathlib import Path
 
 from pydantic import BaseModel
 
 from app.config import REPO_ROOT
+from app.demo_solicitation import stored_extraction
 from app.schemas import (
     CheckVerdict,
     Quote,
@@ -29,7 +29,6 @@ class RequirementsSpec(BaseModel):
 
     delivery_limit_days: int
     required_part: str
-    brand_name_only: bool = True
     sourcing_clause: str = ""
 
 
@@ -166,12 +165,18 @@ def load_quote_fixture(quote_id: str) -> Quote:
 
 
 def demo_spec() -> RequirementsSpec:
-    """The demo solicitation's requirements (D03): 60 days, PTB8850LS41."""
+    """The demo solicitation's requirements, read from its stored extraction.
+
+    D03 pins the values: 60 days, part PTB8850LS41, FAR 52.225-3.
+    """
+    extraction = stored_extraction()
+    parts = {item.part_or_nsn.value for item in extraction.line_items}
+    if len(parts) != 1:
+        raise ValueError(f"Expected one required part, found {sorted(parts)}.")
     return RequirementsSpec(
-        delivery_limit_days=60,
-        required_part="PTB8850LS41",
-        brand_name_only=True,
-        sourcing_clause="FAR 52.225-3",
+        delivery_limit_days=parse_delivery_days(extraction.required_delivery.value),
+        required_part=parts.pop(),
+        sourcing_clause=f"FAR {parse_far_number(extraction.sourcing_clause.value)}",
     )
 
 
@@ -182,8 +187,3 @@ def demo_verdicts() -> list[QuoteVerdict]:
         check_quote(quote_id, load_quote_fixture(quote_id), spec)
         for quote_id in ("ninebark", "larkspur", "tallgrass")
     ]
-
-
-def fixture_path(quote_id: str) -> Path:
-    """Path of a curated quote fixture (for tests and screens)."""
-    return REPO_ROOT / "data" / "quotes" / f"{quote_id}.json"

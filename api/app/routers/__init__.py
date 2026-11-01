@@ -1,8 +1,4 @@
-"""Route stubs for the KounOS API (A03).
-
-Every handler raises 501 until its implementing task lands. The detail
-names that task so a 501 in the UI is traceable, not mysterious.
-"""
+"""Every KounOS API router, mounted under one APIRouter."""
 
 from fastapi import APIRouter
 

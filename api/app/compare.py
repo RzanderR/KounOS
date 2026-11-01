@@ -7,6 +7,7 @@ no model call, so the screen recomputes margins live from these figures.
 
 import json
 from decimal import Decimal
+from typing import Any
 
 from app.checks import demo_verdicts, load_quote_fixture
 from app.config import REPO_ROOT
@@ -15,16 +16,18 @@ from app.schemas import QuoteComparison
 
 QUOTE_IDS = ("ninebark", "larkspur", "tallgrass")
 MARGIN_FLOOR = Decimal("0.10")
+AWARD_FILE = "data/awards/1232SA26Q0557.json"
+
+
+def award_json() -> dict[str, Any]:
+    """The real award record for the demo solicitation, as stored."""
+    raw: dict[str, Any] = json.loads((REPO_ROOT / AWARD_FILE).read_text(encoding="utf-8"))
+    return raw
 
 
 def award_total() -> Decimal:
     """The real award total the bid is measured against."""
-    raw = json.loads(
-        (REPO_ROOT / "data" / "awards" / "1232SA26Q0557.json").read_text(
-            encoding="utf-8"
-        )
-    )
-    return Decimal(raw["total_obligated"])
+    return Decimal(award_json()["total_obligated"])
 
 
 def deposit_fraction(quote_id: str) -> Decimal:

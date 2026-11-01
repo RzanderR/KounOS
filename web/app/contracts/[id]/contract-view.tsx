@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { fetchContractFile, fetchImpactAnalysis, fetchRipple } from "@/lib/api";
+import { errorMessage, fetchContractFile, fetchImpactAnalysis, fetchRipple } from "@/lib/api";
 import type { ContractFile, ImpactAnalysis, LinkedFigure, Ripple } from "@/lib/kounos-types";
 import { SimulatedAwardBanner } from "../../orders/banner";
 
@@ -69,24 +69,40 @@ function LineagePanel({ figure }: { figure: LinkedFigure }) {
 
 export default function ContractView({ orderId }: { orderId: string }) {
   const [file, setFile] = useState<ContractFile | null>(null);
-  const [failed, setFailed] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [selection, setSelection] = useState<LinkedFigure | null>(null);
   const [ripple, setRipple] = useState<Ripple | null>(null);
   const [impact, setImpact] = useState<ImpactAnalysis | null>(null);
+  const [rippleError, setRippleError] = useState<string | null>(null);
+  const [impactError, setImpactError] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
     async function load() {
-      const [data, rippleData, impactData] = await Promise.all([
+      const [fileResult, rippleResult] = await Promise.allSettled([
         fetchContractFile(orderId),
         fetchRipple(orderId),
-        fetchImpactAnalysis(orderId),
       ]);
-      if (!cancelled) {
-        if (data === null) setFailed(true);
-        else setFile(data);
-        setRipple(rippleData);
-        setImpact(impactData);
+      if (cancelled) return;
+      if (fileResult.status === "rejected") {
+        setError(errorMessage(fileResult.reason));
+        return;
+      }
+      setFile(fileResult.value);
+      if (rippleResult.status === "rejected") {
+        setRippleError(errorMessage(rippleResult.reason));
+        return;
+      }
+      const rippleData = rippleResult.value;
+      setRipple(rippleData);
+      // Recovery options only exist for a late order, and the model call is
+      // slow, so it loads after the rest of the page is on screen.
+      if (rippleData === null || rippleData.days_late <= 0) return;
+      try {
+        const impactData = await fetchImpactAnalysis(orderId);
+        if (!cancelled) setImpact(impactData);
+      } catch (err) {
+        if (!cancelled) setImpactError(errorMessage(err));
       }
     }
     void load();
@@ -95,13 +111,12 @@ export default function ContractView({ orderId }: { orderId: string }) {
     };
   }, [orderId]);
 
-  if (failed) {
+  if (error !== null) {
     return (
       <main className="mx-auto w-full max-w-5xl px-6 py-10">
         <h1 className="text-2xl font-semibold">Contract file</h1>
         <p role="alert" className="mt-4 text-sm">
-          The API is unreachable or the order is unknown. Start it with{" "}
-          <code>uvicorn app.main:app --reload</code> from api/ and reload.
+          {error}
         </p>
       </main>
     );
@@ -150,6 +165,15 @@ export default function ContractView({ orderId }: { orderId: string }) {
         </section>
       ))}
 
+      {rippleError === null ? null : (
+        <section aria-label="Delay ripple" className="mt-8">
+          <h2 className="text-lg font-medium">Delay ripple</h2>
+          <p role="alert" className="mt-2 text-sm text-amber-700">
+            Delay ripple unavailable: {rippleError}
+          </p>
+        </section>
+      )}
+
       {ripple === null ? null : (
         <section aria-label="Delay ripple" className="mt-8">
           <h2 className="text-lg font-medium">Delay ripple</h2>
@@ -186,6 +210,15 @@ export default function ContractView({ orderId }: { orderId: string }) {
               ))}
             </tbody>
           </table>
+        </section>
+      )}
+
+      {impactError === null ? null : (
+        <section aria-label="Recovery options" className="mt-8">
+          <h2 className="text-lg font-medium">Recovery options</h2>
+          <p role="alert" className="mt-2 text-sm text-amber-700">
+            Recovery options unavailable: {impactError}
+          </p>
         </section>
       )}
 

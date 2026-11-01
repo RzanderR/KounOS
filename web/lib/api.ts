@@ -23,30 +23,58 @@ import type {
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
-async function getJson<T>(path: string): Promise<T | null> {
-  try {
-    const res = await fetch(`${API_URL}${path}`);
-    if (!res.ok) return null;
-    return (await res.json()) as T;
-  } catch {
-    return null;
-  }
+/** A failed API call, carrying a reason a person can act on. */
+export class ApiError extends Error {}
+
+/** The message to show for anything a fetcher threw. */
+export function errorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
 }
 
-/** Typed GET /health. Null when the API is unreachable or unhealthy. */
-export async function fetchHealth(): Promise<HealthStatus | null> {
+/** One API call; throws ApiError with the API's own reason on failure. */
+async function request<T>(path: string, init?: RequestInit): Promise<T> {
+  let res: Response;
+  try {
+    res = await fetch(`${API_URL}${path}`, init);
+  } catch {
+    throw new ApiError(
+      `Cannot reach the API at ${API_URL}. Start it with uvicorn app.main:app --reload from api/ and reload.`,
+    );
+  }
+  if (!res.ok) {
+    let detail = res.statusText;
+    try {
+      const body = (await res.json()) as { detail?: unknown };
+      if (typeof body.detail === "string") detail = body.detail;
+    } catch {
+      // Not JSON: keep the status text.
+    }
+    throw new ApiError(`The API answered ${res.status} for ${path}: ${detail}`);
+  }
+  return (await res.json()) as T;
+}
+
+function getJson<T>(path: string): Promise<T> {
+  return request<T>(path);
+}
+
+function postJson<T>(path: string, body: unknown): Promise<T> {
+  return request<T>(path, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+}
+
+/** Typed GET /health. Throws when the API is unreachable or unhealthy. */
+export async function fetchHealth(): Promise<HealthStatus> {
   const data = await getJson<HealthStatus>("/health");
-  if (data === null || data.status !== "ok") return null;
+  if (data.status !== "ok") throw new ApiError("The API reports it is unhealthy.");
   return data;
 }
 
-/** Typed GET /solicitations. Empty until extraction lands (A05). */
-export function fetchSolicitations(): Promise<Solicitation[] | null> {
-  return getJson<Solicitation[]>("/solicitations");
-}
-
-/** Typed GET /solicitations/{id}. Null when unreachable or unknown. */
-export function fetchSolicitation(solicitationId: string): Promise<Solicitation | null> {
+/** Typed GET /solicitations/{id}. */
+export function fetchSolicitation(solicitationId: string): Promise<Solicitation> {
   return getJson<Solicitation>(`/solicitations/${encodeURIComponent(solicitationId)}`);
 }
 
@@ -71,80 +99,66 @@ export async function fetchPassageBytes(url: string): Promise<Uint8Array> {
   return bytes;
 }
 
-/** Typed GET /quotes. Empty until intake lands (A10). */
-export function fetchQuotes(): Promise<Quote[] | null> {
+/** Typed GET /quotes: the three curated demo quotes (A10). */
+export function fetchQuotes(): Promise<Quote[]> {
   return getJson<Quote[]>("/quotes");
 }
 
 export type { AwardRecord, QuoteComparison, SourcingDecision };
 
-/** Typed GET /quotes/comparison. Null when unreachable. */
-export function fetchComparison(): Promise<QuoteComparison[] | null> {
+/** Typed GET /quotes/comparison. */
+export function fetchComparison(): Promise<QuoteComparison[]> {
   return getJson<QuoteComparison[]>("/quotes/comparison");
 }
 
-/** Typed GET /sourcing-decisions. Null when unreachable. */
-export function fetchDecision(): Promise<SourcingDecision[] | null> {
+/** Typed GET /sourcing-decisions. */
+export function fetchDecision(): Promise<SourcingDecision[]> {
   return getJson<SourcingDecision[]>("/sourcing-decisions");
 }
 
-/** Typed GET /sourcing-decisions/award. Null when unreachable. */
-export function fetchAward(): Promise<AwardRecord | null> {
+/** Typed GET /sourcing-decisions/award. */
+export function fetchAward(): Promise<AwardRecord> {
   return getJson<AwardRecord>("/sourcing-decisions/award");
 }
 
 /** Typed GET /orders. Empty until seeding lands (A16). */
-export function fetchOrders(): Promise<Order[] | null> {
+export function fetchOrders(): Promise<Order[]> {
   return getJson<Order[]>("/orders");
 }
 
 export type { Flag, OrderDetail };
 
-/** Typed GET /orders/{id}. Null when unreachable or unknown. */
-export function fetchOrderDetail(orderId: string): Promise<OrderDetail | null> {
+/** Typed GET /orders/{id}. */
+export function fetchOrderDetail(orderId: string): Promise<OrderDetail> {
   return getJson<OrderDetail>(`/orders/${encodeURIComponent(orderId)}`);
 }
 
-/** Typed GET /orders/{id}/contract-file. Null when unreachable or unknown. */
-export function fetchContractFile(orderId: string): Promise<ContractFile | null> {
+/** Typed GET /orders/{id}/contract-file. */
+export function fetchContractFile(orderId: string): Promise<ContractFile> {
   return getJson<ContractFile>(`/orders/${encodeURIComponent(orderId)}/contract-file`);
 }
 
-/** Typed GET /orders/{id}/ripple. Null when unreachable, unknown, or on track. */
+/** Typed GET /orders/{id}/ripple. Null when the order is on track. */
 export function fetchRipple(orderId: string): Promise<Ripple | null> {
-  return getJson<Ripple>(`/orders/${encodeURIComponent(orderId)}/ripple`);
+  return getJson<Ripple | null>(`/orders/${encodeURIComponent(orderId)}/ripple`);
 }
 
-/** Typed POST /impact/analyze. Null when unreachable or not yet served. */
-export function fetchImpactAnalysis(orderId: string): Promise<ImpactAnalysis | null> {
+/** Typed POST /impact/analyze. The API answers 409 for an on-time order. */
+export function fetchImpactAnalysis(orderId: string): Promise<ImpactAnalysis> {
   return postJson<ImpactAnalysis>("/impact/analyze", { order_id: orderId });
 }
 
-async function postJson<T>(path: string, body: unknown): Promise<T | null> {
-  try {
-    const res = await fetch(`${API_URL}${path}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
-    if (!res.ok) return null;
-    return (await res.json()) as T;
-  } catch {
-    return null;
-  }
-}
-
 /** Typed GET /notices. Empty until the H16 batch lands. */
-export function fetchNotices(): Promise<Notice[] | null> {
+export function fetchNotices(): Promise<Notice[]> {
   return getJson<Notice[]>("/notices");
 }
 
-/** Typed GET /notices/{id}/fit. Null when unscorable (H15 profile pending). */
-export function fetchFit(noticeId: string): Promise<FitAssessment | null> {
+/** Typed GET /notices/{id}/fit. The API answers 503 until the H15 profile lands. */
+export function fetchFit(noticeId: string): Promise<FitAssessment> {
   return getJson<FitAssessment>(`/notices/${encodeURIComponent(noticeId)}/fit`);
 }
 
-/** Typed GET /events/flags. Null when unreachable. */
-export function fetchFlags(): Promise<Flag[] | null> {
+/** Typed GET /events/flags. */
+export function fetchFlags(): Promise<Flag[]> {
   return getJson<Flag[]>("/events/flags");
 }

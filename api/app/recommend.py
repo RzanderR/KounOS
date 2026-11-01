@@ -7,12 +7,10 @@ as an explicit reason, never a silent pass. The actual award is read
 from ``data/awards/`` for the side-by-side reveal.
 """
 
-import json
 from datetime import date
 from decimal import Decimal
 
-from app.compare import MARGIN_FLOOR, build_comparison
-from app.config import REPO_ROOT
+from app.compare import MARGIN_FLOOR, award_json, build_comparison
 from app.schemas import AwardRecord, QuoteComparison, SourcingDecision
 
 SOLICITATION_ID = "1232SA26Q0557"
@@ -20,11 +18,7 @@ SOLICITATION_ID = "1232SA26Q0557"
 
 def read_award() -> AwardRecord:
     """The real award record for the demo solicitation."""
-    raw = json.loads(
-        (REPO_ROOT / "data" / "awards" / "1232SA26Q0557.json").read_text(
-            encoding="utf-8"
-        )
-    )
+    raw = award_json()
     return AwardRecord(
         solicitation_id=raw["solicitation_id"],
         award_id=raw["award_id"],
@@ -49,8 +43,13 @@ def recommend(
             award_total=award.total,
         )
     best = min(eligible, key=lambda row: row.safe_bid_total)
+    standing = (
+        "passes every requirement check"
+        if best.verdict.overall == "pass"
+        else "fails no requirement check but has open items"
+    )
     reasons = [
-        f"{best.quote.supplier} passes every requirement check at "
+        f"{best.quote.supplier} {standing}; lowest safe bid "
         f"{best.safe_bid_total} with a {floor * 100:.0f}% margin floor."
     ]
     if best.verdict.overall == "needs_confirmation":

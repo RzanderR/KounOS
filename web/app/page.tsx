@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { fetchHealth } from "@/lib/api";
@@ -7,10 +8,10 @@ import { fetchHealth } from "@/lib/api";
 type ApiStatus = "checking" | "ok" | "unreachable";
 
 const NAV_LINKS = [
-  { label: "Triage", href: "#" },
+  { label: "Triage", href: "/triage" },
   { label: "Solicitation", href: "/solicitation" },
-  { label: "Quotes", href: "#" },
-  { label: "Orders", href: "#" },
+  { label: "Quotes", href: "/quotes" },
+  { label: "Orders", href: "/orders" },
 ];
 
 export default function Home() {
@@ -19,8 +20,13 @@ export default function Home() {
   useEffect(() => {
     let cancelled = false;
     async function checkApi() {
-      const health = await fetchHealth();
-      if (!cancelled) setStatus(health === null ? "unreachable" : "ok");
+      let next: ApiStatus = "ok";
+      try {
+        await fetchHealth();
+      } catch {
+        next = "unreachable";
+      }
+      if (!cancelled) setStatus(next);
     }
     void checkApi();
     return () => {
@@ -44,13 +50,13 @@ export default function Home() {
         </p>
       </header>
 
-      <nav aria-label="Placeholder">
+      <nav aria-label="Screens">
         <ul className="flex gap-6">
           {NAV_LINKS.map((link) => (
             <li key={link.label}>
-              <a href={link.href} className="text-sm font-medium underline underline-offset-4">
+              <Link href={link.href} className="text-sm font-medium underline underline-offset-4">
                 {link.label}
-              </a>
+              </Link>
             </li>
           ))}
         </ul>

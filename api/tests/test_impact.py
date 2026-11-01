@@ -73,7 +73,6 @@ def apply_delay() -> None:
 
 def snapshot() -> object:
     """JSON-able store state to prove the tools never mutate."""
-    reset()
     detail = get_detail("ORD-001")
     assert detail is not None
     return detail.model_dump_json()
@@ -81,6 +80,7 @@ def snapshot() -> object:
 
 def test_tools_are_read_only(monkeypatch: pytest.MonkeyPatch) -> None:
     """Facts, pricing and a full analysis change nothing stored."""
+    apply_delay()
     before = snapshot()
     settings = make_settings()
     impact.order_facts("ORD-001")
@@ -140,7 +140,7 @@ def test_analyze_falls_back_to_model_read(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """A dead impact model still yields a labeled MODEL_READ analysis."""
-    reset()
+    apply_delay()
     monkeypatch.setattr(impact, "_request", fake_request_fallback)
     analysis = impact.analyze("ORD-001", make_settings())
     assert analysis.generated_by == "muse-spark-1.3"
@@ -157,7 +157,7 @@ def test_analyze_without_model_key_is_503() -> None:
     """A missing MODEL_API_KEY answers 503 with a clear reason, not a bare 500."""
     from app.config import get_settings
 
-    reset()
+    apply_delay()
     app.dependency_overrides[get_settings] = lambda: Settings(model_api_key=None)
     try:
         response = client.post("/impact/analyze", json={"order_id": "ORD-001"})
@@ -165,3 +165,17 @@ def test_analyze_without_model_key_is_503() -> None:
         app.dependency_overrides.pop(get_settings, None)
     assert response.status_code == 503
     assert "MODEL_API_KEY" in response.json()["detail"]
+
+
+def test_on_time_order_is_not_analyzed(monkeypatch: pytest.MonkeyPatch) -> None:
+    """No delay, no recovery options and no model call."""
+    reset()
+
+    def no_model(*_: object) -> dict[str, object]:
+        raise AssertionError("an on-time order must not call a model")
+
+    monkeypatch.setattr(impact, "_request", no_model)
+    with pytest.raises(impact.NoDelay):
+        impact.analyze("ORD-001", make_settings())
+    response = client.post("/impact/analyze", json={"order_id": "ORD-001"})
+    assert response.status_code == 409
