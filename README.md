@@ -140,14 +140,13 @@ flowchart TB
   subgraph META["Meta Model API"]
     MS["Muse Spark 1.3"]
     MW["Muse Wonder 1.0"]
-    MV["Muse Voice Transcribe"]
+    MV["Muse Voice Transcribe<br/>(voicemail path, unused in demo)"]
   end
   WEB <-->|"JSON + uploads"| API
   API -->|"loads at startup, reset restores"| STORE
   I --> X
   X --> F
   X --> MS
-  T -.->|"voicemail path, not used in the demo"| MV
   T --> MW
   T --> MS
 ```
