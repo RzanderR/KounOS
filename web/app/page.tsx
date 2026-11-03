@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+import { AskPanel } from "@/components/ask-panel";
 import { fetchHealth } from "@/lib/api";
 
 type ApiStatus = "checking" | "ok" | "unreachable";
@@ -62,12 +63,7 @@ export default function Home() {
         </ul>
       </nav>
 
-      <section aria-label="Ask KounOS" className="rounded-lg border p-4">
-        <h2 className="text-lg font-medium">Ask KounOS</h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          The assistant panel arrives in a later task.
-        </p>
-      </section>
+      <AskPanel />
     </div>
   );
 }

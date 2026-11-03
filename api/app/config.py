@@ -1,5 +1,6 @@
 """Settings loaded from the environment and the repo-root .env (A01)."""
 
+from datetime import date
 from pathlib import Path
 from typing import Literal
 
@@ -24,6 +25,8 @@ class Settings(BaseSettings):
     model_impact: str = "muse-wonder-1.0"
     model_transcribe: str = "muse-voice-transcribe-1.0"
     demo_mode: Literal["live", "replay"] = "live"
+    # A24: the date Ask KounOS treats as today; unset means the real date.
+    demo_today: date | None = None
 
 
 class ModelKeyMissing(RuntimeError):
