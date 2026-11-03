@@ -40,7 +40,7 @@ Updated at the end of every task or work session, committed with that work.
 
 ## In progress
 
-- None.
+- **A26 polish (2026-11-03, `task/A26-polish`, draft PR).** New `web/components/page-state.tsx`: `PageLoading` (status role, pulsing skeleton, and after 5 s "The demo API sleeps when idle; the first load can take up to a minute.") and `PageError` ("Couldn't load this page", the message, a "Try again" button that re-runs the load). Used on triage, solicitation, quotes, orders, order detail and contract file; tables wrap in `overflow-x-auto`. Checked in the app: error state with the API off, Try again recovers once it is up, all six screens fit at 375 px with no sideways scroll. Local e2e green end to end (live model stages included). Checks: eslint, tsc, build. Built by Muse Code headless; **caution:** in its no-network sandbox Muse emptied `web/node_modules` (likely `npm ci`) and then staged a rollback of its own commit. Claude stopped it, dropped the rollback and reinstalled. Briefs now need "never run npm ci / npm install". **Left:** the `/taste` pass on each screen, then tick A26.
 
 ## Blocked (on what or whom)
 
