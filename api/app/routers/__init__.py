@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter
 
-from app.routers import decisions, events, impact, notices, orders, quotes, solicitations
+from app.routers import ask, decisions, events, impact, notices, orders, quotes, solicitations
 
 api_router = APIRouter()
 api_router.include_router(solicitations.router)
@@ -13,3 +13,4 @@ api_router.include_router(orders.demo_router)
 api_router.include_router(notices.router)
 api_router.include_router(events.router)
 api_router.include_router(impact.router)
+api_router.include_router(ask.router)

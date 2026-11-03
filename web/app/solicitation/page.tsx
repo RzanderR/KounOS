@@ -10,6 +10,7 @@ import type {
   Solicitation,
   WordBox,
 } from "@/lib/kounos-types";
+import { PageError, PageLoading } from "@/components/page-state";
 import type { Selection } from "./passage-viewer";
 
 // Client-only: react-pdf's pdf.js entry needs Promise.withResolvers (absent
@@ -50,6 +51,7 @@ export default function SolicitationPage() {
   const [solicitation, setSolicitation] = useState<Solicitation | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [selection, setSelection] = useState<Selection | null>(null);
+  const [reload, setReload] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -65,15 +67,19 @@ export default function SolicitationPage() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [reload]);
+
+  function handleRetry() {
+    setError(null);
+    setSolicitation(null);
+    setReload((value) => value + 1);
+  }
 
   if (error !== null) {
     return (
       <main className="mx-auto w-full max-w-5xl px-6 py-10">
         <h1 className="text-2xl font-semibold">Solicitation</h1>
-        <p role="alert" className="mt-4 text-sm">
-          {error}
-        </p>
+        <PageError message={error} onRetry={handleRetry} />
       </main>
     );
   }
@@ -81,7 +87,7 @@ export default function SolicitationPage() {
     return (
       <main className="mx-auto w-full max-w-5xl px-6 py-10">
         <h1 className="text-2xl font-semibold">Solicitation</h1>
-        <p className="mt-4 text-sm text-muted-foreground">Loading…</p>
+        <PageLoading label="Loading solicitation…" />
       </main>
     );
   }
@@ -103,74 +109,78 @@ export default function SolicitationPage() {
 
       <section aria-label="Requirements" className="mt-8">
         <h2 className="text-lg font-medium">Requirements</h2>
-        <table className="mt-2 w-full border-collapse text-sm">
-          <thead>
-            <tr className="border-b text-left">
-              <th className="py-2 pr-4">Line</th>
-              <th className="py-2 pr-4">Description</th>
-              <th className="py-2 pr-4">Qty</th>
-              <th className="py-2 pr-4">Part</th>
-              <th className="py-2">Citation</th>
-            </tr>
-          </thead>
-          <tbody>
-            {(solicitation.requirements ?? []).map((req) => (
-              <tr key={req.line} className="border-b align-top">
-                <td className="py-2 pr-4">{req.line}</td>
-                <td className="py-2 pr-4">{req.description}</td>
-                <td className="py-2 pr-4">
-                  {req.quantity} {req.unit}
-                </td>
-                <td className="py-2 pr-4">{req.part_or_nsn ?? "—"}</td>
-                <td className="py-2">
-                  <button
-                    type="button"
-                    className="cursor-pointer"
-                    onClick={() =>
-                      req.source === null || req.source === undefined
-                        ? undefined
-                        : setSelection(toSelection("requirement", req.line, req, req.source, req.boxes ?? []))
-                    }
-                    aria-label={`Show citation for line ${req.line}`}
-                  >
-                    <Badge status={req.citation_status} />
-                  </button>
-                </td>
+        <div className="overflow-x-auto">
+          <table className="mt-2 w-full border-collapse text-sm">
+            <thead>
+              <tr className="border-b text-left">
+                <th className="py-2 pr-4">Line</th>
+                <th className="py-2 pr-4">Description</th>
+                <th className="py-2 pr-4">Qty</th>
+                <th className="py-2 pr-4">Part</th>
+                <th className="py-2">Citation</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {(solicitation.requirements ?? []).map((req) => (
+                <tr key={req.line} className="border-b align-top">
+                  <td className="py-2 pr-4">{req.line}</td>
+                  <td className="py-2 pr-4">{req.description}</td>
+                  <td className="py-2 pr-4">
+                    {req.quantity} {req.unit}
+                  </td>
+                  <td className="py-2 pr-4">{req.part_or_nsn ?? "—"}</td>
+                  <td className="py-2">
+                    <button
+                      type="button"
+                      className="cursor-pointer"
+                      onClick={() =>
+                        req.source === null || req.source === undefined
+                          ? undefined
+                          : setSelection(toSelection("requirement", req.line, req, req.source, req.boxes ?? []))
+                      }
+                      aria-label={`Show citation for line ${req.line}`}
+                    >
+                      <Badge status={req.citation_status} />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </section>
 
       <section aria-label="Key clauses" className="mt-8">
         <h2 className="text-lg font-medium">Key clauses</h2>
-        <table className="mt-2 w-full border-collapse text-sm">
-          <thead>
-            <tr className="border-b text-left">
-              <th className="py-2 pr-4">Clause</th>
-              <th className="py-2 pr-4">Summary</th>
-              <th className="py-2">Citation</th>
-            </tr>
-          </thead>
-          <tbody>
-            {(solicitation.key_clauses ?? []).map((clause) => (
-              <tr key={clause.name} className="border-b align-top">
-                <td className="py-2 pr-4">{clause.name}</td>
-                <td className="py-2 pr-4">{clause.summary}</td>
-                <td className="py-2">
-                  <button
-                    type="button"
-                    className="cursor-pointer"
-                    onClick={() => setSelection(toSelection("clause", clause.name, clause, clause.source, clause.boxes ?? []))}
-                    aria-label={`Show citation for clause ${clause.name}`}
-                  >
-                    <Badge status={clause.citation_status} />
-                  </button>
-                </td>
+        <div className="overflow-x-auto">
+          <table className="mt-2 w-full border-collapse text-sm">
+            <thead>
+              <tr className="border-b text-left">
+                <th className="py-2 pr-4">Clause</th>
+                <th className="py-2 pr-4">Summary</th>
+                <th className="py-2">Citation</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {(solicitation.key_clauses ?? []).map((clause) => (
+                <tr key={clause.name} className="border-b align-top">
+                  <td className="py-2 pr-4">{clause.name}</td>
+                  <td className="py-2 pr-4">{clause.summary}</td>
+                  <td className="py-2">
+                    <button
+                      type="button"
+                      className="cursor-pointer"
+                      onClick={() => setSelection(toSelection("clause", clause.name, clause, clause.source, clause.boxes ?? []))}
+                      aria-label={`Show citation for clause ${clause.name}`}
+                    >
+                      <Badge status={clause.citation_status} />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </section>
 
       <section aria-label="Passage viewer" className="mt-8">

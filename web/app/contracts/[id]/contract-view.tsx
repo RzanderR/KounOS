@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 import { errorMessage, fetchContractFile, fetchImpactAnalysis, fetchRipple } from "@/lib/api";
 import type { ContractFile, ImpactAnalysis, LinkedFigure, Ripple } from "@/lib/kounos-types";
+import { PageError, PageLoading } from "@/components/page-state";
 import { SimulatedAwardBanner } from "../../orders/banner";
 
 const SECTION_TITLES: Record<string, string> = {
@@ -51,16 +52,18 @@ function LineagePanel({ figure }: { figure: LinkedFigure }) {
           <p className="mt-2 text-muted-foreground">
             Calculated by <code>{lineage.calculation ?? "code"}</code>
           </p>
-          <table className="mt-2 w-full border-collapse">
-            <tbody>
-              {Object.entries(lineage.inputs ?? {}).map(([name, input]) => (
-                <tr key={name} className="border-b align-top">
-                  <td className="py-1 pr-4 font-medium">{name}</td>
-                  <td className="py-1">{input}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <div className="overflow-x-auto">
+            <table className="mt-2 w-full border-collapse">
+              <tbody>
+                {Object.entries(lineage.inputs ?? {}).map(([name, input]) => (
+                  <tr key={name} className="border-b align-top">
+                    <td className="py-1 pr-4 font-medium">{name}</td>
+                    <td className="py-1">{input}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </>
       )}
     </div>
@@ -75,6 +78,7 @@ export default function ContractView({ orderId }: { orderId: string }) {
   const [impact, setImpact] = useState<ImpactAnalysis | null>(null);
   const [rippleError, setRippleError] = useState<string | null>(null);
   const [impactError, setImpactError] = useState<string | null>(null);
+  const [reload, setReload] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -109,15 +113,23 @@ export default function ContractView({ orderId }: { orderId: string }) {
     return () => {
       cancelled = true;
     };
-  }, [orderId]);
+  }, [orderId, reload]);
+
+  function handleRetry() {
+    setError(null);
+    setFile(null);
+    setRipple(null);
+    setRippleError(null);
+    setImpact(null);
+    setImpactError(null);
+    setReload((value) => value + 1);
+  }
 
   if (error !== null) {
     return (
       <main className="mx-auto w-full max-w-5xl px-6 py-10">
         <h1 className="text-2xl font-semibold">Contract file</h1>
-        <p role="alert" className="mt-4 text-sm">
-          {error}
-        </p>
+        <PageError message={error} onRetry={handleRetry} />
       </main>
     );
   }
@@ -125,7 +137,7 @@ export default function ContractView({ orderId }: { orderId: string }) {
     return (
       <main className="mx-auto w-full max-w-5xl px-6 py-10">
         <h1 className="text-2xl font-semibold">Contract file</h1>
-        <p className="mt-4 text-sm text-muted-foreground">Loading…</p>
+        <PageLoading label="Loading contract file…" />
       </main>
     );
   }
@@ -182,34 +194,36 @@ export default function ContractView({ orderId }: { orderId: string }) {
             {ripple.days_late === 1 ? "day" : "days"} late (due{" "}
             {ripple.customer_due_date ?? "unknown"}).
           </p>
-          <table className="mt-2 w-full border-collapse text-sm">
-            <tbody>
-              <tr className="border-b align-top">
-                <td className="py-2 pr-4 font-medium">Margin now</td>
-                <td className="py-2">{ripple.margin_now}%</td>
-              </tr>
-              <tr className="border-b align-top">
-                <td className="py-2 pr-4 font-medium">Margin if expedited</td>
-                <td className="py-2">
-                  {ripple.margin_expedited}% (overnight {ripple.expedite_cost})
-                </td>
-              </tr>
-              <tr className="border-b align-top">
-                <td className="py-2 pr-4 font-medium">Deposit due</td>
-                <td className="py-2">{ripple.deposit_due}</td>
-              </tr>
-              <tr className="border-b align-top">
-                <td className="py-2 pr-4 font-medium">Invoice balance</td>
-                <td className="py-2">{ripple.invoice_balance}</td>
-              </tr>
-              {(ripple.risks ?? []).map((risk) => (
-                <tr key={risk} className="border-b align-top">
-                  <td className="py-2 pr-4 font-medium">Risk</td>
-                  <td className="py-2">{risk}</td>
+          <div className="overflow-x-auto">
+            <table className="mt-2 w-full border-collapse text-sm">
+              <tbody>
+                <tr className="border-b align-top">
+                  <td className="py-2 pr-4 font-medium">Margin now</td>
+                  <td className="py-2">{ripple.margin_now}%</td>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+                <tr className="border-b align-top">
+                  <td className="py-2 pr-4 font-medium">Margin if expedited</td>
+                  <td className="py-2">
+                    {ripple.margin_expedited}% (overnight {ripple.expedite_cost})
+                  </td>
+                </tr>
+                <tr className="border-b align-top">
+                  <td className="py-2 pr-4 font-medium">Deposit due</td>
+                  <td className="py-2">{ripple.deposit_due}</td>
+                </tr>
+                <tr className="border-b align-top">
+                  <td className="py-2 pr-4 font-medium">Invoice balance</td>
+                  <td className="py-2">{ripple.invoice_balance}</td>
+                </tr>
+                {(ripple.risks ?? []).map((risk) => (
+                  <tr key={risk} className="border-b align-top">
+                    <td className="py-2 pr-4 font-medium">Risk</td>
+                    <td className="py-2">{risk}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </section>
       )}
 

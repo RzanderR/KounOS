@@ -8,6 +8,7 @@ import type {
   QuoteComparison,
   SourcingDecision,
 } from "@/lib/kounos-types";
+import { PageError, PageLoading } from "@/components/page-state";
 
 function VerdictBadge({ verdict }: { verdict: "pass" | "fail" | "needs_confirmation" }) {
   const label =
@@ -65,6 +66,7 @@ export default function QuotesPage() {
   const [selected, setSelected] = useState<string | null>(null);
   const [decision, setDecision] = useState<SourcingDecision | null>(null);
   const [awardRecord, setAwardRecord] = useState<AwardRecord | null>(null);
+  const [reload, setReload] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -90,7 +92,15 @@ export default function QuotesPage() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [reload]);
+
+  function handleRetry() {
+    setError(null);
+    setRows(null);
+    setDecision(null);
+    setAwardRecord(null);
+    setReload((value) => value + 1);
+  }
 
   const chosen = rows?.find((row) => row.quote.quote_id === selected) ?? null;
 
@@ -98,9 +108,7 @@ export default function QuotesPage() {
     return (
       <main className="mx-auto w-full max-w-6xl px-6 py-10">
         <h1 className="text-2xl font-semibold">Quotes</h1>
-        <p role="alert" className="mt-4 text-sm">
-          {error}
-        </p>
+        <PageError message={error} onRetry={handleRetry} />
       </main>
     );
   }
@@ -108,7 +116,7 @@ export default function QuotesPage() {
     return (
       <main className="mx-auto w-full max-w-6xl px-6 py-10">
         <h1 className="text-2xl font-semibold">Quotes</h1>
-        <p className="mt-4 text-sm text-muted-foreground">Loading…</p>
+        <PageLoading label="Loading quotes…" />
       </main>
     );
   }

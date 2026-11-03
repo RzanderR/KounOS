@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 
 import { errorMessage, fetchFlags, fetchOrderDetail } from "@/lib/api";
 import type { Flag, OrderDetail } from "@/lib/kounos-types";
+import { PageError, PageLoading } from "@/components/page-state";
 import { SimulatedAwardBanner } from "../banner";
 
 function TimelineRow({ label, value }: { label: string; value: string }) {
@@ -20,6 +21,7 @@ export default function OrderDetailView({ orderId }: { orderId: string }) {
   const [detail, setDetail] = useState<OrderDetail | null>(null);
   const [flags, setFlags] = useState<Flag[] | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [reload, setReload] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -40,15 +42,20 @@ export default function OrderDetailView({ orderId }: { orderId: string }) {
     return () => {
       cancelled = true;
     };
-  }, [orderId]);
+  }, [orderId, reload]);
+
+  function handleRetry() {
+    setError(null);
+    setDetail(null);
+    setFlags(null);
+    setReload((value) => value + 1);
+  }
 
   if (error !== null) {
     return (
       <main className="mx-auto w-full max-w-5xl px-6 py-10">
         <h1 className="text-2xl font-semibold">Order</h1>
-        <p role="alert" className="mt-4 text-sm">
-          {error}
-        </p>
+        <PageError message={error} onRetry={handleRetry} />
       </main>
     );
   }
@@ -56,7 +63,7 @@ export default function OrderDetailView({ orderId }: { orderId: string }) {
     return (
       <main className="mx-auto w-full max-w-5xl px-6 py-10">
         <h1 className="text-2xl font-semibold">Order</h1>
-        <p className="mt-4 text-sm text-muted-foreground">Loading…</p>
+        <PageLoading label="Loading order…" />
       </main>
     );
   }

@@ -53,3 +53,22 @@ Muse Code works in `KounOS-muse/` (a worktree of this repo) and never switches b
 - A secret or real business data would have to be committed to proceed
 
 When it stops, it says which rule it hit and what it needs, in the pull request if one exists, otherwise in chat.
+
+## Headless runs from Claude Code (from 2026-11-03)
+
+To save Claude usage, Claude Code can hand a task to Muse headless: it writes a brief, runs Muse, then reviews the diff, runs the checks, pushes and opens the pull request. Muse does the building; Claude Code does the reviewing, and anything that needs the network.
+
+```
+muse exec --trust-workspace --disable-approval --reasoning-effort medium \
+  --max-model-steps 150 --workspace <repo> --prompt-file <brief.md>
+```
+
+- `--disable-approval` is required: without it Muse waits on an approval prompt nobody can answer and stalls. `--trust-workspace` loads `AGENTS.md` and the project skills. Muse's sandbox stays on, so it has **no network and no sockets**.
+- Wrap the run in a time cap (e.g. `timeout 2400`) so a stall can't run for hours.
+
+Every brief includes these rules:
+
+- **Never run `npm ci`, `npm install`, `pip install` or any other package install or removal.** Without network the install empties `node_modules` and cannot restore it (this happened on A26).
+- Do not start the dev server, the API, the e2e test, or anything else that opens a socket. Claude Code runs those after the handoff.
+- If a check cannot run in the sandbox, report it and stop. Never undo or roll back your own commit because a check failed.
+- Stay on the given branch; do not push, merge or touch `.env`.
