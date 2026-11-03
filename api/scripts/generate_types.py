@@ -62,6 +62,9 @@ MODELS: list[type[BaseModel]] = [
     schemas.ContractSection,
     schemas.ContractFile,
     schemas.Ripple,
+    schemas.AskRecord,
+    schemas.AskToolCall,
+    schemas.AskAnswer,
 ]
 
 

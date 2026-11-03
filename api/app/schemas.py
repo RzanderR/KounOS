@@ -359,3 +359,34 @@ class ContractFile(BaseModel):
     order_id: str
     solicitation_id: str
     sections: list[ContractSection]
+
+
+class AskRecord(BaseModel):
+    """One record an Ask KounOS answer cites, with the order it belongs to (A24)."""
+
+    record_id: str
+    kind: Literal["order", "po", "invoice", "shipment", "event"]
+    order_id: str
+
+
+class AskToolCall(BaseModel):
+    """One read-only tool call the model made while answering (A24)."""
+
+    name: str
+    arguments: dict[str, str] = Field(default_factory=dict)
+
+
+class AskAnswer(BaseModel):
+    """An Ask KounOS answer built from read-only tool calls (A24)."""
+
+    question: str
+    answer: str
+    generated_by: str
+    as_of: date
+    records: list[AskRecord] = Field(default_factory=list)
+    tool_calls: list[AskToolCall] = Field(default_factory=list)
+    # A22: False when the answer cited a figure or record no tool returned;
+    # the answer is then code-written from the attention reasons.
+    grounded: bool = True
+    ungrounded_figures: list[str] = Field(default_factory=list)
+    unknown_records: list[str] = Field(default_factory=list)

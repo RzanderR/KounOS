@@ -343,3 +343,32 @@ export interface Ripple {
   invoice_balance: string;
   risks?: string[];
 }
+/**
+ * One record an Ask KounOS answer cites, with the order it belongs to (A24).
+ */
+export interface AskRecord {
+  record_id: string;
+  kind: "order" | "po" | "invoice" | "shipment" | "event";
+  order_id: string;
+}
+/**
+ * One read-only tool call the model made while answering (A24).
+ */
+export interface AskToolCall {
+  name: string;
+  arguments?: Record<string, string>;
+}
+/**
+ * An Ask KounOS answer built from read-only tool calls (A24).
+ */
+export interface AskAnswer {
+  question: string;
+  answer: string;
+  generated_by: string;
+  as_of: string;
+  records?: AskRecord[];
+  tool_calls?: AskToolCall[];
+  grounded?: boolean;
+  ungrounded_figures?: string[];
+  unknown_records?: string[];
+}
