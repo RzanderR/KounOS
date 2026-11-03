@@ -8,7 +8,7 @@ Built by Koun Logistics LLC for **[HACKATHON NAME]** on Meta's Muse models throu
 
 > **Hackathon prototype.** Everything in this repository was built between October 26 and November 4, 2026. The solicitation and award record are public federal documents. Suppliers, quotes, orders and the delay email are fictional unless marked otherwise, and the awarded order is simulated. KounOS never submits bids or sends messages; people do.
 
-<!-- TODO before submission: the only placeholders left are [HACKATHON NAME], the demo video link, Team names, [LICENSE NAME], and "Real supplier quotes". Everything else below matches the code. -->
+<!-- TODO before submission: the only placeholders left are [HACKATHON NAME], the problem statement, the demo video link, Team names, [LICENSE NAME], and "Real supplier quotes". Everything else below matches the code. -->
 
 ---
 
@@ -147,7 +147,7 @@ flowchart TB
   I --> X
   X --> F
   X --> MS
-  X --> MV
+  T -.->|"voicemail path, not used in the demo"| MV
   T --> MW
   T --> MS
 ```
@@ -213,13 +213,13 @@ Not run yet: the hand-labeled eval set and the eval script (A15) are still open,
 
 | | Value |
 | --- | --- |
-| KounOS lowest safe bid (10% target margin) | [TODO] |
-| Actual award total | $91,880.12 for 116 fixtures |
+| KounOS lowest safe bid (10% target margin, Tallgrass) | $91,189.92 ($786.12 per fixture) |
+| Actual award total | $91,880.12 for 116 fixtures ($792.07 per fixture) |
 | Award date | September 30, 2026 |
 | Offers received | 26 |
 
 How to read it:
-- The safe-bid cell stays [TODO]: it must come from `app/costs.py` run against the Tallgrass quote, and no Python runs in this sandbox.
+- The safe bid comes from `app/costs.py` (`lowest_safe_bid`) on the Tallgrass quote, the same figure the contract-file screen shows. It lands $690.20 under the winning total.
 - Only the award total is public, not line-item prices, so we compare totals.
 - Our supplier prices reflect today's market, not prices at bid time. We chose an award from the last six months to limit drift.
 - The winner had its own costs and strategy. This shows whether Koun would have been competitive, not an accuracy score.
@@ -326,7 +326,7 @@ Meta's models are called as hosted services and are not bundled in this reposito
 ### Data and assets
 
 - **Solicitations:** the demo solicitation, USDA ARS 1232SA26Q0557 (greenhouse LED fixtures, Fargo ND), is a public federal document: [SAM.gov notice](https://sam.gov/opp/8e79b518fb1046398b4c90429d18deea/view) (PDFs in `data/solicitations/`). There is no triage batch yet (H16). Works of the U.S. federal government are generally not subject to copyright.
-- **Award records:** public award data for [1232SA26P0357](https://www.usaspending.gov/award/CONT_AWD_1232SA26P0357_12K3_-NONE_-NONE-) (signed 2026-09-30, $91,880.12, 26 offers).
+- **Award records:** public award data for [1232SA26P0357](https://www.usaspending.gov/award/CONT_AWD_1232SA26P0357_12K3_-NONE-_-NONE-) (signed 2026-09-30, $91,880.12, 26 offers).
 - **Company profile:** still open (H15). The schema exists; `data/company_profile.json` hasn't landed. It will hold Koun's public eligibility facts plus a demonstration margin floor, not Koun's real one.
 - **Suppliers, quotes, orders and the delay email:** fictional, created by the team. No voicemail was recorded; the delay arrives as the Tallgrass backorder email. Supplier names were checked against real companies.
 - **Real supplier quotes:** [NONE / list each one here, with the supplier's written permission on file].
