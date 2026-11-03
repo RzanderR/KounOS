@@ -1,4 +1,5 @@
 import type {
+  AskAnswer,
   AwardRecord,
   ContractFile,
   ImpactAnalysis,
@@ -161,4 +162,9 @@ export function fetchFit(noticeId: string): Promise<FitAssessment> {
 /** Typed GET /events/flags. */
 export function fetchFlags(): Promise<Flag[]> {
   return getJson<Flag[]>("/events/flags");
+}
+
+/** Typed POST /ask (A24). 503 without a model key; 502 when the model gives no answer. */
+export function askKounOS(question: string): Promise<AskAnswer> {
+  return postJson<AskAnswer>("/ask", { question });
 }
