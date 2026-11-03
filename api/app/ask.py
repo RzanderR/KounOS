@@ -322,9 +322,21 @@ def _replayed(
     return str(record["response"]["answer"]), f"{record['model']} (replay)", calls, outputs
 
 
+def _replay_date(settings: Settings) -> date:
+    """The date the stored replay answer was recorded on (its top-level as_of)."""
+    record = replay.stored(REPLAY_NAME)
+    raw = record.get("as_of")
+    if raw is None:
+        return today(settings)
+    return date.fromisoformat(str(raw))
+
+
 def answer(question: str, settings: Settings) -> AskAnswer:
     """Answer one question from read-only tool calls, grounded or withheld."""
-    as_of = today(settings)
+    if settings.demo_mode == "replay" and settings.demo_today is None:
+        as_of = _replay_date(settings)
+    else:
+        as_of = today(settings)
     if settings.demo_mode == "replay":
         text, used, calls, outputs = _replayed(question, as_of)
     else:

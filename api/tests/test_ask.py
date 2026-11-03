@@ -242,6 +242,7 @@ def test_route_ok(monkeypatch: pytest.MonkeyPatch) -> None:
 def write_replay(directory: Path) -> None:
     record = {
         "model": "muse-spark-1.3",
+        "as_of": "2026-11-04",
         "response": {"tool_calls": [{"name": "list_orders", "arguments": {}}], "answer": GOOD},
     }
     (directory / f"{ask.REPLAY_NAME}.json").write_text(json.dumps(record), encoding="utf-8")
@@ -260,6 +261,19 @@ def test_replay_scripted_question(monkeypatch: pytest.MonkeyPatch, tmp_path: Pat
     assert result.grounded
     assert result.generated_by == "muse-spark-1.3 (replay)"
     assert [c.name for c in result.tool_calls] == ["list_orders"]
+
+
+def test_replay_uses_recorded_date(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    write_replay(tmp_path)
+    monkeypatch.setattr(replay, "REPLAY_DIR", tmp_path)
+
+    def no_model(*_: object) -> list[dict[str, Any]]:
+        raise AssertionError("replay must not call a model")
+
+    monkeypatch.setattr(ask, "_call_model", no_model)
+    settings = make_settings(demo_mode="replay", model_api_key=None, demo_today=None)
+    result = ask.answer("Which orders need attention today?", settings)
+    assert result.as_of == date(2026, 11, 4)
 
 
 def test_replay_other_question_503(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
