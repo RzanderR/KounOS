@@ -113,7 +113,7 @@ Deadline: **Wed, Nov 4, 2026, 9 PM ET.** Submit by 2 PM Phoenix time (5 PM ET).
 
 - [ ] **A29** DROPPED by D05 (room for the contract file): award backtest.
 - [ ] **A30** Fix every blocking issue from reviews; extend the end-to-end test to start at triage; it passes on the live link from a fresh browser.
-- [ ] **A31** README sync: architecture, model map, "Built during the hackathon" list, third-party table, eval table.
+- [x] **A31** README sync: architecture, model map, "Built during the hackathon" list, third-party table, eval table.
 
 ## Mon Nov 2: rehearse and freeze
 

@@ -40,7 +40,7 @@ Updated at the end of every task or work session, committed with that work.
 
 ## In progress
 
-- None.
+- **A31 README sync (2026-11-03, `task/A31-readme`, draft PR).** README now matches what shipped: one USDA contract (1232SA26Q0557), fictional Ninebark/Larkspur/Tallgrass, the delay as a supplier email (no voicemail), in-memory order store (no SQLite), Vercel + Render hosting; triage, draft notes and eval marked not in the prototype, no invented eval numbers. Award table filled: lowest safe bid $91,189.92 ($786.12/fixture, from `costs.lowest_safe_bid`) vs award $91,880.12, Sept 30 2026, 26 offers. Lists Ask KounOS (#36) and loading states (#37) as built in open PRs. Built by Muse Code headless (clean run); Claude computed the safe bid, fixed the award link and diagram. **Owner placeholders left:** hackathon name, problem statement, video link, team, license, real supplier quotes.
 
 ## Blocked (on what or whom)
 
