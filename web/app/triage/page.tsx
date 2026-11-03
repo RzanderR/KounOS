@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 import { errorMessage, fetchFit, fetchNotices } from "@/lib/api";
 import type { FitAssessment, Notice } from "@/lib/kounos-types";
+import { PageError, PageLoading } from "@/components/page-state";
 
 const DEMO_NOTICE_ID = "1232SA26Q0557";
 
@@ -39,6 +40,7 @@ function VerdictBadge({ verdict }: { verdict: string }) {
 export default function TriagePage() {
   const [rows, setRows] = useState<RankedNotice[] | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [reload, setReload] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -67,15 +69,19 @@ export default function TriagePage() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [reload]);
+
+  function handleRetry() {
+    setError(null);
+    setRows(null);
+    setReload((value) => value + 1);
+  }
 
   if (error !== null) {
     return (
       <main className="mx-auto w-full max-w-5xl px-6 py-10">
         <h1 className="text-2xl font-semibold">Triage</h1>
-        <p role="alert" className="mt-4 text-sm">
-          {error}
-        </p>
+        <PageError message={error} onRetry={handleRetry} />
       </main>
     );
   }
@@ -83,7 +89,7 @@ export default function TriagePage() {
     return (
       <main className="mx-auto w-full max-w-5xl px-6 py-10">
         <h1 className="text-2xl font-semibold">Triage</h1>
-        <p className="mt-4 text-sm text-muted-foreground">Loading…</p>
+        <PageLoading label="Loading notices…" />
       </main>
     );
   }
@@ -105,55 +111,57 @@ export default function TriagePage() {
         {rows.length} notices ranked by fit — pursue or pass, with a reason per factor
       </p>
 
-      <table className="mt-6 w-full border-collapse text-sm">
-        <thead>
-          <tr className="border-b text-left">
-            <th className="py-2 pr-4">Notice</th>
-            <th className="py-2 pr-4">Agency</th>
-            <th className="py-2 pr-4">Fit</th>
-            <th className="py-2">Reasons</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map(({ notice, fit, fitError }) => (
-            <tr key={notice.notice_id} className="border-b align-top">
-              <td className="py-2 pr-4">
-                {notice.notice_id === DEMO_NOTICE_ID ? (
-                  <a className="underline" href="/solicitation">
-                    {notice.title}
-                  </a>
-                ) : (
-                  notice.title
-                )}
-                <span className="block text-xs text-muted-foreground">
-                  {notice.notice_id}
-                </span>
-              </td>
-              <td className="py-2 pr-4">{notice.agency}</td>
-              <td className="py-2 pr-4">
-                {fit === null ? (
-                  <span role="alert" className="text-xs text-muted-foreground">
-                    Scoring unavailable: {fitError}
-                  </span>
-                ) : (
-                  <VerdictBadge verdict={fit.verdict} />
-                )}
-              </td>
-              <td className="py-2">
-                {fit === null ? (
-                  <span className="text-muted-foreground">—</span>
-                ) : (
-                  <ul className="list-disc pl-4">
-                    {(fit.reasons ?? []).map((reason) => (
-                      <li key={reason}>{reason}</li>
-                    ))}
-                  </ul>
-                )}
-              </td>
+      <div className="overflow-x-auto">
+        <table className="mt-6 w-full border-collapse text-sm">
+          <thead>
+            <tr className="border-b text-left">
+              <th className="py-2 pr-4">Notice</th>
+              <th className="py-2 pr-4">Agency</th>
+              <th className="py-2 pr-4">Fit</th>
+              <th className="py-2">Reasons</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {rows.map(({ notice, fit, fitError }) => (
+              <tr key={notice.notice_id} className="border-b align-top">
+                <td className="py-2 pr-4">
+                  {notice.notice_id === DEMO_NOTICE_ID ? (
+                    <a className="underline" href="/solicitation">
+                      {notice.title}
+                    </a>
+                  ) : (
+                    notice.title
+                  )}
+                  <span className="block text-xs text-muted-foreground">
+                    {notice.notice_id}
+                  </span>
+                </td>
+                <td className="py-2 pr-4">{notice.agency}</td>
+                <td className="py-2 pr-4">
+                  {fit === null ? (
+                    <span role="alert" className="text-xs text-muted-foreground">
+                      Scoring unavailable: {fitError}
+                    </span>
+                  ) : (
+                    <VerdictBadge verdict={fit.verdict} />
+                  )}
+                </td>
+                <td className="py-2">
+                  {fit === null ? (
+                    <span className="text-muted-foreground">—</span>
+                  ) : (
+                    <ul className="list-disc pl-4">
+                      {(fit.reasons ?? []).map((reason) => (
+                        <li key={reason}>{reason}</li>
+                      ))}
+                    </ul>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </main>
   );
 }
